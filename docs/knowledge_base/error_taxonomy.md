@@ -42,7 +42,7 @@ e-NACH uses NPCI's dedicated Return Code taxonomy, divided into Presentation (ex
 |---|---|---|---|
 | `AP01` | Account blocked / frozen | **Hard / Terminal** | Prompt customer for alternate bank account. |
 | `AP02` | Account closed | **Hard / Terminal** | Halt onboarding; request fresh mandate submission. |
-| `AP03` | Account frozen (regulatory) | **Legal-Adjacent** | Escalate to compliance operations. No automation. |
+| `AP03` | Account frozen (regulatory) | **Legal Hold** | *Mapped from Legal-Adjacent to strict Legal Hold.* Escalate to compliance operations. No automation. |
 | `AP04` | Account inoperative | **Hard / Terminal** | Prompt customer to activate bank account or provide alternate. |
 | `AP05` | No such account number | **Hard / Terminal** | Validation error; re-trigger account input flow. |
 

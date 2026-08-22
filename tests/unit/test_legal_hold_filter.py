@@ -20,3 +20,8 @@ def test_legal_hold_codes():
     assert requires_mandatory_escalation("04") is False
     assert requires_mandatory_escalation("01") is False
     assert requires_mandatory_escalation("U19") is False
+
+def test_unrecognized_code_fails_closed():
+    """Proves that an uncatalogued/unrecognized failure code safely fails closed."""
+    assert requires_mandatory_escalation("GARBAGE_99") is True
+    assert requires_mandatory_escalation("UNKNOWN_CODE") is True

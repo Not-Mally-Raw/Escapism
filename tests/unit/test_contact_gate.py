@@ -62,3 +62,9 @@ def test_timezone_conversion_active_proof():
 
     next_contact = next_valid_contact_window(utc_evening, "Asia/Kolkata")
     assert next_contact.astimezone(IST) == datetime(2026, 8, 23, 8, 0, 0, tzinfo=IST)
+
+def test_naive_datetime_rejection():
+    """Proves that naive datetimes are strictly rejected rather than assumed IST."""
+    naive_dt = datetime(2026, 8, 22, 12, 0, 0)
+    with pytest.raises(ValueError, match="Timezone-naive datetimes are strictly prohibited"):
+        is_within_contact_hours(naive_dt)

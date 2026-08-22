@@ -98,3 +98,6 @@ The deterministic Guardrail Engine computes the feasible action set by applying 
 $$A_{\text{feasible}}(S) = A_{\text{universe}} \cap \text{Mask}_{\text{Attempts}}(k) \cap \text{Mask}_{\text{Spacing}}(\Delta t) \cap \text{Mask}_{\text{Window}}(t) \cap \text{Mask}_{\text{AFA}}(\text{Amount}) \cap \text{Mask}_{\text{FPC}}(t_{\text{contact}}) \cap \text{Mask}_{\text{Legal}}(Code)$$
 
 Because this mask sits strictly **in front of** the probabilistic decision layer, the Compliance Violation Rate (CVR) is **$0.0\%$ by construction**.
+
+### 3.4 Uncatalogued Failure Code Policy (Fail-Closed)
+If the system encounters an uncatalogued or entirely unrecognized bank switch failure code, it must explicitly **fail-closed**. Unrecognized codes are routed to the `ABORT_COMPLIANT` pathway (mandatory escalation) rather than being treated as standard retriable failures. This prevents the guardrail engine from failing open and inadvertently hammering the clearing house with unsupported or highly sensitive internal network codes.

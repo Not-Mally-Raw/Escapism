@@ -48,3 +48,14 @@ def test_spacing_invalid_attempt_number():
         get_min_spacing_delta(5)
     with pytest.raises(ValueError):
         check_spacing(5, base_ts, base_ts + timedelta(days=10))
+
+def test_spacing_attempt_one():
+    """
+    Tests the attempt_number == 1 branch which should require 0 delay,
+    and shouldn't evaluate timestamps at all.
+    """
+    from datetime import datetime
+    now = datetime(2026, 8, 22, 9, 0, 0, tzinfo=IST)
+    assert get_min_spacing_delta(1) == timedelta(hours=0)
+    # Even if previous timestamp is identically now, it permits
+    assert check_spacing(1, now, now) is True

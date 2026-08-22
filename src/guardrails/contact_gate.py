@@ -1,8 +1,4 @@
-"""
-RBI Fair Practices Code Digital Contact Hours Guardrail.
-Citing: docs/knowledge_base/rbi_npci_regulations.md §2.1 (RBI Fair Practices Code for Digital Recovery).
-"""
-
+"""Unit tests for RBI Fair Practices Code Contact Hours Guardrail."""
 from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
@@ -11,10 +7,11 @@ CONTACT_END = time(19, 0, 0)
 
 
 def _to_local_tz(ts: datetime, local_tz: str) -> datetime:
-    """Normalizes datetime to the specified recipient timezone."""
-    tz = ZoneInfo(local_tz)
+    """Normalizes datetime to the specified recipient timezone. 
+    Strictly requires timezone-aware input."""
     if ts.tzinfo is None:
-        return ts.replace(tzinfo=tz)
+        raise ValueError("Timezone-naive datetimes are strictly prohibited for compliance evaluation.")
+    tz = ZoneInfo(local_tz)
     return ts.astimezone(tz)
 
 
@@ -28,7 +25,7 @@ def is_within_contact_hours(ts: datetime, local_tz: str = "Asia/Kolkata") -> boo
         t_contact ∈ [08:00, 19:00) local time.
 
     Args:
-        ts: Target contact timestamp.
+        ts: Target contact timestamp (MUST be timezone-aware).
         local_tz: IANA timezone string of recipient (default: 'Asia/Kolkata').
 
     Returns:
@@ -48,7 +45,7 @@ def next_valid_contact_window(after: datetime, local_tz: str = "Asia/Kolkata") -
     - If at or after 19:00 local time, advances to 08:00:00 local time on the NEXT day.
 
     Args:
-        after: Timestamp when communication was generated or queued.
+        after: Timestamp when communication was generated or queued (MUST be timezone-aware).
         local_tz: Recipient's local timezone.
 
     Returns:
@@ -67,6 +64,5 @@ def next_valid_contact_window(after: datetime, local_tz: str = "Asia/Kolkata") -
         tomorrow = local_dt + timedelta(days=1)
         result_local = tomorrow.replace(hour=8, minute=0, second=0, microsecond=0)
 
-    if orig_tz is not None:
-        return result_local.astimezone(orig_tz)
-    return result_local.replace(tzinfo=None)
+    # _to_local_tz guarantees orig_tz is not None
+    return result_local.astimezone(orig_tz)

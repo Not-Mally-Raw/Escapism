@@ -73,3 +73,10 @@ def test_window_mask_utc_conversion():
     next_slot = next_valid_execution_window(utc_peak)
     # 13:00:00 IST == 07:30:00 UTC
     assert next_slot.astimezone(IST) == datetime(2026, 8, 22, 13, 0, 0, tzinfo=IST)
+
+def test_naive_datetime_rejection():
+    """Proves that naive datetimes are strictly rejected rather than assumed IST."""
+    from datetime import datetime
+    naive_dt = datetime(2026, 8, 22, 12, 0, 0)
+    with pytest.raises(ValueError, match="Timezone-naive datetimes are strictly prohibited"):
+        is_in_non_peak_window(naive_dt)

@@ -1,17 +1,12 @@
 """
 NPCI Non-Peak Execution Window Mask Guardrail.
-Citing: docs/knowledge_base/rbi_npci_regulations.md §1.3 (NPCI System Load Management Circular, Aug 2025).
+Citing: docs/knowledge_base/rbi_npci_regulations.md §1.3 (NPCI Operational Circular).
 """
 
 from datetime import datetime, time
 from zoneinfo import ZoneInfo
 
 IST = ZoneInfo("Asia/Kolkata")
-
-# Non-Peak Window Definitions (IST):
-# Window 1: 00:00:00 to 09:59:59.999999 [00:00, 10:00)
-# Window 2: 13:00:00 to 16:59:59.999999 [13:00, 17:00)
-# Window 3: 21:30:00 to 23:59:59.999999 [21:30, 24:00)
 
 MORNING_PEAK_START = time(10, 0, 0)
 AFTERNOON_WINDOW_START = time(13, 0, 0)
@@ -20,9 +15,10 @@ NIGHT_WINDOW_START = time(21, 30, 0)
 
 
 def _to_ist(ts: datetime) -> datetime:
-    """Converts a timezone-aware or naive datetime to IST."""
+    """Converts a timezone-aware datetime to IST. 
+    Strictly requires timezone-aware input."""
     if ts.tzinfo is None:
-        return ts.replace(tzinfo=IST)
+        raise ValueError("Timezone-naive datetimes are strictly prohibited for compliance evaluation.")
     return ts.astimezone(IST)
 
 
@@ -33,6 +29,9 @@ def is_in_non_peak_window(ts: datetime) -> bool:
     Regulatory Citation:
         rbi_npci_regulations.md §1.3:
         T_non_peak = [00:00, 10:00) ∪ [13:00, 17:00) ∪ [21:30, 24:00) IST.
+        
+    Args:
+        ts: Target execution timestamp (MUST be timezone-aware).
     """
     ist_dt = _to_ist(ts)
     t = ist_dt.time()
@@ -60,7 +59,7 @@ def next_valid_execution_window(after: datetime) -> datetime:
     - If in Evening Peak [17:00, 21:30), advances to 21:30:00 IST same day.
 
     Args:
-        after: Base candidate execution timestamp.
+        after: Base candidate execution timestamp (MUST be timezone-aware).
 
     Returns:
         datetime: Earliest valid execution timestamp in the original timezone.
@@ -81,6 +80,5 @@ def next_valid_execution_window(after: datetime) -> datetime:
         # Fallback (should be covered by is_in_non_peak_window)
         result_ist = ist_dt
 
-    if orig_tz is not None:
-        return result_ist.astimezone(orig_tz)
-    return result_ist.replace(tzinfo=None)
+    # _to_ist guarantees orig_tz is not None
+    return result_ist.astimezone(orig_tz)
