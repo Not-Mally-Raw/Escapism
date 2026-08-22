@@ -1,0 +1,18 @@
+[project]
+name = "razorpay-revenue-recovery"
+version = "0.1.0"
+description = "AI Revenue Recovery Engine for Recurring Mandates under NPCI/RBI Constraints"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.7.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-v --strict-markers"
