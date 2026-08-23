@@ -43,3 +43,16 @@ class ActionType(StrEnum):
     # They co-occur with primary actions rather than competing in the feasible set.
     SEND_PRE_DEBIT_NOTICE = "SEND_PRE_DEBIT_NOTICE"  # Must fire >=24h before any debit execution
     SEND_POST_TXN_NOTICE = "SEND_POST_TXN_NOTICE"    # Must fire after every attempt (success or failure)
+
+class EnforcementLevel(StrEnum):
+    """
+    Machine-readable canonical source of truth for regulatory provenance (Constraint A2).
+    MANDATORY maps to 🟢 (Verified Regulation)
+    BEST_PRACTICE maps to 🟡 (Derived/Best Practice)
+    UNKNOWN maps to 🔴 (Modeled Assumption / Unverified)
+    INTERNAL_POLICY maps to labeled internal policy
+    """
+    MANDATORY = "MANDATORY"
+    BEST_PRACTICE = "BEST_PRACTICE"
+    INTERNAL_POLICY = "INTERNAL_POLICY"
+    UNKNOWN = "UNKNOWN"

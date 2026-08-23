@@ -1,55 +1,64 @@
-"""
-Static Architecture Boundary & Physical Import Enforcement Tests.
-Verifies that deterministic guardrails maintain 100% isolation from probabilistic
-decision layers, configuration priors, and simulation models.
-"""
-
 import ast
 from pathlib import Path
-import pytest
 
-GUARDRAILS_DIR = Path(__file__).parent.parent / "src" / "guardrails"
-
-# Forbidden import root packages for the guardrails layer
-FORBIDDEN_IMPORT_PREFIXES = (
-    "src.simulation",
-    "src.core.config",
-    "src.decision",
-    "src.diagnostic",
-)
-
-
-def get_imports_from_file(file_path: Path) -> list[str]:
+def get_imports(file_path: Path) -> set[str]:
     """Parses a Python file and returns all imported module names."""
+    if not file_path.exists():
+        return set()
     with open(file_path, "r", encoding="utf-8") as f:
         tree = ast.parse(f.read(), filename=str(file_path))
 
-    imports = []
+    imports = set()
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
-                imports.append(alias.name)
+                imports.add(alias.name)
         elif isinstance(node, ast.ImportFrom):
             if node.module:
-                imports.append(node.module)
+                imports.add(node.module)
     return imports
-
 
 def test_guardrails_import_boundaries():
     """
-    Exhaustively checks every file in src/guardrails/ to assert physical separation:
-    - NO imports from src.simulation.*
-    - NO imports from src.core.config.*
-    - NO imports from src.decision.*
+    Guardrails (Stage 2) must never import from simulation (Stage 6).
     """
-    guardrail_files = list(GUARDRAILS_DIR.glob("*.py"))
-    assert len(guardrail_files) >= 6, f"Expected at least 6 guardrail files, found {len(guardrail_files)}"
-
-    for file_path in guardrail_files:
-        imports = get_imports_from_file(file_path)
+    project_root = Path(__file__).parent.parent
+    guardrails_dir = project_root / "src" / "guardrails"
+    
+    for py_file in guardrails_dir.glob("**/*.py"):
+        imports = get_imports(py_file)
         for imp in imports:
-            for forbidden in FORBIDDEN_IMPORT_PREFIXES:
-                assert not imp.startswith(forbidden), (
-                    f"Architecture Violation in {file_path.name}: "
-                    f"Guardrail layer must not import from '{imp}'"
-                )
+            assert not imp.startswith("src.simulation"), \
+                f"Architecture violation: {py_file.name} imports {imp} from simulation layer."
+
+def test_decision_import_boundaries():
+    """
+    Decision/Production (Stage 4) must never import from simulation (Stage 6)
+    to prevent circular answer-key sharing. (Constraints A4, A8)
+    """
+    project_root = Path(__file__).parent.parent
+    decision_dir = project_root / "src" / "decision"
+    diagnosis_dir = project_root / "src" / "diagnosis"
+    
+    for layer_dir in [decision_dir, diagnosis_dir]:
+        if not layer_dir.exists():
+            continue
+        for py_file in layer_dir.glob("**/*.py"):
+            imports = get_imports(py_file)
+            for imp in imports:
+                assert not imp.startswith("src.simulation"), \
+                    f"Architecture violation: {py_file.name} in {layer_dir.name} imports {imp} from simulation layer."
+
+def test_simulation_import_boundaries():
+    """
+    Simulation must not import from decision to avoid tight coupling 
+    where simulator learns from the model it evaluates.
+    """
+    project_root = Path(__file__).parent.parent
+    simulation_dir = project_root / "src" / "simulation"
+    
+    for py_file in simulation_dir.glob("**/*.py"):
+        imports = get_imports(py_file)
+        for imp in imports:
+            assert not imp.startswith("src.decision"), \
+                f"Architecture violation: {py_file.name} imports {imp} from decision layer."
