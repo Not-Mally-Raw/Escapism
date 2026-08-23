@@ -1,5 +1,5 @@
 """
-Generates labeled synthetic records conforming to MandateStateRecord.
+Generates labeled synthetic records conforming to SimulationRecord.
 """
 import random
 from decimal import Decimal
@@ -9,13 +9,13 @@ import json
 
 from src.core.types import PaymentRail, FailureClass
 from src.core.models import MandateStateRecord
+from src.simulation.models import SimulationRecord
 from src.simulation.latent_state_model import is_post_salary_cycle
 from src.simulation.distributions import get_ground_truth_probability
 
 IST = ZoneInfo("Asia/Kolkata")
 
 CODE_TO_CLASS = {
-    # UPI AutoPay
     "Z9": FailureClass.SOFT_LIQUIDITY,
     "U19": FailureClass.AMBIGUOUS_DECLINE,
     "U30": FailureClass.AMBIGUOUS_DECLINE,
@@ -23,14 +23,12 @@ CODE_TO_CLASS = {
     "U28": FailureClass.TECHNICAL_RETRYABLE,
     "Z7": FailureClass.TECHNICAL_RETRYABLE,
     "Z8": FailureClass.HARD_TERMINAL,
-    # e-NACH
     "01": FailureClass.HARD_TERMINAL,
     "02": FailureClass.HARD_TERMINAL,
     "04": FailureClass.SOFT_LIQUIDITY,
     "05": FailureClass.HARD_TERMINAL,
     "06": FailureClass.HARD_TERMINAL,
     "07": FailureClass.LEGAL_HOLD,
-    # Registration
     "AP01": FailureClass.HARD_TERMINAL,
     "AP02": FailureClass.HARD_TERMINAL,
     "AP03": FailureClass.LEGAL_HOLD,
@@ -42,7 +40,6 @@ ALL_CODES = list(CODE_TO_CLASS.keys())
 MALFORMED_CODES = ["GARBAGE_99", "UNKNOWN_CODE", "XXX"]
 
 def _generate_amount() -> Decimal:
-    """Generates amounts spread across the ₹15,000 AFA threshold."""
     choices = [
         round(random.uniform(100.0, 5000.0), 2),
         15000.00,
@@ -53,10 +50,7 @@ def _generate_amount() -> Decimal:
     return Decimal(str(random.choice(choices)))
 
 def _generate_timestamps(attempt_count: int) -> tuple[datetime, datetime | None]:
-    """Generates failure_timestamp and last_attempt_timestamp crossing guardrail boundaries."""
-    # Use deterministic 'now' for the test generator
     now = datetime(2026, 8, 22, 12, 0, 0, tzinfo=IST)
-    
     if attempt_count == 1:
         return now, None
         
@@ -68,7 +62,6 @@ def _generate_timestamps(attempt_count: int) -> tuple[datetime, datetime | None]
         timedelta(hours=random.uniform(2, 20)), 
         timedelta(hours=random.uniform(25, 48))
     ]
-    
     spacing = random.choice(spacing_hours_options)
     
     base_times = [
@@ -76,7 +69,6 @@ def _generate_timestamps(attempt_count: int) -> tuple[datetime, datetime | None]
         time(9, 59, 59), time(10, 0, 0), time(12, 59, 59), time(13, 0, 0), 
         time(16, 59, 59), time(17, 0, 0), time(21, 29, 59), time(21, 30, 0)
     ]
-    
     chosen_time = random.choice(base_times)
     
     failure_ts = now.replace(
@@ -89,7 +81,7 @@ def _generate_timestamps(attempt_count: int) -> tuple[datetime, datetime | None]
     last_attempt_ts = failure_ts - spacing
     return failure_ts, last_attempt_ts
 
-def generate_record(code_override: str = None, idx: int = 0) -> MandateStateRecord:
+def generate_record(code_override: str = None, idx: int = 0) -> SimulationRecord:
     code = code_override or random.choice(ALL_CODES + MALFORMED_CODES)
     
     if code in MALFORMED_CODES:
@@ -114,7 +106,7 @@ def generate_record(code_override: str = None, idx: int = 0) -> MandateStateReco
             p_success = get_ground_truth_probability(dist_class, attempt_count + 1, is_post_sal)
         ground_truth = random.random() < p_success
 
-    return MandateStateRecord(
+    state = MandateStateRecord(
         case_id=f"case_{idx:04d}",
         mandate_id=f"man_{idx:04d}",
         merchant_id="mer_default_001",
@@ -127,12 +119,16 @@ def generate_record(code_override: str = None, idx: int = 0) -> MandateStateReco
         failure_timestamp=failure_ts,
         last_attempt_timestamp=last_attempt_ts,
         afa_required=(amount > 15000),
-        ground_truth_recoverable=ground_truth,
         pre_debit_notice_sent=random.choice([True, False]),
         customer_timezone="Asia/Kolkata"
     )
+    
+    return SimulationRecord(
+        state=state,
+        ground_truth_recoverable=ground_truth
+    )
 
-def generate_batch(size: int, seed: int = 42) -> list[MandateStateRecord]:
+def generate_batch(size: int, seed: int = 42) -> list[SimulationRecord]:
     random.seed(seed)
     records = []
     

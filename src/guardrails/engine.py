@@ -75,6 +75,13 @@ def compute_feasible_action_set(
     if not is_silent_retry_permitted(state.amount_inr):
         primary_actions.discard(ActionType.SILENT_RETRY)
 
+    # 5b. Apply Pre-Debit Notice Gate (Instruction 2)
+    # Citing: rbi_npci_regulations.md §2.3 — Retries are NOT in feasible set until notice sent >=24h prior.
+    if not state.pre_debit_notice_sent:
+        primary_actions.discard(ActionType.SILENT_RETRY)
+        primary_actions.discard(ActionType.PIN_PROMPTED_RETRY)
+
+
     # 6. Apply Hard Terminal Failure Class Filter
     if state.failure_class == FailureClass.HARD_TERMINAL:
         # Cannot retry closed/blocked accounts on bank rail

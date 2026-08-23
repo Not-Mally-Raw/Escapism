@@ -52,8 +52,8 @@ $$T_{\text{non-peak}} = [00:00, 10:00) \cup [13:00, 17:00) \cup [21:30, 24:00)$$
 ## 2. RBI Frameworks for Mandates & Customer Communication
 
 ### 2.1 RBI Fair Practices Code: Digital Contact Hours
-* **Regulation Reference:** 🟢 **VERIFIED — RBI Fair Practices Code for Lenders & Digital Recovery (Master Direction).**
-* **Rule:** Any customer-facing communication (WhatsApp message, SMS, interactive Payment Link nudge, or phone notification) must occur strictly within approved daylight hours in the recipient's local time zone:
+* **Regulation Reference:** 🟡 **BEST PRACTICE — RBI Fair Practices Code for Lenders & Digital Recovery (Master Direction).**
+* **Rule:** Any customer-facing communication (WhatsApp message, SMS, interactive Payment Link nudge, or phone notification) must occur strictly within approved daylight hours in the recipient's local time zone: Applied here voluntarily as a conservative standard, not because it is directly mandated for non-loan merchant communications.
 
 $$t_{\text{contact}} \in [08:00, 19:00) \quad (\text{Local Recipient Time})$$
 

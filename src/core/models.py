@@ -43,6 +43,5 @@ class MandateStateRecord(BaseModel):
     failure_timestamp: datetime
     last_attempt_timestamp: Optional[datetime] = None
     afa_required: bool = Field(default=False, description="Computed or explicit flag indicating if AFA is required")
-    ground_truth_recoverable: bool = Field(default=True, description="Hidden simulation label for unbiased evaluation")
     pre_debit_notice_sent: bool = Field(default=False, description="Whether pre-debit notice >=24h was dispatched")
     customer_timezone: str = Field(default="Asia/Kolkata", description="IANA Timezone of the recipient")
