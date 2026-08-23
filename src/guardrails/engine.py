@@ -88,7 +88,14 @@ def compute_feasible_action_set(
         primary_actions.discard(ActionType.SILENT_RETRY)
         primary_actions.discard(ActionType.PIN_PROMPTED_RETRY)
 
-    # 7. Optional Real-Time Temporal Filtering (if current_time is passed)
+    # 7. Temporal Filtering — Fail-Closed on Missing Evidence
+    # If attempt_count > 1 but last_attempt_timestamp is None, we cannot verify spacing.
+    # Fail-closed: block retries rather than assuming spacing is satisfied.
+    if state.attempt_count > 1 and state.last_attempt_timestamp is None:
+        primary_actions.discard(ActionType.SILENT_RETRY)
+        primary_actions.discard(ActionType.PIN_PROMPTED_RETRY)
+
+    # 8. Optional Real-Time Temporal Filtering (if current_time is passed)
     if current_time is not None and state.last_attempt_timestamp is not None:
         next_attempt_number = min(state.attempt_count + 1, 4)
 

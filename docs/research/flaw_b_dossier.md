@@ -20,7 +20,7 @@ This project's thesis is that payment recovery is two stacked problems with diff
 |---|---|---|---|
 | **Retry timing** | Static calendar rules (e.g., retry on day 1, day 3, day 7) regardless of failure type or customer context | Model decides timing — may or may not respect regulatory spacing | Timing constrained by deterministic spacing validator (\`spacing_validator.py\`); optimization layer selects *within* permitted windows only |
 | **Failure-class discrimination** | None — treats \`Z9\` (insufficient funds) identically to \`07\` (court order) | Depends on prompt quality; may hallucinate distinctions or miss legal-hold codes | Exhaustive code-to-class mapping per \`error_taxonomy.md\`; \`07\`/\`AP03\` hard-gated to \`ESCALATE_HUMAN\` only |
-| **Compliance guarantee** | Accidental — schedule may or may not respect the 4-attempt cap or AFA threshold | None provable — depends on prompt adherence, which degrades under ambiguity or model updates | **Proven by construction:** guardrails are pure functions, exhaustively unit-tested, physically isolated from any probabilistic component by AST boundary tests (\`test_architecture_boundaries.py\`) |
+| **Compliance guarantee** | Accidental — schedule may or may not respect the 4-attempt cap or AFA threshold | None provable — depends on prompt adherence, which degrades under ambiguity or model updates | **Within the modeled policy domain and supplied state,** prohibited actions are structurally excluded from the feasible action set. Guardrails are pure functions, unit-tested, physically isolated from probabilistic components by AST boundary tests (\`test_architecture_boundaries.py\`) |
 | **Auditability** | Reconstructable from schedule config but not from individual case reasoning | "The model decided to" — not reproducible, not defensible to a regulator | Every action traces to a specific guardrail check with a citation to the regulation that motivated it |
 | **Adaptivity** | Zero — never improves without manual rule changes | High — learns from data continuously | Planned (Phase 9–10): probabilistic layer can improve, but *only within the boundary the deterministic layer has already drawn* |
 | **Failure under ambiguity** | Executes next scheduled retry regardless | Model improvises, potentially past a legal boundary | System fails closed — ambiguous/unknown input blocks the action (\`legal_hold_filter.py\` §3.4: uncatalogued codes route to \`ABORT_COMPLIANT\`) |
@@ -35,11 +35,11 @@ Stripe's documentation lists the conditions under which it will *not* retry a pa
 
 This appears alongside other non-retry conditions like "the issuer returned a hard decline code" and "no payment methods are available."
 
-🟡 **What this implies (own analysis, not a sourced claim):**
+🟡 **Our interpretation (own analysis, not a sourced claim):**
 
-Stripe's own engineering team evaluated the Indian regulatory environment — RBI's AFA mandate for transactions >₹15,000, the 24h pre-debit notification requirement, NPCI's attempt caps and spacing rules — and chose to **exclude India-issued cards from their flagship ML retry product entirely**, rather than attempt to make the probabilistic model compliant with these deterministic constraints. This is the strongest independent validation of this project's rules-first architecture: the world's most sophisticated payment retry ML system decided the Indian regulatory domain is not a problem their model should try to solve.
+This creates an important market boundary for the project: Stripe's general Smart Retries approach cannot be directly applied to this Indian recurring-payment use case. We do not claim to know Stripe's internal reason for that exclusion — it may be regulatory complexity, low volume, commercial prioritization, or some combination. What the exclusion establishes is the narrower, defensible point: **Stripe's flagship ML retry product is not available for the specific payment type this project targets.**
 
-This does **not** mean Stripe's approach is inferior globally. In jurisdictions without India's AFA/mandate constraints, their ML-driven approach is likely superior to a rules-first system. The claim is narrower and more defensible: **for the specific regulatory environment this project targets (Indian recurring mandates), Stripe's own team concluded that an ML-first approach is not viable.**
+This does **not** mean Stripe's approach is inferior globally. In jurisdictions without India's AFA/mandate constraints, their ML-driven approach is likely superior to a rules-first system. The differentiation is that this project builds compliance into the architecture rather than choosing to exclude the jurisdiction entirely.
 
 ### A.3 Market Teardown: Razorpay's Native Retry Infrastructure
 

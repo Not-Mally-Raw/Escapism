@@ -6,7 +6,11 @@ from typing import Optional
 from src.core.types import FailureClass
 from src.diagnosis.models import DiagnosticOutput
 
-CONFIDENCE_THRESHOLD = 0.40
+# Initial policy heuristic — NOT a calibrated probability boundary.
+# This value was chosen as a conservative starting point. Proper calibration
+# requires a reliability curve against labeled data, which does not yet exist.
+# Future work: replace with a data-driven threshold from calibration analysis.
+AMBIGUITY_THRESHOLD_HEURISTIC = 0.40
 
 def resolve_ambiguity(diagnosis: DiagnosticOutput) -> DiagnosticOutput:
     """
@@ -20,7 +24,7 @@ def resolve_ambiguity(diagnosis: DiagnosticOutput) -> DiagnosticOutput:
     # For fail-closed property (Constraint B6): if input is fundamentally indeterminate,
     # we force a safe failure class.
     
-    if diagnosis.confidence <= CONFIDENCE_THRESHOLD:
+    if diagnosis.confidence <= AMBIGUITY_THRESHOLD_HEURISTIC:
         # If it's already an ambiguous decline, we leave it.
         # Otherwise, we might force it to ambiguous or escalate.
         # This implementation will be expanded when the full decision layer is built.

@@ -21,7 +21,7 @@ Most systems—including generic AI agent hackathons and off-the-shelf commercia
 * Problem A fails *catastrophically and legally* (an unauthorized silent debit >₹15,000 constitutes a direct breach of RBI's digital mandate framework, inviting regulatory penalties and reputational damage). 
 * Problem B fails *gracefully and statistically* (a suboptimal retry time loses a few rupees). 
 
-Therefore, they require different engineering treatments. Problem A gets deterministic code, proven by exhaustive invariant tests and AST boundary enforcement. Problem B gets a probabilistic LLM/Classifier model that is allowed to guess, but *only within the hard boundaries Problem A has already drawn.*
+Therefore, they require different engineering treatments. Problem A gets deterministic code, verified by exhaustive invariant tests and AST boundary enforcement. Within the modeled policy domain and supplied state, prohibited actions are structurally excluded from the feasible action set. Problem B gets a probabilistic LLM/Classifier model that is allowed to guess, but *only within the hard boundaries Problem A has already drawn.*
 
 ---
 
@@ -29,12 +29,12 @@ Therefore, they require different engineering treatments. Problem A gets determi
 
 ### 2.1 vs. Stripe Smart Retries (Single ML Model)
 Stripe's approach is a single black-box ML model that learns retry timing from aggregate data. 
-* **The Reality Check:** Stripe's "Smart Retries" feature **explicitly excludes India-issued cards**. (Source: Stripe documentation: `stripe.com/docs/billing/revenue-recovery/smart-retries`). Stripe's own engineering team evaluated the Indian regulatory environment and chose to exclude it from their flagship ML retry product entirely, rather than try to make the probabilistic model compliant. This validates our core thesis: the Indian regulatory environment requires a rules-first architecture, not an ML-first one. 
-* **The Trade-off:** By treating compliance as a rigid predecessor to optimization, our system can operate safely in the Indian regulatory environment where Stripe's native ML cannot.
+* **Verified:** Stripe's "Smart Retries" feature **explicitly excludes India-issued cards**. (Source: Stripe documentation: `stripe.com/docs/billing/revenue-recovery/smart-retries`). This creates an important market boundary: Stripe's general Smart Retries approach cannot be directly applied to this Indian recurring-payment use case. We do not claim to know Stripe's internal reason for that exclusion unless Stripe explicitly documents it.
+* **The Trade-off:** By treating compliance as a rigid predecessor to optimization, our system can operate safely in the Indian regulatory environment where Stripe's native ML retry product is not offered.
 
 ### 2.2 vs. Razorpay's Native Retry Infrastructure
 Razorpay's own Intelligent Payment Retry and Failed Payment Recovery are production-grade systems. We do not claim to out-recover them on raw volume.
-* **The Differentiation:** Razorpay's public documentation describes intelligent retry logic, but our system's differentiation is **provable legibility**. Our compliance is an independently checkable, auditable artifact. We decouple the NPCI/RBI rules (Problem A) entirely from the recovery logic (Problem B). If the RBI audits this system, we can hand them a pure mathematical proof (the Guardrail Engine) guaranteeing zero violations, rather than asking them to trust an ML model's weights.
+* **The Differentiation:** We are making compliance independently inspectable rather than treating it as an implicit property of an optimization system. We decouple the NPCI/RBI rules (Problem A) entirely from the recovery logic (Problem B). If the RBI audits this system, we can hand them independently verifiable guardrail code with cited regulatory sources, rather than asking them to trust an ML model's weights.
 
 ### 2.3 vs. A Generic "LLM Decides Everything" Agent
 * **Compliance:** An LLM with unrestricted execution authority is a massive liability. Prompt adherence degrades under adversarial input or ambiguity. Our LLM is restricted to outputting a strict `DiagnosticOutput` JSON schema. It *never* executes a payment; it merely recommends a classification that the Guardrail Engine filters.

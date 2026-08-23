@@ -65,7 +65,6 @@ def test_compliance_invariants_500_states():
             failure_timestamp=last_attempt,
             last_attempt_timestamp=last_attempt,
             afa_required=(amount > Decimal("15000.00")),
-            ground_truth_recoverable=True,
             pre_debit_notice_sent=random.choice([True, False]),
             customer_timezone="Asia/Kolkata",
         )
