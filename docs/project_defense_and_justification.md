@@ -18,7 +18,7 @@ This is a question with **no correct answer**, only a better or worse probabilis
 Most systems—including generic AI agent hackathons and off-the-shelf commercial retry logic—either solve Problem B and hope Problem A comes along for free (e.g., an LLM "prompted" to be compliant), or solve Problem A so rigidly that Problem B is ignored (a basic rules engine).
 
 **The bet this project makes:** These two problems have fundamentally different failure modes. 
-* Problem A fails *catastrophically and legally* (an unauthorized debit >₹15,000 forces a 10-day shadow reversal and invites RBI penalties). 
+* Problem A fails *catastrophically and legally* (an unauthorized silent debit >₹15,000 constitutes a direct breach of RBI's digital mandate framework, inviting regulatory penalties and reputational damage). 
 * Problem B fails *gracefully and statistically* (a suboptimal retry time loses a few rupees). 
 
 Therefore, they require different engineering treatments. Problem A gets deterministic code, proven by exhaustive invariant tests and AST boundary enforcement. Problem B gets a probabilistic LLM/Classifier model that is allowed to guess, but *only within the hard boundaries Problem A has already drawn.*
@@ -29,7 +29,7 @@ Therefore, they require different engineering treatments. Problem A gets determi
 
 ### 2.1 vs. Stripe Smart Retries (Single ML Model)
 Stripe's approach is a single black-box ML model that learns retry timing from aggregate data. 
-* **The Reality Check:** Stripe's "Smart Retries" feature **explicitly excludes India-issued cards**. Why? Because automated retry logic designed for Western markets optimizes for temporary network errors (soft declines). Indian recurring payment failures are predominantly compliance-related (mandate rules, AFA requirements). 
+* **The Reality Check:** Stripe's "Smart Retries" feature **explicitly excludes India-issued cards**. (Source: Stripe documentation: `stripe.com/docs/billing/revenue-recovery/smart-retries`). Stripe's own engineering team evaluated the Indian regulatory environment and chose to exclude it from their flagship ML retry product entirely, rather than try to make the probabilistic model compliant. This validates our core thesis: the Indian regulatory environment requires a rules-first architecture, not an ML-first one. 
 * **The Trade-off:** By treating compliance as a rigid predecessor to optimization, our system can operate safely in the Indian regulatory environment where Stripe's native ML cannot.
 
 ### 2.2 vs. Razorpay's Native Retry Infrastructure
@@ -64,9 +64,9 @@ Every small engineering adjustment made during this build was load-bearing. None
 2. **Deterministic Guardrails (Stage 2):** The Guardrail Engine evaluates the state:
    * *Legal Hold?* No.
    * *Attempt Cap?* 1 is < 4. (Pass)
-   * *AFA Threshold?* ₹25,000 > ₹15,000. (Fail). The engine **mutates the feasible action set**, permanently discarding `SILENT_RETRY`.
+   * *AFA Threshold?* ₹25,000 > ₹15,000. (Fail). The engine **mutates the feasible action set**, permanently discarding `SILENT_RETRY` but preserving `PIN_PROMPTED_RETRY`.
    * *Pre-Debit Notice?* Verified sent >24h ago. (Pass)
-3. **Probabilistic Decision (Stage 4):** The LLM/Decision layer looks at the restricted feasible set (now only containing `PAYMENT_LINK`, `WHATSAPP_NUDGE`, `ESCALATE_HUMAN`). It calculates expected yields and selects `WHATSAPP_NUDGE` because liquidity failures respond well to interactive nudges.
+3. **Probabilistic Decision (Stage 4):** The LLM/Decision layer looks at the restricted feasible set (now only containing `PIN_PROMPTED_RETRY`, `PAYMENT_LINK`, `WHATSAPP_NUDGE`, `ESCALATE_HUMAN`). It calculates expected yields and selects `WHATSAPP_NUDGE` because liquidity failures respond well to interactive nudges.
 4. **Execution & Audit:** The nudge is dispatched. The entire rationale—including the exact RBI rule that blocked the silent retry—is logged for audit.
 
 *What exists right now:* Stages 1 (Data Generation) and 2 (Guardrails) are built, fully tested, and proven. Stage 3 (Diagnosis) is currently in active development.
