@@ -7,13 +7,39 @@ from datetime import datetime, timedelta, time
 from zoneinfo import ZoneInfo
 import json
 
-from src.core.types import PaymentRail, FailureClass
+from src.core.types import PaymentRail, FailureClass, ConsentStatus
 from src.core.models import MandateStateRecord
 from src.simulation.models import SimulationRecord
 from src.simulation.latent_state_model import is_post_salary_cycle
 from src.simulation.distributions import get_ground_truth_probability
 
 IST = ZoneInfo("Asia/Kolkata")
+
+def _generate_channel_consent() -> dict[str, ConsentStatus]:
+    """
+    Generates synthetic per-channel customer consent state.
+
+    🔴 MODELED ASSUMPTION:
+    In Indian consumer subscription context, WhatsApp and SMS have high opt-in rates
+    with a realistic minority opting out or having indeterminate/unverified consent:
+    - WHATSAPP: 80% OPTED_IN, 15% OPTED_OUT, 5% UNKNOWN
+    - SMS: 75% OPTED_IN, 15% OPTED_OUT, 10% UNKNOWN
+    - PAYMENT_LINK: 85% OPTED_IN, 10% OPTED_OUT, 5% UNKNOWN
+    """
+    def _sample_status(p_in: float, p_out: float) -> ConsentStatus:
+        r = random.random()
+        if r < p_in:
+            return ConsentStatus.OPTED_IN
+        elif r < p_in + p_out:
+            return ConsentStatus.OPTED_OUT
+        else:
+            return ConsentStatus.UNKNOWN
+
+    return {
+        "WHATSAPP": _sample_status(0.80, 0.15),
+        "SMS": _sample_status(0.75, 0.15),
+        "PAYMENT_LINK": _sample_status(0.85, 0.10),
+    }
 
 CODE_TO_CLASS = {
     "Z9": FailureClass.SOFT_LIQUIDITY,
@@ -120,7 +146,8 @@ def generate_record(code_override: str = None, idx: int = 0) -> SimulationRecord
         last_attempt_timestamp=last_attempt_ts,
         afa_required=(amount > 15000),
         pre_debit_notice_sent=random.choice([True, False]),
-        customer_timezone="Asia/Kolkata"
+        customer_timezone="Asia/Kolkata",
+        channel_consent=_generate_channel_consent(),
     )
     
     return SimulationRecord(
