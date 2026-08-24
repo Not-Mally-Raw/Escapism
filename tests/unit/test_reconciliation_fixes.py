@@ -36,6 +36,7 @@ def test_missing_timestamp_blocks_retries_when_attempt_count_above_1():
         failure_timestamp=datetime(2026, 8, 20, 10, 0, tzinfo=timezone.utc),
         last_attempt_timestamp=None,  # Missing — cannot verify spacing
         pre_debit_notice_sent=True,
+        channel_consent={"WHATSAPP": "OPTED_IN", "SMS": "OPTED_IN", "PAYMENT_LINK": "OPTED_IN"},
     )
     # No current_time passed — the temporal check block is not entered,
     # but the NEW fail-closed block should still remove retries.

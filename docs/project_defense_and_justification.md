@@ -23,6 +23,16 @@ Most systems—including generic AI agent hackathons and off-the-shelf commercia
 
 Therefore, they require different engineering treatments. Problem A gets deterministic code, verified by exhaustive invariant tests and AST boundary enforcement. Within the modeled policy domain and supplied state, prohibited actions are structurally excluded from the feasible action set. Problem B gets a probabilistic LLM/Classifier model that is allowed to guess, but *only within the hard boundaries Problem A has already drawn.*
 
+**The sorting is the product.** The core question for any payment recovery system isn't "does AI handle everything?" — it's: what percentage of cases never reaches a human, what percentage reaches a human with work already assembled, and what data decided the split. This project makes that split explicit and auditable:
+
+| Tier | What happens | This project's mechanism |
+|---|---|---|
+| **Resolved** | Fully automated — no human needed | Guardrail engine returns a feasible action set; decision layer selects and executes |
+| **Assembled** | Routed to human, but with pre-assembled context | `ESCALATE_HUMAN` with `DiagnosticOutput` attached — the human receives failure class, confidence, evidence, and feasible actions already computed |
+| **Judgment** | Genuine human judgment on novel/complex cases | Legal-hold cases (code `07`/`AP03`) and genuinely ambiguous declines below the initial ambiguity threshold |
+
+**Why India specifically:** India's NPCI/RBI mandate framework is more granular and prescriptive than any comparable jurisdiction. SEPA Direct Debit (EU) provides an 8-week unconditional dispute window and 14-day pre-notification — but no attempt cap, no escalating spacing schedule, and no AFA threshold. India's rules are tighter and faster. A system that treats Indian mandate recovery as a subset of global retry logic will miss constraints that don't exist elsewhere. (Comparative detail: `docs/research/market_context.md §2`.)
+
 ---
 
 ## 2. Comparative Analysis — Why Not the Alternatives
@@ -49,7 +59,7 @@ Every small engineering adjustment made during this build was load-bearing. None
 | Microscopic Decision | The Catastrophic Failure it Prevents |
 |---|---|
 | **AST Import Boundary Tests** | Prevents future engineers from quietly wiring the decision layer's success estimate to the same probability distribution the synthetic generator uses to create ground truth. Prevents the benchmark from "grading its own answer key." |
-| **🟢/🟡/🔴 Provenance Tags** | Prevents the dangerous assumption that internal best-practices are laws, or that laws are mere suggestions. (e.g., accurately downgrading 8AM-7PM contact hours from verified law to 🟡 Best Practice, while strictly enforcing it to avoid RBI Ombudsman harassment penalties). |
+| **🟢/🟡/🔴 Provenance Tags** | Prevents the dangerous assumption that internal best-practices are laws, or that laws are mere suggestions. (e.g., accurately downgrading 8AM-7PM contact hours from verified law to 🟡 Best Practice, while strictly enforcing it to avoid RBI Ombudsman harassment penalties). This is not an idiosyncratic obsession — serious practitioners in adjacent regulated domains enforce the same discipline. SF AI Labs' own strategy documents explicitly label their projected improvements as "modeled automation targets from the strategy work rather than measured production results" (`docs/research/market_context.md §3.5`). |
 | **Fail-Closed on Unknown Codes** | A silent "fail-open" on an uncatalogued bank code (e.g., a new NPCI legal hold code) would bypass the system, directly contradicting the project's zero-violation claim. |
 | **Strict NRR Definition** | Net Revenue Recovered (NRR) strictly ignores `LINK_OPENED` or `AUTHORIZED`. It only counts `CAPTURED` or `SETTLED`. This prevents dashboard metrics from lying to executives. |
 | **Timezone-Naive Rejection** | Silently assuming IST for a naive datetime violates cross-border contact hour laws. The engine now throws a fatal `ValueError` if fed a naive datetime. |

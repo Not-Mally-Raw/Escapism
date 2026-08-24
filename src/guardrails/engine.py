@@ -10,6 +10,7 @@ from src.core.models import MandateStateRecord
 from src.core.types import ActionType, FailureClass
 from src.guardrails.afa_enforcer import is_silent_retry_permitted
 from src.guardrails.attempt_limiter import check_attempt_cap
+from src.guardrails.consent_gate import is_channel_permitted, ACTION_TO_CHANNEL
 from src.guardrails.contact_gate import is_within_contact_hours, next_valid_contact_window
 from src.guardrails.legal_hold_filter import requires_mandatory_escalation
 from src.guardrails.spacing_validator import check_spacing, get_min_spacing_delta
@@ -87,6 +88,15 @@ def compute_feasible_action_set(
         # Cannot retry closed/blocked accounts on bank rail
         primary_actions.discard(ActionType.SILENT_RETRY)
         primary_actions.discard(ActionType.PIN_PROMPTED_RETRY)
+
+    # 6c. Apply Channel Consent Gate (Self-Imposed Best Practice)
+    # Citing: docs/research/market_context.md §3.4
+    # Fail-closed: UNKNOWN or OPTED_OUT consent blocks the channel.
+    for action_name, channel_key in ACTION_TO_CHANNEL.items():
+        action_type = ActionType(action_name)
+        if action_type in primary_actions:
+            if not is_channel_permitted(state.channel_consent, channel_key):
+                primary_actions.discard(action_type)
 
     # 7. Temporal Filtering — Fail-Closed on Missing Evidence
     # If attempt_count > 1 but last_attempt_timestamp is None, we cannot verify spacing.

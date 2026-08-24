@@ -5,10 +5,10 @@ All state models are immutable snapshots (frozen) with strict boundary validatio
 
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
+from typing import Dict, Optional
 from pydantic import BaseModel, ConfigDict, Field
 
-from src.core.types import ActionType, FailureClass, PaymentRail
+from src.core.types import ActionType, ConsentStatus, FailureClass, PaymentRail
 
 
 class AttemptLogEntry(BaseModel):
@@ -45,3 +45,8 @@ class MandateStateRecord(BaseModel):
     afa_required: bool = Field(default=False, description="Computed or explicit flag indicating if AFA is required")
     pre_debit_notice_sent: bool = Field(default=False, description="Whether pre-debit notice >=24h was dispatched")
     customer_timezone: str = Field(default="Asia/Kolkata", description="IANA Timezone of the recipient")
+    channel_consent: Dict[str, ConsentStatus] = Field(
+        default_factory=dict,
+        description="Per-channel consent state (WHATSAPP, SMS, PAYMENT_LINK). "
+                    "Missing keys are treated as UNKNOWN (fail-closed)."
+    )

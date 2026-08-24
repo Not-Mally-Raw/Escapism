@@ -27,6 +27,7 @@ flowchart TD
         G4["src/guardrails/contact_gate.py<br/>(RBI Fair Practices Code: 8AM-7PM Local Time)"]
         G5["src/guardrails/afa_enforcer.py<br/>(Amount > ₹15k Masks Out Silent Retry)"]
         G6["src/guardrails/legal_hold_filter.py<br/>(e-NACH Code 07 Instant Freeze)"]
+        G7["src/guardrails/consent_gate.py<br/>(Per-Channel Consent Hard Mask, Fail-Closed)"]
         GE["src/guardrails/engine.py<br/>(Unified Guardrail Pre-Action Masker)"]
     end
 
@@ -42,6 +43,7 @@ flowchart TD
         P1["src/decision/action_pruner.py<br/>(Applies Guardrail Engine as Hard Action Mask)"]
         P2["src/decision/net_recovery_model.py<br/>(Expected Value Optimization: P(Success)*Amount - Cost)"]
         P3["src/decision/agent.py<br/>(LLM Context Reasoner with Abort-Compliant Threshold)"]
+        P4["[FUTURE] Failure-class-specific message tone<br/>(Citing: market_context.md §3.3 — tone varies by FailureClass)"]
     end
 
     %% Stage 5: Execution & Simulation Layer
@@ -49,6 +51,7 @@ flowchart TD
         E1["src/execution/payment_link_client.py<br/>(Razorpay Payment Link API Client/Mock)"]
         E2["src/execution/mandate_scheduler.py<br/>(Scheduled Debit Task Dispatcher)"]
         E3["src/execution/audit_logger.py<br/>(Append-Only Tamper-Evident State Logger)"]
+        E4["[FUTURE] Webhook-state reconciliation job<br/>(Citing: market_context.md §3.2 — nightly drift detection)"]
     end
 
     %% Stage 6: Synthetic Data Generator
@@ -68,8 +71,8 @@ flowchart TD
 
     %% Dependencies
     K1 & K2 & K3 --> M1 & M2 & M3
-    M1 & M2 & M3 --> G1 & G2 & G3 & G4 & G5 & G6
-    G1 & G2 & G3 & G4 & G5 & G6 --> GE
+    M1 & M2 & M3 --> G1 & G2 & G3 & G4 & G5 & G6 & G7
+    G1 & G2 & G3 & G4 & G5 & G6 & G7 --> GE
     GE --> T1
 
     M1 & M2 --> I1 & I2 & D1

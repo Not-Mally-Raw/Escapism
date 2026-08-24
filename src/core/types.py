@@ -56,3 +56,14 @@ class EnforcementLevel(StrEnum):
     BEST_PRACTICE = "BEST_PRACTICE"
     INTERNAL_POLICY = "INTERNAL_POLICY"
     UNKNOWN = "UNKNOWN"
+
+
+class ConsentStatus(StrEnum):
+    """
+    Per-channel customer consent state for outbound communications.
+    Used by consent_gate.py as a hard mask on the feasible action set.
+    Citing: docs/research/market_context.md §3.4 (self-imposed best practice).
+    """
+    OPTED_IN = "OPTED_IN"
+    OPTED_OUT = "OPTED_OUT"
+    UNKNOWN = "UNKNOWN"
