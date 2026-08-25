@@ -156,15 +156,36 @@ def generate_record(code_override: str = None, idx: int = 0) -> SimulationRecord
     )
 
 def generate_batch(size: int, seed: int = 42) -> list[SimulationRecord]:
+    """
+    Generates a deterministic synthetic batch of SimulationRecords.
+    
+    🔴 MODELED ASSUMPTION (Option A):
+    Rare classes such as LEGAL_HOLD (codes '07', 'AP03') are guaranteed
+    adequate representation (minimum 2% of the dataset, >= 100 cases for N=5000)
+    for evaluation metric stability on held-out test splits.
+    """
     random.seed(seed)
     records = []
     
+    # 1. Guaranteed representation of every single code at least once
     guaranteed_codes = ALL_CODES + MALFORMED_CODES
     idx = 0
     for code in guaranteed_codes:
         records.append(generate_record(code_override=code, idx=idx))
         idx += 1
         
+    # 2. Guaranteed minimum quota for rare LEGAL_HOLD class (>= 2% or 100 for N=5000)
+    target_legal_hold = max(2, int(size * 0.02)) if size >= 500 else 1
+    current_legal_hold = sum(1 for r in records if r.state.failure_class == FailureClass.LEGAL_HOLD)
+    
+    legal_codes = ["07", "AP03"]
+    while current_legal_hold < target_legal_hold and len(records) < size:
+        code = random.choice(legal_codes)
+        records.append(generate_record(code_override=code, idx=idx))
+        idx += 1
+        current_legal_hold += 1
+
+    # 3. Fill the rest of the batch
     while len(records) < size:
         records.append(generate_record(idx=idx))
         idx += 1
@@ -184,6 +205,11 @@ if __name__ == "__main__":
     batch_500 = generate_batch(500, seed=100)
     with open("data/synthetic_batch_500.jsonl", "w") as f:
         for r in batch_500:
+            f.write(r.model_dump_json() + "\n")
+
+    batch_5000 = generate_batch(5000, seed=42)
+    with open("data/synthetic_batch_5000.jsonl", "w") as f:
+        for r in batch_5000:
             f.write(r.model_dump_json() + "\n")
             
     edge_cases = generate_batch(20, seed=99)

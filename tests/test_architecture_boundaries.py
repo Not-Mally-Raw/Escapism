@@ -39,8 +39,9 @@ def test_decision_import_boundaries():
     project_root = Path(__file__).parent.parent
     decision_dir = project_root / "src" / "decision"
     diagnosis_dir = project_root / "src" / "diagnosis"
+    ml_dir = project_root / "src" / "ml"
     
-    for layer_dir in [decision_dir, diagnosis_dir]:
+    for layer_dir in [decision_dir, diagnosis_dir, ml_dir]:
         if not layer_dir.exists():
             continue
         for py_file in layer_dir.glob("**/*.py"):
