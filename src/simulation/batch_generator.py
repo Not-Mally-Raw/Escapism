@@ -62,8 +62,44 @@ CODE_TO_CLASS = {
     "AP05": FailureClass.HARD_TERMINAL,
 }
 
+CLASS_TO_CODES = {
+    FailureClass.SOFT_LIQUIDITY: ["Z9", "04", "U69"],
+    FailureClass.TECHNICAL_RETRYABLE: ["U28", "Z7"],
+    FailureClass.AMBIGUOUS_DECLINE: ["U19", "U30"],
+    FailureClass.HARD_TERMINAL: ["01", "02", "05", "06", "Z8", "AP01", "AP02", "AP04", "AP05"],
+    FailureClass.LEGAL_HOLD: ["07", "AP03"],
+}
+
+# 🔴 MODELED ASSUMPTION (dossier §C.3 & Option A):
+# Calibrated failure-class population distribution:
+# - SOFT_LIQUIDITY: 58% (dominant low-balance failures)
+# - TECHNICAL_RETRYABLE: 12% (transient bank timeouts)
+# - AMBIGUOUS_DECLINE: 13% (indeterminate declines)
+# - HARD_TERMINAL: 10% (closed/blocked accounts)
+# - LEGAL_HOLD: 2% (rare legal freezes, guaranteed N>=100 in N=5000)
+# - MALFORMED: 5% (synthetic noise/robustness testing)
+CLASS_WEIGHTS = [
+    (FailureClass.SOFT_LIQUIDITY, 0.58),
+    (FailureClass.TECHNICAL_RETRYABLE, 0.12),
+    (FailureClass.AMBIGUOUS_DECLINE, 0.13),
+    (FailureClass.HARD_TERMINAL, 0.10),
+    (FailureClass.LEGAL_HOLD, 0.02),
+    ("MALFORMED", 0.05),
+]
+
 ALL_CODES = list(CODE_TO_CLASS.keys())
 MALFORMED_CODES = ["GARBAGE_99", "UNKNOWN_CODE", "XXX"]
+
+def _sample_class_and_code() -> tuple[str, FailureClass]:
+    classes, weights = zip(*CLASS_WEIGHTS)
+    chosen = random.choices(classes, weights=weights, k=1)[0]
+    if chosen == "MALFORMED":
+        code = random.choice(MALFORMED_CODES)
+        failure_class = random.choice(list(FailureClass))
+    else:
+        failure_class = chosen
+        code = random.choice(CLASS_TO_CODES[chosen])
+    return code, failure_class
 
 def _generate_amount() -> Decimal:
     choices = [
@@ -108,12 +144,14 @@ def _generate_timestamps(attempt_count: int) -> tuple[datetime, datetime | None]
     return failure_ts, last_attempt_ts
 
 def generate_record(code_override: str = None, idx: int = 0) -> SimulationRecord:
-    code = code_override or random.choice(ALL_CODES + MALFORMED_CODES)
-    
-    if code in MALFORMED_CODES:
-        failure_class = random.choice(list(FailureClass))
+    if code_override:
+        code = code_override
+        if code in MALFORMED_CODES:
+            failure_class = random.choice(list(FailureClass))
+        else:
+            failure_class = CODE_TO_CLASS[code]
     else:
-        failure_class = CODE_TO_CLASS[code]
+        code, failure_class = _sample_class_and_code()
         
     amount = _generate_amount()
     attempt_count = random.randint(1, 4)

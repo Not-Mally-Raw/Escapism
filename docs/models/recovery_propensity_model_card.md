@@ -26,6 +26,7 @@ The model scores feasible recovery candidates to rank which action maximizes exp
 - **No Execution Authority:** This model has **zero authority to execute transactions, dispatch nudges, or create payment links**.
 - **No Compliance Authority:** This model **cannot override, relax, or expand the feasible action set**.
 - **Synthetic Training Domain:** The current model is trained exclusively on synthetic data. Real-world deployment requires calibration against live bank webhook telemetry once historical outcomes are logged.
+- **Synthetic Malformed Codes Note:** Malformed codes (`GARBAGE_99`, `UNKNOWN_CODE`, `XXX`) are included in the synthetic generator purely as synthetic noise for feature-pipeline robustness; in production, all uncatalogued codes are hard-gated to `ABORT_COMPLIANT` / `ESCALATE_HUMAN` by the fail-closed guardrail (`legal_hold_filter.py §3.4`), independent of model inference.
 
 ---
 
@@ -42,17 +43,23 @@ The model scores feasible recovery candidates to rank which action maximizes exp
 
 ---
 
-## 4. Data Provenance & Statistical Choice (Option A)
+## 4. Data Provenance & Class Balance (Option A)
 
-### 4.1 Dataset Composition (5,000 Records)
-- **Source Dataset:** `data/synthetic_batch_5000.jsonl` (SHA-256: `31ac6bde15b1...`)
-- **Train/Test Split:** 80% Train (\( N=4,000 \)), 20% Held-Out Test (\( N=1,000 \)), stratified by `failure_class` with fixed seed `42`.
-- **Case ID Persistence:** Full train and test case IDs and split indices are serialized in `src/ml/models/metadata.json`.
+### 4.1 Calibrated Failure-Class Population Breakdown (5,000 Records)
+The 5,000-case dataset (`data/synthetic_batch_5000.jsonl`, SHA-256: `5bad7debd03f...`) uses calibrated failure-class weights derived from `docs/research/flaw_b_dossier.md §C.3`:
+
+| Failure Class | Full Dataset \( N \) | Population Proportion | Target Calibration Band |
+|---|---|---|---|
+| `SOFT_LIQUIDITY` | 2,921 | **58.42%** | ~55%–65% (dominant liquidity events) |
+| `AMBIGUOUS_DECLINE` | 668 | **13.36%** | ~10%–15% (indeterminate bank codes) |
+| `TECHNICAL_RETRYABLE` | 644 | **12.88%** | ~10%–15% (transient switch timeouts) |
+| `HARD_TERMINAL` | 536 | **10.72%** | ~5%–10% (closed/blocked accounts) |
+| `LEGAL_HOLD` | 231 | **4.62%** | Guaranteed \( N \ge 100 \) for test stability |
 
 ### 4.2 Statistical Imbalance Strategy: Option (A)
-- **Rare-Class Oversampling:** In the synthetic dataset generation, `LEGAL_HOLD` cases (codes `07`, `AP03`) are explicitly guaranteed at \( N \ge 100 \) instances (~2% of the dataset). This ensures the 20% held-out test set contains \( N=140 \) cases for statistically stable evaluation.
-- **Loss Function Setting:** The model is trained with `class_weight=None`. This avoids double-weighting penalties on top of sample-level oversampling.
-- **Honesty Note:** The ~2% prevalence of `LEGAL_HOLD` in this dataset is an explicit **evaluation-stability adjustment**, not an empirical claim of real-world base rate (which is modeled at ~1–2% in `docs/research/flaw_b_dossier.md §C.3`).
+- **Rare-Class Quota:** `LEGAL_HOLD` cases (codes `07`, `AP03`) are guaranteed at \( N \ge 100 \) instances (resulting in \( N=231 \) across 5,000 cases), yielding \( N=46 \) cases in the 20% held-out test set (\( N \ge 20 \) satisfied).
+- **Loss Function Setting:** The model is trained with `class_weight=None` to avoid artificial double-weighting penalties on top of sample-level representation.
+- **Honesty Note:** The ~4.6% prevalence of `LEGAL_HOLD` in this dataset is an explicit **evaluation-stability adjustment**, not an empirical claim of natural base rate.
 
 ---
 
@@ -89,40 +96,40 @@ The model scores feasible recovery candidates to rank which action maximizes exp
 
 | Regularization Parameter \( C \) | Mean CV ROC-AUC | Std CV ROC-AUC | Selection |
 |---|---|---|---|
-| \( C = 0.01 \) | 0.9400 | \(\pm 0.0118\) | |
-| \( C = 0.10 \) | 0.9541 | \(\pm 0.0054\) | |
-| \( C = 0.50 \) | 0.9560 | \(\pm 0.0039\) | |
-| **\( C = 1.00 \)** | **0.9560** | **\(\pm 0.0037\)** | **Selected Optimal** |
-| \( C = 5.00 \) | 0.9559 | \(\pm 0.0035\) | |
-| \( C = 10.00 \) | 0.9559 | \(\pm 0.0035\) | |
+| \( C = 0.01 \) | 0.8518 | \(\pm 0.0029\) | |
+| \( C = 0.10 \) | 0.8673 | \(\pm 0.0037\) | |
+| \( C = 0.50 \) | 0.8728 | \(\pm 0.0068\) | |
+| \( C = 1.00 \) | 0.8735 | \(\pm 0.0071\) | |
+| \( C = 5.00 \) | 0.8741 | \(\pm 0.0076\) | |
+| **\( C = 10.00 \)** | **0.8741** | **\(\pm 0.0076\)** | **Selected Optimal** |
 
 ### 6.2 Held-Out Test Evaluation (\( N=1,000 \))
 
-- **Accuracy:** `92.10%`
-- **ROC-AUC:** `0.9563`
-- **PR-AUC:** `0.7126`
-- **Macro F1:** `0.7834`
-- **Weighted F1:** `0.9198`
-- **Brier Score Loss:** `0.0501` (lower is better; strong probabilistic calibration)
-- **Expected Calibration Error (ECE, 10 bins):** `0.0198` (< 2.0% calibration error)
+- **Accuracy:** `78.20%`
+- **ROC-AUC:** `0.8707`
+- **PR-AUC:** `0.7039`
+- **Macro F1:** `0.7531`
+- **Weighted F1:** `0.7891`
+- **Brier Score Loss:** `0.1295` (well-calibrated across probabilistic recovery spectra)
+- **Expected Calibration Error (ECE, 10 bins):** `0.0298` (< 3.0% calibration error)
 - **Confusion Matrix:**
-  - True Negative (TN): `859`
-  - False Positive (FP): `36`
-  - False Negative (FN): `43`
-  - True Positive (TP): `62`
+  - True Negative (TN): `562`
+  - False Positive (FP): `151`
+  - False Negative (FN): `67`
+  - True Positive (TP): `220`
 
 ### 6.3 Per-Failure-Class Slice Breakdown (Held-Out Test Set)
 
 | Failure Class | Sample Size (\( N \)) | Mean Predicted \( P \) | Slice F1 Score | Sizing Flag |
 |---|---|---|---|---|
-| `AMBIGUOUS_DECLINE` | \( N = 126 \) | `0.1001` | `0.0000` | Statistically sufficient (\( N \ge 20 \)) |
-| `HARD_TERMINAL` | \( N = 448 \) | `0.0019` | `1.0000` | Statistically sufficient (\( N \ge 20 \)) |
-| `LEGAL_HOLD` | \( N = 140 \) | `0.0045` | `1.0000` | Statistically sufficient (\( N \ge 20 \)) |
-| `SOFT_LIQUIDITY` | \( N = 174 \) | `0.2619` | `0.4750` | Statistically sufficient (\( N \ge 20 \)) |
-| `TECHNICAL_RETRYABLE` | \( N = 112 \) | `0.4873` | `0.7748` | Statistically sufficient (\( N \ge 20 \)) |
+| `AMBIGUOUS_DECLINE` | \( N = 134 \) | `0.1054` | `0.0000` | Statistically sufficient (\( N \ge 20 \)) |
+| `HARD_TERMINAL` | \( N = 107 \) | `0.0007` | `1.0000` | Statistically sufficient (\( N \ge 20 \)) |
+| `LEGAL_HOLD` | \( N = 46 \) | `0.0026` | `1.0000` | Statistically sufficient (\( N \ge 20 \)) |
+| `SOFT_LIQUIDITY` | \( N = 584 \) | `0.3408` | `0.5839` | Statistically sufficient (\( N \ge 20 \)) |
+| `TECHNICAL_RETRYABLE` | \( N = 129 \) | `0.6529` | `0.9399` | Statistically sufficient (\( N \ge 20 \)) |
 
 **Sanity Check Result:**
-Across all \( N=140 \) held-out `LEGAL_HOLD` test instances, maximum predicted probability is `0.0348` and mean is `0.0045` (both strictly \( < 0.05 \)).
+Across all \( N=46 \) held-out `LEGAL_HOLD` test instances, maximum predicted probability is `0.0076` and mean is `0.0026` (both strictly \( < 0.05 \)).
 
 ---
 
