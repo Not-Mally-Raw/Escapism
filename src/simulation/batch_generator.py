@@ -90,12 +90,19 @@ CLASS_WEIGHTS = [
 ALL_CODES = list(CODE_TO_CLASS.keys())
 MALFORMED_CODES = ["GARBAGE_99", "UNKNOWN_CODE", "XXX"]
 
+NON_LEGAL_CLASSES = [
+    FailureClass.SOFT_LIQUIDITY,
+    FailureClass.HARD_TERMINAL,
+    FailureClass.TECHNICAL_RETRYABLE,
+    FailureClass.AMBIGUOUS_DECLINE,
+]
+
 def _sample_class_and_code() -> tuple[str, FailureClass]:
     classes, weights = zip(*CLASS_WEIGHTS)
     chosen = random.choices(classes, weights=weights, k=1)[0]
     if chosen == "MALFORMED":
         code = random.choice(MALFORMED_CODES)
-        failure_class = random.choice(list(FailureClass))
+        failure_class = random.choice(NON_LEGAL_CLASSES)
     else:
         failure_class = chosen
         code = random.choice(CLASS_TO_CODES[chosen])
@@ -211,22 +218,20 @@ def generate_batch(size: int, seed: int = 42) -> list[SimulationRecord]:
     for code in guaranteed_codes:
         records.append(generate_record(code_override=code, idx=idx))
         idx += 1
-        
-    # 2. Guaranteed minimum quota for rare LEGAL_HOLD class (>= 2% or 100 for N=5000)
-    target_legal_hold = max(2, int(size * 0.02)) if size >= 500 else 1
-    current_legal_hold = sum(1 for r in records if r.state.failure_class == FailureClass.LEGAL_HOLD)
-    
-    legal_codes = ["07", "AP03"]
-    while current_legal_hold < target_legal_hold and len(records) < size:
-        code = random.choice(legal_codes)
-        records.append(generate_record(code_override=code, idx=idx))
-        idx += 1
-        current_legal_hold += 1
 
-    # 3. Fill the rest of the batch
+    # 2. Fill the batch using calibrated weighted class distribution (2% target for LEGAL_HOLD)
     while len(records) < size:
         records.append(generate_record(idx=idx))
         idx += 1
+
+    # 3. Ensure minimum quota is satisfied (minimum 2% or 100 for N=5000)
+    target_legal_hold = max(2, int(size * 0.02)) if size >= 500 else 1
+    current_legal_hold = sum(1 for r in records if r.state.failure_class == FailureClass.LEGAL_HOLD)
+    if current_legal_hold < target_legal_hold:
+        legal_codes = ["07", "AP03"]
+        for i in range(len(records) - (target_legal_hold - current_legal_hold), len(records)):
+            code = random.choice(legal_codes)
+            records[i] = generate_record(code_override=code, idx=i)
         
     random.shuffle(records)
     return records[:size]
