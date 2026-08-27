@@ -41,34 +41,12 @@ def _generate_channel_consent() -> dict[str, ConsentStatus]:
         "PAYMENT_LINK": _sample_status(0.85, 0.10),
     }
 
-CODE_TO_CLASS = {
-    "Z9": FailureClass.SOFT_LIQUIDITY,
-    "U19": FailureClass.AMBIGUOUS_DECLINE,
-    "U30": FailureClass.AMBIGUOUS_DECLINE,
-    "U69": FailureClass.SOFT_LIQUIDITY,
-    "U28": FailureClass.TECHNICAL_RETRYABLE,
-    "Z7": FailureClass.TECHNICAL_RETRYABLE,
-    "Z8": FailureClass.HARD_TERMINAL,
-    "01": FailureClass.HARD_TERMINAL,
-    "02": FailureClass.HARD_TERMINAL,
-    "04": FailureClass.SOFT_LIQUIDITY,
-    "05": FailureClass.HARD_TERMINAL,
-    "06": FailureClass.HARD_TERMINAL,
-    "07": FailureClass.LEGAL_HOLD,
-    "AP01": FailureClass.HARD_TERMINAL,
-    "AP02": FailureClass.HARD_TERMINAL,
-    "AP03": FailureClass.LEGAL_HOLD,
-    "AP04": FailureClass.HARD_TERMINAL,
-    "AP05": FailureClass.HARD_TERMINAL,
-}
-
-CLASS_TO_CODES = {
-    FailureClass.SOFT_LIQUIDITY: ["Z9", "04", "U69"],
-    FailureClass.TECHNICAL_RETRYABLE: ["U28", "Z7"],
-    FailureClass.AMBIGUOUS_DECLINE: ["U19", "U30"],
-    FailureClass.HARD_TERMINAL: ["01", "02", "05", "06", "Z8", "AP01", "AP02", "AP04", "AP05"],
-    FailureClass.LEGAL_HOLD: ["07", "AP03"],
-}
+from src.core.taxonomy import (
+    CODE_TO_CLASS,
+    CLASS_TO_CODES,
+    ALL_CODES,
+    MALFORMED_CODES,
+)
 
 # 🔴 MODELED ASSUMPTION (dossier §C.3 & Option A):
 # Calibrated failure-class population distribution:
@@ -86,9 +64,6 @@ CLASS_WEIGHTS = [
     (FailureClass.LEGAL_HOLD, 0.02),
     ("MALFORMED", 0.05),
 ]
-
-ALL_CODES = list(CODE_TO_CLASS.keys())
-MALFORMED_CODES = ["GARBAGE_99", "UNKNOWN_CODE", "XXX"]
 
 NON_LEGAL_CLASSES = [
     FailureClass.SOFT_LIQUIDITY,

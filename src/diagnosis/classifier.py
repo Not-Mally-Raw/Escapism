@@ -19,33 +19,10 @@ from src.core.types import FailureClass
 from src.diagnosis.ambiguity_handler import resolve_ambiguity
 from src.diagnosis.models import DiagnosticOutput
 
-# Deterministic lookup table for unambiguous cataloged return codes
-# 🟢 Verified NPCI / e-NACH Return Code Taxonomy (docs/knowledge_base/error_taxonomy.md)
-DETERMINISTIC_TAXONOMY_LOOKUP: Dict[str, Tuple[FailureClass, str]] = {
-    # Soft / Liquidity
-    "Z9": (FailureClass.SOFT_LIQUIDITY, "Deterministic lookup: Z9 mapped to SOFT_LIQUIDITY (insufficient funds)"),
-    "04": (FailureClass.SOFT_LIQUIDITY, "Deterministic lookup: 04 mapped to SOFT_LIQUIDITY (balance insufficient)"),
-    "U69": (FailureClass.SOFT_LIQUIDITY, "Deterministic lookup: U69 mapped to SOFT_LIQUIDITY (collect request expired / timeout)"),
-    # Technical Retryable
-    "U28": (FailureClass.TECHNICAL_RETRYABLE, "Deterministic lookup: U28 mapped to TECHNICAL_RETRYABLE (bank switch down)"),
-    "Z7": (FailureClass.TECHNICAL_RETRYABLE, "Deterministic lookup: Z7 mapped to TECHNICAL_RETRYABLE (rate limit exceeded)"),
-    # Hard / Terminal
-    "Z8": (FailureClass.HARD_TERMINAL, "Deterministic lookup: Z8 mapped to HARD_TERMINAL (transaction limit exceeded)"),
-    "01": (FailureClass.HARD_TERMINAL, "Deterministic lookup: 01 mapped to HARD_TERMINAL (account closed)"),
-    "02": (FailureClass.HARD_TERMINAL, "Deterministic lookup: 02 mapped to HARD_TERMINAL (no such account)"),
-    "05": (FailureClass.HARD_TERMINAL, "Deterministic lookup: 05 mapped to HARD_TERMINAL (not arranged for auto-debit)"),
-    "06": (FailureClass.HARD_TERMINAL, "Deterministic lookup: 06 mapped to HARD_TERMINAL (payment stopped by drawer)"),
-    "AP01": (FailureClass.HARD_TERMINAL, "Deterministic lookup: AP01 mapped to HARD_TERMINAL (account blocked / frozen)"),
-    "AP02": (FailureClass.HARD_TERMINAL, "Deterministic lookup: AP02 mapped to HARD_TERMINAL (account closed)"),
-    "AP04": (FailureClass.HARD_TERMINAL, "Deterministic lookup: AP04 mapped to HARD_TERMINAL (account inoperative)"),
-    "AP05": (FailureClass.HARD_TERMINAL, "Deterministic lookup: AP05 mapped to HARD_TERMINAL (no such account number)"),
-    # Legal Hold (Structural hard freeze)
-    "07": (FailureClass.LEGAL_HOLD, "Deterministic lookup: 07 mapped to LEGAL_HOLD (court order / litigation)"),
-    "AP03": (FailureClass.LEGAL_HOLD, "Deterministic lookup: AP03 mapped to LEGAL_HOLD (regulatory freeze)"),
-}
-
-# Known ambiguous codes that require semantic inspection if text is present
-AMBIGUOUS_CODES = {"U19", "U30"}
+from src.core.taxonomy import (
+    DETERMINISTIC_TAXONOMY_LOOKUP,
+    AMBIGUOUS_CODES,
+)
 
 # PII / PCI-DSS Sanitization Regexes
 _PAN_REGEX = re.compile(r"\b(?:\d[ -]*?){13,19}\b")
