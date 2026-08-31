@@ -40,8 +40,9 @@ def test_decision_import_boundaries():
     decision_dir = project_root / "src" / "decision"
     diagnosis_dir = project_root / "src" / "diagnosis"
     ml_dir = project_root / "src" / "ml"
+    orchestration_dir = project_root / "src" / "orchestration"
     
-    for layer_dir in [decision_dir, diagnosis_dir, ml_dir]:
+    for layer_dir in [decision_dir, diagnosis_dir, ml_dir, orchestration_dir]:
         if not layer_dir.exists():
             continue
         for py_file in layer_dir.glob("**/*.py"):

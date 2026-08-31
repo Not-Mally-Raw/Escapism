@@ -34,6 +34,10 @@ BANNED_PII_FIELDS = {
 FEATURE_COLUMNS_CATEGORICAL = [
     "failure_class",
     "rail",
+    "issuer_bank",
+    "merchant_category",
+    "error_source",
+    "error_reason",
     "consent_whatsapp",
     "consent_sms",
     "consent_payment_link",
@@ -48,6 +52,8 @@ FEATURE_COLUMNS_NUMERIC = [
     "pre_debit_notice_sent",
     "is_weekend",
     "hour_of_day",
+    "day_of_month",
+    "days_from_month_boundary",
     "consent_score",
 ]
 
@@ -142,6 +148,10 @@ def extract_features(record: Union[MandateStateRecord, Dict[str, Any]]) -> Dict[
     return {
         "failure_class": failure_class_str,
         "rail": rail_str,
+        "issuer_bank": state.issuer_bank or "UNKNOWN",
+        "merchant_category": state.merchant_category or "UNKNOWN",
+        "error_source": state.error_source or "UNKNOWN",
+        "error_reason": state.error_reason or "UNKNOWN",
         "consent_whatsapp": consent_whatsapp,
         "consent_sms": consent_sms,
         "consent_payment_link": consent_payment_link,
@@ -153,5 +163,14 @@ def extract_features(record: Union[MandateStateRecord, Dict[str, Any]]) -> Dict[
         "pre_debit_notice_sent": 1 if state.pre_debit_notice_sent else 0,
         "is_weekend": int(is_weekend),
         "hour_of_day": int(hour_of_day),
+        "day_of_month": int(ts_ist.day),
+        "days_from_month_boundary": int(min(ts_ist.day - 1, 31 - ts_ist.day)),
         "consent_score": int(consent_score),
     }
+
+
+def features_list_to_array(features_list: list[Dict[str, Any]]):
+    """Converts feature dictionaries to a 2D numpy array with fixed column ordering."""
+    import numpy as np
+
+    return np.array([[feat[col] for col in FEATURE_COLUMNS_ALL] for feat in features_list], dtype=object)

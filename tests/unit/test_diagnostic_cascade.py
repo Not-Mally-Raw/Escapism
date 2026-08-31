@@ -104,11 +104,11 @@ def test_ambiguous_code_with_text_invokes_llm_and_sanitizes_pii():
     assert captured_text is not None
     # Verify PII was redacted before passing to LLM
     assert "4111" not in captured_text
-    assert "[REDACTED_PAN]" in captured_text
+    assert "__REDACTED_PAN__" in captured_text
     assert "customer@okhdfcbank" not in captured_text
-    assert "[REDACTED_VPA]" in captured_text
+    assert "__REDACTED_VPA__" in captured_text
     assert "9876543210" not in captured_text
-    assert "[REDACTED_PHONE]" in captured_text
+    assert "__REDACTED_PHONE__" in captured_text
 
 
 def test_llm_low_confidence_downgraded_by_uncertainty_protocol():
@@ -152,7 +152,7 @@ def test_pii_sanitizer_unit():
     assert "test.user@icici" not in sanitized
     assert "9876543210" not in sanitized
     assert "123456789012" not in sanitized
-    assert "[REDACTED_PAN]" in sanitized
-    assert "[REDACTED_VPA]" in sanitized
-    assert "[REDACTED_PHONE]" in sanitized
-    assert "[REDACTED_ACCOUNT]" in sanitized
+    assert "__REDACTED_PAN__" in sanitized
+    assert "__REDACTED_VPA__" in sanitized
+    assert "__REDACTED_PHONE__" in sanitized
+    assert "__REDACTED_ACCOUNT__" in sanitized

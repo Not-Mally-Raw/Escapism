@@ -19,3 +19,14 @@ sortedcontainers==2.4.0
 threadpoolctl==3.6.0
 typing-inspection==0.4.4
 typing_extensions==4.16.0
+fastapi
+uvicorn
+httpx
+aiosqlite
+pytest-asyncio
+streamlit>=1.38.0
+plotly>=5.18.0
+xgboost>=2.0.0
+econml>=0.15.0
+shap>=0.44.0
+sentence-transformers>=3.0.0

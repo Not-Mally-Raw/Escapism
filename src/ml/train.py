@@ -28,6 +28,7 @@ from src.ml.features import (
     FEATURE_COLUMNS_ALL,
     FEATURE_COLUMNS_CATEGORICAL,
     FEATURE_COLUMNS_NUMERIC,
+    features_list_to_array,
     extract_features,
 )
 from src.ml.pipeline import build_recovery_pipeline
@@ -81,15 +82,6 @@ def load_dataset(file_path: Path) -> Tuple[List[Dict[str, Any]], List[bool], Lis
             failure_classes.append(feat["failure_class"])
 
     return features_list, labels_list, case_ids, failure_classes
-
-
-def features_list_to_array(features_list: List[Dict[str, Any]]) -> np.ndarray:
-    """Converts a list of feature dicts to a 2D numpy array with fixed column ordering."""
-    rows = []
-    for feat in features_list:
-        row = [feat[col] for col in FEATURE_COLUMNS_ALL]
-        rows.append(row)
-    return np.array(rows, dtype=object)
 
 
 def train_and_evaluate(

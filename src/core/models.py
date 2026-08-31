@@ -40,6 +40,14 @@ class MandateStateRecord(BaseModel):
     attempt_count: int = Field(ge=1, le=4, description="Lifetime presentation count in current cycle (1 to 4)")
     failure_code: str = Field(description="Raw bank switch error code (e.g. Z9, 04, 07)")
     failure_class: FailureClass
+    error_description: Optional[str] = Field(
+        default=None,
+        description="Free-text failure description from Razorpay/bank payload, sanitized before LLM use",
+    )
+    error_source: Optional[str] = Field(default=None, description="Failure source such as customer, bank, or razorpay")
+    error_reason: Optional[str] = Field(default=None, description="Granular gateway/bank failure reason")
+    issuer_bank: Optional[str] = Field(default=None, description="Issuer bank identifier when available")
+    merchant_category: Optional[str] = Field(default=None, description="Merchant vertical/category when available")
     failure_timestamp: datetime
     last_attempt_timestamp: Optional[datetime] = None
     afa_required: bool = Field(default=False, description="Computed or explicit flag indicating if AFA is required")

@@ -33,6 +33,7 @@ from src.core.types import ActionType, FailureClass
 from src.decision.models import CandidateScore, DecisionAuditStep, DecisionResult
 from src.guardrails.engine import compute_feasible_action_set
 from src.ml.inference import predict_recovery_probability
+from src.ml.uplift import predict_treatment_effect, uplift_model_available
 
 # =============================================================================
 # Pre-Registered & Frozen Cost Table C(a) in INR (🔴 Modeled Assumptions)
@@ -81,6 +82,8 @@ def optimize_decision(
     custom_multipliers: Optional[Dict[ActionType, Decimal]] = None,
     custom_theta_digital: Optional[Decimal] = None,
     custom_theta_human: Optional[Decimal] = None,
+    uplift_model_path: Optional[Path] = None,
+    use_uplift: bool = True,
 ) -> DecisionResult:
     """
     Evaluates feasible recovery actions and selects the optimal intervention via Lift-EV.
@@ -165,18 +168,36 @@ def optimize_decision(
             execution_timestamp=eval_ts,
         )
 
-    # 5. Score Candidates via Track 1 Model and Lift-EV Formula
+    # 5. Score Candidates via Track 1 Model and Lift-EV Formula.
+    # Prefer learned treatment effects when an artifact is present. Custom multipliers
+    # intentionally force the transparent static fallback used by sensitivity tests.
     p_hat_float = predict_recovery_probability(state, model_path=model_path)
     p_hat = Decimal(str(round(p_hat_float, 4)))
     amount_inr = state.amount_inr
+    use_learned_cate = (
+        use_uplift
+        and custom_costs is None
+        and custom_multipliers is None
+        and uplift_model_available(uplift_model_path)
+    )
 
     candidate_scores: list[CandidateScore] = []
     for action in candidate_actions:
         m_a = multipliers.get(action, Decimal("1.00"))
         c_a = costs.get(action, Decimal("0.00"))
 
-        # Lift probability over passive noop baseline: ΔP = P̂(S) · m(a) - P̂(S) · m(noop)
-        lift_prob = (p_hat * m_a) - (p_hat * M_NOOP)
+        if use_learned_cate:
+            try:
+                # Learned uplift: ΔP = P(recovery | S, do(action)) - P(recovery | S, do(NOOP))
+                lift_prob = Decimal(str(round(predict_treatment_effect(state, action, model_path=uplift_model_path), 4)))
+                m_a = (Decimal("1.00") + (lift_prob / p_hat)) if p_hat > 0 else Decimal("1.00")
+            except Exception:
+                # Explicit graceful degradation if the artifact is stale or missing an action arm.
+                lift_prob = (p_hat * m_a) - (p_hat * M_NOOP)
+                use_learned_cate = False
+        else:
+            # Static fallback: ΔP = P̂(S) · m(a) - P̂(S) · m(noop)
+            lift_prob = (p_hat * m_a) - (p_hat * M_NOOP)
         
         # Lift-EV = ΔP · Amount - C(a)
         lift_ev = (lift_prob * amount_inr) - c_a
@@ -201,16 +222,18 @@ def optimize_decision(
     # 7. Threshold Gating against θ_digital
     if best_candidate.cleared_threshold:
         selected_action = best_candidate.action
+        method_label = "learned CATE" if use_learned_cate else "static multiplier fallback"
         rationale = (
-            f"Selected '{selected_action}' with optimal Lift-EV of ₹{best_candidate.lift_ev_inr:.2f} "
+            f"Selected '{selected_action}' via {method_label} with optimal Lift-EV of ₹{best_candidate.lift_ev_inr:.2f} "
             f"(P̂={p_hat:.4f}, m={best_candidate.multiplier}, Cost=₹{best_candidate.cost_inr:.2f}), "
             f"clearing threshold θ_digital=₹{theta_digital:.2f}."
         )
         verdict = selected_action.value
     else:
         selected_action = ActionType.ABORT_COMPLIANT
+        method_label = "learned CATE" if use_learned_cate else "static multiplier fallback"
         rationale = (
-            f"Optimal candidate '{best_candidate.action}' yielded Lift-EV of ₹{best_candidate.lift_ev_inr:.2f}, "
+            f"Optimal candidate '{best_candidate.action}' via {method_label} yielded Lift-EV of ₹{best_candidate.lift_ev_inr:.2f}, "
             f"failing threshold θ_digital=₹{theta_digital:.2f}. Safely aborting automated intervention."
         )
         verdict = "ABORT_COMPLIANT"

@@ -1,31 +1,36 @@
 """
-Generates labeled synthetic records conforming to SimulationRecord.
+Generates labeled synthetic records conforming to SimulationRecord and CausalSimulationRecord.
 """
 import random
 from decimal import Decimal
 from datetime import datetime, timedelta, time
 from zoneinfo import ZoneInfo
 import json
+import numpy as np
+from typing import Dict
 
 from src.core.types import PaymentRail, FailureClass, ConsentStatus
 from src.core.models import MandateStateRecord
-from src.simulation.models import SimulationRecord
+from src.simulation.models import SimulationRecord, CausalSimulationRecord
 from src.simulation.latent_state_model import is_post_salary_cycle
-from src.simulation.distributions import get_ground_truth_probability
+from src.simulation.distributions import get_ground_truth_probability, mu_0, tau, TREATMENT_ACTIONS, LOGGED_ACTIONS, NOOP_ACTION
 
 IST = ZoneInfo("Asia/Kolkata")
 
-def _generate_channel_consent() -> dict[str, ConsentStatus]:
-    """
-    Generates synthetic per-channel customer consent state.
+MERCHANT_IDS = [f'mer_{i:03d}' for i in range(1, 21)]  # 20 merchants
+CUSTOMER_IDS = [f'cust_{i:04d}' for i in range(1, 201)]  # 200 customers
+ISSUER_BANKS = ['HDFC', 'SBI', 'ICICI', 'AXIS', 'KOTAK']
+MERCHANT_CATEGORIES = ['streaming', 'insurance', 'loan_emi', 'utility', 'saas']
+ERROR_SOURCES = ["customer", "bank", "razorpay"]
+ERROR_REASONS = {
+    FailureClass.SOFT_LIQUIDITY: ["insufficient_balance", "debit_limit_exceeded"],
+    FailureClass.TECHNICAL_RETRYABLE: ["issuer_timeout", "bank_server_unavailable", "gateway_timeout"],
+    FailureClass.AMBIGUOUS_DECLINE: ["issuer_declined", "reason_not_provided"],
+    FailureClass.HARD_TERMINAL: ["account_closed", "mandate_cancelled", "account_blocked"],
+    FailureClass.LEGAL_HOLD: ["court_order", "regulatory_freeze"],
+}
 
-    🔴 MODELED ASSUMPTION:
-    In Indian consumer subscription context, WhatsApp and SMS have high opt-in rates
-    with a realistic minority opting out or having indeterminate/unverified consent:
-    - WHATSAPP: 80% OPTED_IN, 15% OPTED_OUT, 5% UNKNOWN
-    - SMS: 75% OPTED_IN, 15% OPTED_OUT, 10% UNKNOWN
-    - PAYMENT_LINK: 85% OPTED_IN, 10% OPTED_OUT, 5% UNKNOWN
-    """
+def _generate_channel_consent() -> dict[str, ConsentStatus]:
     def _sample_status(p_in: float, p_out: float) -> ConsentStatus:
         r = random.random()
         if r < p_in:
@@ -48,14 +53,6 @@ from src.core.taxonomy import (
     MALFORMED_CODES,
 )
 
-# 🔴 MODELED ASSUMPTION (dossier §C.3 & Option A):
-# Calibrated failure-class population distribution:
-# - SOFT_LIQUIDITY: 58% (dominant low-balance failures)
-# - TECHNICAL_RETRYABLE: 12% (transient bank timeouts)
-# - AMBIGUOUS_DECLINE: 13% (indeterminate declines)
-# - HARD_TERMINAL: 10% (closed/blocked accounts)
-# - LEGAL_HOLD: 2% (rare legal freezes, guaranteed N>=100 in N=5000)
-# - MALFORMED: 5% (synthetic noise/robustness testing)
 CLASS_WEIGHTS = [
     (FailureClass.SOFT_LIQUIDITY, 0.58),
     (FailureClass.TECHNICAL_RETRYABLE, 0.12),
@@ -125,7 +122,8 @@ def _generate_timestamps(attempt_count: int) -> tuple[datetime, datetime | None]
     last_attempt_ts = failure_ts - spacing
     return failure_ts, last_attempt_ts
 
-def generate_record(code_override: str = None, idx: int = 0) -> SimulationRecord:
+
+def generate_causal_record(code_override: str = None, idx: int = 0) -> CausalSimulationRecord:
     if code_override:
         code = code_override
         if code in MALFORMED_CODES:
@@ -141,27 +139,29 @@ def generate_record(code_override: str = None, idx: int = 0) -> SimulationRecord
     
     rail = PaymentRail.UPI_AUTOPAY if code.startswith("U") or code.startswith("Z") else PaymentRail.ENACH
     
-    if attempt_count == 4:
-        ground_truth = False 
-    else:
-        is_post_sal = is_post_salary_cycle(failure_ts)
-        dist_class = "UX_FRICTION" if code == "U69" else failure_class.value
-        if code in MALFORMED_CODES:
-            p_success = 0.0 
-        else:
-            p_success = get_ground_truth_probability(dist_class, attempt_count + 1, is_post_sal)
-        ground_truth = random.random() < p_success
+    merchant_id = random.choice(MERCHANT_IDS)
+    customer_id = random.choice(CUSTOMER_IDS)
+    issuer_bank = random.choice(ISSUER_BANKS)
+    merchant_category = random.choice(MERCHANT_CATEGORIES)
+    error_source = random.choice(ERROR_SOURCES)
+    error_reason = random.choice(ERROR_REASONS.get(failure_class, ["unknown_failure"]))
+    error_description = f"{error_source} failure: {error_reason.replace('_', ' ')}"
 
     state = MandateStateRecord(
         case_id=f"case_{idx:04d}",
         mandate_id=f"man_{idx:04d}",
-        merchant_id="mer_default_001",
-        customer_id="cust_default_001",
+        merchant_id=merchant_id,
+        customer_id=customer_id,
         rail=rail,
         amount_inr=amount,
         attempt_count=attempt_count,
         failure_code=code,
         failure_class=failure_class,
+        error_description=error_description,
+        error_source=error_source,
+        error_reason=error_reason,
+        issuer_bank=issuer_bank,
+        merchant_category=merchant_category,
         failure_timestamp=failure_ts,
         last_attempt_timestamp=last_attempt_ts,
         afa_required=(amount > 15000),
@@ -170,36 +170,76 @@ def generate_record(code_override: str = None, idx: int = 0) -> SimulationRecord
         channel_consent=_generate_channel_consent(),
     )
     
-    return SimulationRecord(
+    fc_val = failure_class.value if hasattr(failure_class, 'value') else str(failure_class)
+    rail_val = rail.value if hasattr(rail, 'value') else str(rail)
+    
+    state_dict = {
+        'failure_class': fc_val, 
+        'attempt_count': attempt_count, 
+        'failure_timestamp': failure_ts, 
+        'amount_inr': float(amount), 
+        'rail': rail_val, 
+        'day_of_week': failure_ts.weekday()
+    }
+
+    base_p = mu_0(state_dict)
+    
+    true_cate_dict: Dict[str, float] = {}
+    for action in LOGGED_ACTIONS:
+        true_cate_dict[action] = tau(state_dict, action)
+        
+    epsilon = 0.2
+    
+    if random.random() < epsilon:
+        observed_action = random.choice(LOGGED_ACTIONS)
+    else:
+        observed_action = max(LOGGED_ACTIONS, key=lambda a: true_cate_dict[a])
+        
+    best_action = max(LOGGED_ACTIONS, key=lambda a: true_cate_dict[a])
+    
+    if observed_action == best_action:
+        propensity = (1.0 - epsilon) + (epsilon / len(LOGGED_ACTIONS))
+    else:
+        propensity = epsilon / len(LOGGED_ACTIONS)
+        
+    p_outcome = float(np.clip(base_p + true_cate_dict[observed_action], 0.0, 1.0))
+    
+    if code in MALFORMED_CODES:
+        p_outcome = 0.0
+        
+    observed_outcome = random.random() < p_outcome
+
+    return CausalSimulationRecord(
         state=state,
-        ground_truth_recoverable=ground_truth
+        observed_action=observed_action,
+        observed_outcome=observed_outcome,
+        propensity=propensity,
+        true_cate=true_cate_dict,
+        ground_truth_recoverable=observed_outcome
+    )
+
+def generate_record(code_override: str = None, idx: int = 0) -> SimulationRecord:
+    causal = generate_causal_record(code_override=code_override, idx=idx)
+    return SimulationRecord(
+        state=causal.state, 
+        ground_truth_recoverable=causal.observed_outcome
     )
 
 def generate_batch(size: int, seed: int = 42) -> list[SimulationRecord]:
-    """
-    Generates a deterministic synthetic batch of SimulationRecords.
-    
-    🔴 MODELED ASSUMPTION (Option A):
-    Rare classes such as LEGAL_HOLD (codes '07', 'AP03') are guaranteed
-    adequate representation (minimum 2% of the dataset, >= 100 cases for N=5000)
-    for evaluation metric stability on held-out test splits.
-    """
     random.seed(seed)
+    np.random.seed(seed)
     records = []
     
-    # 1. Guaranteed representation of every single code at least once
     guaranteed_codes = ALL_CODES + MALFORMED_CODES
     idx = 0
     for code in guaranteed_codes:
         records.append(generate_record(code_override=code, idx=idx))
         idx += 1
 
-    # 2. Fill the batch using calibrated weighted class distribution (2% target for LEGAL_HOLD)
     while len(records) < size:
         records.append(generate_record(idx=idx))
         idx += 1
 
-    # 3. Ensure minimum quota is satisfied (minimum 2% or 100 for N=5000)
     target_legal_hold = max(2, int(size * 0.02)) if size >= 500 else 1
     current_legal_hold = sum(1 for r in records if r.state.failure_class == FailureClass.LEGAL_HOLD)
     if current_legal_hold < target_legal_hold:
@@ -207,6 +247,32 @@ def generate_batch(size: int, seed: int = 42) -> list[SimulationRecord]:
         for i in range(len(records) - (target_legal_hold - current_legal_hold), len(records)):
             code = random.choice(legal_codes)
             records[i] = generate_record(code_override=code, idx=i)
+        
+    random.shuffle(records)
+    return records[:size]
+
+def generate_causal_batch(size: int, seed: int = 42) -> list[CausalSimulationRecord]:
+    random.seed(seed)
+    np.random.seed(seed)
+    records = []
+    
+    guaranteed_codes = ALL_CODES + MALFORMED_CODES
+    idx = 0
+    for code in guaranteed_codes:
+        records.append(generate_causal_record(code_override=code, idx=idx))
+        idx += 1
+
+    while len(records) < size:
+        records.append(generate_causal_record(idx=idx))
+        idx += 1
+
+    target_legal_hold = max(2, int(size * 0.02)) if size >= 500 else 1
+    current_legal_hold = sum(1 for r in records if r.state.failure_class == FailureClass.LEGAL_HOLD)
+    if current_legal_hold < target_legal_hold:
+        legal_codes = ["07", "AP03"]
+        for i in range(len(records) - (target_legal_hold - current_legal_hold), len(records)):
+            code = random.choice(legal_codes)
+            records[i] = generate_causal_record(code_override=code, idx=i)
         
     random.shuffle(records)
     return records[:size]
@@ -228,6 +294,11 @@ if __name__ == "__main__":
     batch_5000 = generate_batch(5000, seed=42)
     with open("data/synthetic_batch_5000.jsonl", "w") as f:
         for r in batch_5000:
+            f.write(r.model_dump_json() + "\n")
+            
+    causal_batch_5000 = generate_causal_batch(5000, seed=42)
+    with open("data/causal_batch_5000.jsonl", "w") as f:
+        for r in causal_batch_5000:
             f.write(r.model_dump_json() + "\n")
             
     edge_cases = generate_batch(20, seed=99)

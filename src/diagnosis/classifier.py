@@ -6,6 +6,13 @@ Implements the Abstain-and-Escalate Cascade Architecture:
 3. Schema-Locked LLM Diagnostic Agent (invoked only on ambiguous residual with error text).
 
 Safety & Boundary Notes:
+- OWASP LLM01:2025 Mitigation (Prompt Injection): It is unclear if there are fool-proof methods
+  of prevention. Mitigation requires defense in depth. We implement:
+  1. Segregation of untrusted external content in the LLM prompt.
+  2. Control-structure stripping in the text sanitizer.
+  3. (Crucial) Privilege Restriction: `legal_hold_filter.py` checks the raw `failure_code`
+     directly, NEVER the LLM output. This is the human-in-the-loop / hard-boundary backstop
+     recommended by OWASP. Prompt injection cannot bypass compliance guardrails.
 - legal_hold_filter.py checks the raw failure_code directly; it never trusts the FailureClass
   produced here. A misclassification therefore only degrades recovery quality, never compliance.
 - 🔴 MODELED ASSUMPTION: The 0.40 confidence threshold in ambiguity_handler.py is an initial
@@ -35,12 +42,21 @@ def sanitize_error_text(text: str) -> str:
     """
     Sanitizes raw error text to strip potential cardholder PANs, VPAs, phone numbers,
     or bank account numbers before submitting to an LLM prompt or log (PCI-DSS & Privacy).
+    Also implements OWASP LLM01:2025 semantic filters by stripping control characters 
+    and role delimiters to prevent prompt injection.
     """
-    sanitized = _PAN_REGEX.sub("[REDACTED_PAN]", text)
-    sanitized = _VPA_REGEX.sub("[REDACTED_VPA]", sanitized)
-    sanitized = _PHONE_REGEX.sub("[REDACTED_PHONE]", sanitized)
-    sanitized = _ACCOUNT_REGEX.sub("[REDACTED_ACCOUNT]", sanitized)
-    return sanitized
+    sanitized = _PAN_REGEX.sub("__REDACTED_PAN__", text)
+    sanitized = _VPA_REGEX.sub("__REDACTED_VPA__", sanitized)
+    sanitized = _PHONE_REGEX.sub("__REDACTED_PHONE__", sanitized)
+    sanitized = _ACCOUNT_REGEX.sub("__REDACTED_ACCOUNT__", sanitized)
+    
+    # Strip JSON brackets and structural characters that could hijack JSON mode
+    sanitized = re.sub(r'[\{\}\[\]"\'`<>|]', ' ', sanitized)
+    
+    # Strip faux role injections
+    sanitized = re.sub(r'(?i)\b(system|user|assistant|role|instruction)\s*:', ' ', sanitized)
+    
+    return sanitized.strip()
 
 
 def default_llm_classifier(bank_code: str, sanitized_text: str) -> DiagnosticOutput:

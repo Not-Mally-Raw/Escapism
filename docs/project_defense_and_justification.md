@@ -80,3 +80,24 @@ Every small engineering adjustment made during this build was load-bearing. None
 4. **Execution & Audit:** The nudge is dispatched. The entire rationale—including the exact RBI rule that blocked the silent retry—is logged for audit.
 
 *What exists right now:* Stages 1 (Data Generation) and 2 (Guardrails) are built, fully tested, and proven. Stage 3 (Diagnosis) is currently in active development.
+
+## 4. Market Context: Why Global Baselines Fail Here (SEPA vs. India)
+A common critique is: *"Why build a bespoke rules engine when standard dunning logic (like Stripe Smart Retries) already exists?"* 
+Because standard dunning logic is built for environments like SEPA, where retry policies are largely determined by merchant risk tolerance. 
+India's regulatory environment (NPCI/RBI) is structurally different:
+- **SEPA:** No hard statutory cap on retry attempts.
+- **India:** NPCI strictly caps presentation attempts at exactly 4 per mandate cycle.
+- **SEPA:** Timing is flexible based on ML models.
+- **India:** Mandates require rigid 24h / 72h / 168h escalating spacing between retry attempts.
+- **SEPA:** Frictionless retries for any amount.
+- **India:** ₹15,000 AFA (Additional Factor of Authentication) threshold on silent retries.
+
+A system that treats Indian mandate recovery as a subset of global retry logic will inevitably violate constraints that simply don't exist in other jurisdictions. This is the regulatory basis for the project's rules-first architecture: the guardrail engine MUST sit between the ML model and the outside world.
+
+## 5. The Three-Tier Sorting Pattern
+The workflow is architected using a proven operational pattern (analogous to the Three-Tier Sorting seen in Healthcare Revenue Cycle Management):
+1. **Resolved (Zero Human Touch):** The deterministic Guardrail Engine computes a feasible action set. The Decision Layer (Track 3) selects and executes the highest-EV action automatically.
+2. **Assembled (Human with Context):** The engine triggers `ESCALATE_HUMAN` but attaches the full `DiagnosticOutput`. The human operator receives the failure class, confidence score, evidence, and the pre-computed feasible actions, drastically reducing resolution time.
+3. **Judgment (Human Expertise Required):** Reserved for novel/complex cases (e.g., Legal Holds, `AP03`, `07`, or genuinely ambiguous declines below the heuristic threshold).
+
+The success of this system isn't defined by "does AI handle everything?", but rather: what percentage of cases never reach a human, what percentage reach one with the work already assembled, and what deterministic data decided the split?
