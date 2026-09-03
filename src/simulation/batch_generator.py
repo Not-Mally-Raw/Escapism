@@ -183,31 +183,49 @@ def generate_causal_record(code_override: str = None, idx: int = 0) -> CausalSim
     }
 
     base_p = mu_0(state_dict)
-    
+    if code in MALFORMED_CODES:
+        base_p = 0.0
+
     true_cate_dict: Dict[str, float] = {}
-    for action in LOGGED_ACTIONS:
-        true_cate_dict[action] = tau(state_dict, action)
-        
-    epsilon = 0.2
-    
+    potential_outcomes: Dict[str, bool] = {}
+
+    # Potential outcome under NOOP (control): Bernoulli(mu_0(state))
+    potential_outcome_noop = bool(random.random() < base_p)
+    potential_outcomes[NOOP_ACTION] = potential_outcome_noop
+
+    # Potential outcomes under treatments: Bernoulli(clip(mu_0(state) + tau(state, action), 0, 1))
+    for action in TREATMENT_ACTIONS:
+        cate = tau(state_dict, action)
+        true_cate_dict[action] = cate
+        p_act = float(np.clip(base_p + cate, 0.0, 1.0))
+        if code in MALFORMED_CODES:
+            p_act = 0.0
+        potential_outcomes[action] = bool(random.random() < p_act)
+
+    # Logging policy with common support and positivity enforcement:
+    # With 8 actions in LOGGED_ACTIONS, epsilon = 0.40 gives exploration prob = 0.40 / 8 = 0.05 per action
+    epsilon = 0.40
+    best_action = max(LOGGED_ACTIONS, key=lambda a: true_cate_dict.get(a, 0.0))
+
     if random.random() < epsilon:
         observed_action = random.choice(LOGGED_ACTIONS)
     else:
-        observed_action = max(LOGGED_ACTIONS, key=lambda a: true_cate_dict[a])
-        
-    best_action = max(LOGGED_ACTIONS, key=lambda a: true_cate_dict[a])
-    
+        observed_action = best_action
+
+    num_actions = len(LOGGED_ACTIONS)
     if observed_action == best_action:
-        propensity = (1.0 - epsilon) + (epsilon / len(LOGGED_ACTIONS))
+        propensity = (1.0 - epsilon) + (epsilon / num_actions)
     else:
-        propensity = epsilon / len(LOGGED_ACTIONS)
-        
-    p_outcome = float(np.clip(base_p + true_cate_dict[observed_action], 0.0, 1.0))
-    
-    if code in MALFORMED_CODES:
-        p_outcome = 0.0
-        
-    observed_outcome = random.random() < p_outcome
+        propensity = epsilon / num_actions
+
+    # Explicit floor to guarantee positivity: pi(a | S) >= 0.05
+    propensity = max(0.05, float(propensity))
+
+    # Observed outcome corresponding to observed action
+    observed_outcome = potential_outcomes[observed_action]
+
+    # Ground truth recoverable is explicitly unconfounded baseline NOOP outcome
+    ground_truth_recoverable = potential_outcome_noop
 
     return CausalSimulationRecord(
         state=state,
@@ -215,14 +233,15 @@ def generate_causal_record(code_override: str = None, idx: int = 0) -> CausalSim
         observed_outcome=observed_outcome,
         propensity=propensity,
         true_cate=true_cate_dict,
-        ground_truth_recoverable=observed_outcome
+        ground_truth_recoverable=ground_truth_recoverable,
+        potential_outcomes=potential_outcomes,
     )
 
 def generate_record(code_override: str = None, idx: int = 0) -> SimulationRecord:
     causal = generate_causal_record(code_override=code_override, idx=idx)
     return SimulationRecord(
         state=causal.state, 
-        ground_truth_recoverable=causal.observed_outcome
+        ground_truth_recoverable=causal.ground_truth_recoverable
     )
 
 def generate_batch(size: int, seed: int = 42) -> list[SimulationRecord]:

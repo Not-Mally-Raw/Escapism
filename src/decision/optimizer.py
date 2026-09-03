@@ -32,6 +32,7 @@ from src.core.models import MandateStateRecord
 from src.core.types import ActionType, FailureClass
 from src.decision.models import CandidateScore, DecisionAuditStep, DecisionResult
 from src.guardrails.engine import compute_feasible_action_set
+from src.guardrails.legal_hold_filter import requires_mandatory_escalation
 from src.ml.inference import predict_recovery_probability
 from src.ml.uplift import predict_treatment_effect, uplift_model_available
 
@@ -83,7 +84,7 @@ def optimize_decision(
     custom_theta_digital: Optional[Decimal] = None,
     custom_theta_human: Optional[Decimal] = None,
     uplift_model_path: Optional[Path] = None,
-    use_uplift: bool = True,
+    use_uplift: bool = False,
 ) -> DecisionResult:
     """
     Evaluates feasible recovery actions and selects the optimal intervention via Lift-EV.
@@ -106,6 +107,8 @@ def optimize_decision(
         custom_multipliers: Optional custom multiplier dictionary.
         custom_theta_digital: Optional custom digital gating threshold.
         custom_theta_human: Optional custom human gating threshold.
+        uplift_model_path: Optional custom path to serialized uplift model bundle.
+        use_uplift: Optional boolean flag to enable CATE uplift scoring (default: False).
 
     Returns:
         DecisionResult: Schema-locked optimization verdict and audit step.
@@ -115,6 +118,33 @@ def optimize_decision(
     multipliers = custom_multipliers or MULTIPLIER_TABLE
     theta_digital = custom_theta_digital if custom_theta_digital is not None else THETA_DIGITAL
     theta_human = custom_theta_human if custom_theta_human is not None else THETA_HUMAN
+
+    # 0. Early Mandatory Compliance Routing Gate (Invariant 10: Legal Hold & Unknown Codes)
+    # Check for LEGAL_HOLD failure class or unknown/mandatory failure codes BEFORE any EV scoring.
+    if (
+        state.failure_class == FailureClass.LEGAL_HOLD
+        or requires_mandatory_escalation(state.failure_code)
+    ):
+        audit_step = DecisionAuditStep(
+            timestamp=eval_ts,
+            verdict="ESCALATE_HUMAN",
+            rationale=(
+                f"Mandatory regulatory escalation at early gate: Failure code '{state.failure_code}' "
+                f"or failure class '{state.failure_class}' requires human intervention. "
+                "EV scoring bypassed by compliance invariant."
+            ),
+        )
+        return DecisionResult(
+            case_id=state.case_id,
+            selected_action=ActionType.ESCALATE_HUMAN,
+            is_mandatory_routing=True,
+            lift_ev_inr=None,
+            p_hat=None,
+            cost_inr=costs.get(ActionType.ESCALATE_HUMAN),
+            candidate_scores=[],
+            audit_step=audit_step,
+            execution_timestamp=eval_ts,
+        )
 
     # 1. Guardrail Feasible Set Computation
     feasible_actions, mandatory_notices = compute_feasible_action_set(state, current_time=current_time)
@@ -169,15 +199,12 @@ def optimize_decision(
         )
 
     # 5. Score Candidates via Track 1 Model and Lift-EV Formula.
-    # Prefer learned treatment effects when an artifact is present. Custom multipliers
-    # intentionally force the transparent static fallback used by sensitivity tests.
+    # Prefer learned treatment effects when use_uplift=True and artifact is present.
     p_hat_float = predict_recovery_probability(state, model_path=model_path)
     p_hat = Decimal(str(round(p_hat_float, 4)))
     amount_inr = state.amount_inr
     use_learned_cate = (
         use_uplift
-        and custom_costs is None
-        and custom_multipliers is None
         and uplift_model_available(uplift_model_path)
     )
 
@@ -219,10 +246,35 @@ def optimize_decision(
     # Deterministic tie-breaking by candidate order
     best_candidate = max(candidate_scores, key=lambda cs: cs.lift_ev_inr)
 
+    # 6b. Negative EV Floor: Enforce hard profit floor. If the maximum EV among all feasible
+    # digital actions is less than 0 (cost-saturated regime), abort rather than selecting a losing action.
+    if best_candidate.lift_ev_inr < Decimal("0.00"):
+        method_label = "learned CATE" if use_learned_cate else "static multiplier"
+        audit_step = DecisionAuditStep(
+            timestamp=eval_ts,
+            verdict="ABORT_COMPLIANT",
+            rationale=(
+                f"All candidate actions yield negative Lift-EV via {method_label} under current cost regime. "
+                f"Best candidate '{best_candidate.action}' yielded Lift-EV of ₹{best_candidate.lift_ev_inr:.2f} < ₹0.00. "
+                "Safely aborting to protect profitability."
+            ),
+        )
+        return DecisionResult(
+            case_id=state.case_id,
+            selected_action=ActionType.ABORT_COMPLIANT,
+            is_mandatory_routing=False,
+            lift_ev_inr=Decimal("0.00"),
+            p_hat=p_hat,
+            cost_inr=Decimal("0.00"),
+            candidate_scores=candidate_scores,
+            audit_step=audit_step,
+            execution_timestamp=eval_ts,
+        )
+
     # 7. Threshold Gating against θ_digital
     if best_candidate.cleared_threshold:
         selected_action = best_candidate.action
-        method_label = "learned CATE" if use_learned_cate else "static multiplier fallback"
+        method_label = "learned CATE" if use_learned_cate else "static multiplier"
         rationale = (
             f"Selected '{selected_action}' via {method_label} with optimal Lift-EV of ₹{best_candidate.lift_ev_inr:.2f} "
             f"(P̂={p_hat:.4f}, m={best_candidate.multiplier}, Cost=₹{best_candidate.cost_inr:.2f}), "
@@ -231,7 +283,7 @@ def optimize_decision(
         verdict = selected_action.value
     else:
         selected_action = ActionType.ABORT_COMPLIANT
-        method_label = "learned CATE" if use_learned_cate else "static multiplier fallback"
+        method_label = "learned CATE" if use_learned_cate else "static multiplier"
         rationale = (
             f"Optimal candidate '{best_candidate.action}' via {method_label} yielded Lift-EV of ₹{best_candidate.lift_ev_inr:.2f}, "
             f"failing threshold θ_digital=₹{theta_digital:.2f}. Safely aborting automated intervention."

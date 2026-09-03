@@ -86,8 +86,8 @@ def compute_feasible_action_set(
     # 6. Apply Hard Terminal Failure Class Filter
     if state.failure_class == FailureClass.HARD_TERMINAL:
         # Cannot retry closed/blocked accounts on bank rail
-        primary_actions.discard(ActionType.SILENT_RETRY)
-        primary_actions.discard(ActionType.PIN_PROMPTED_RETRY)
+        # Clear ALL recovery actions; terminal states must abort cleanly
+        primary_actions = {ActionType.ABORT_COMPLIANT}
 
     # 6c. Apply Channel Consent Gate (Self-Imposed Best Practice)
     # Citing: docs/research/market_context.md §3.4

@@ -159,3 +159,44 @@ def test_missing_optional_fields_handled_gracefully():
     )
     p = predict_recovery_probability(minimal_record)
     assert 0.0 <= p <= 1.0
+
+
+def test_model_metadata_and_card_hash_synchronization():
+    """
+    R3 Lineage Synchronization:
+    Verifies SHA256 hashes of dataset and model artifact match between on-disk files,
+    metadata.json, and recovery_propensity_model_card.md.
+    """
+    import hashlib
+    import json
+
+    metadata_path = Path("src/ml/models/metadata.json")
+    model_card_path = Path("docs/models/recovery_propensity_model_card.md")
+    data_path = Path("data/synthetic_batch_5000.jsonl")
+    pipeline_path = Path("src/ml/models/recovery_propensity_pipeline.joblib")
+
+    assert metadata_path.exists()
+    assert model_card_path.exists()
+    assert data_path.exists()
+    assert pipeline_path.exists()
+
+    with open(data_path, "rb") as f:
+        real_data_hash = hashlib.sha256(f.read()).hexdigest()
+
+    with open(pipeline_path, "rb") as f:
+        real_model_hash = hashlib.sha256(f.read()).hexdigest()
+
+    with open(metadata_path, "r", encoding="utf-8") as f:
+        meta = json.load(f)
+
+    with open(model_card_path, "r", encoding="utf-8") as f:
+        card_text = f.read()
+
+    # Verify metadata.json matches real file hashes
+    assert meta["dataset_provenance"]["data_sha256"] == real_data_hash
+    assert meta.get("model_sha256") == real_model_hash
+
+    # Verify model card contains the synchronized hashes
+    assert real_data_hash in card_text, "Dataset SHA256 not found in model card"
+    assert real_model_hash in card_text, "Model artifact SHA256 not found in model card"
+

@@ -61,6 +61,10 @@ def build_recovery_pipeline(
         random_state=random_state,
         solver="lbfgs",
     )
+    # Ensure cross-version pickle compatibility across sklearn 1.4, 1.5, 1.7, 1.9
+    classifier.multi_class = "auto"
+    preprocessor.force_int_remainder_cols = False
+
 
     return Pipeline(
         steps=[

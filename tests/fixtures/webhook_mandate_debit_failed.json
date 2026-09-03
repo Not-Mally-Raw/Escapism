@@ -1,0 +1,61 @@
+{
+  "entity": "event",
+  "account_id": "acc_N0Gk2XvH8YwZ1a",
+  "event": "mandate.debit.failed",
+  "contains": [
+    "payment"
+  ],
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_O1pQ2rS3tU4vW5",
+        "entity": "payment",
+        "amount": 250000,
+        "currency": "INR",
+        "status": "failed",
+        "order_id": "order_M6nO7pQ8rS9tU0",
+        "invoice_id": null,
+        "international": false,
+        "method": "upi",
+        "amount_refunded": 0,
+        "refund_status": null,
+        "captured": false,
+        "description": "Monthly recurring subscription auto-debit",
+        "card_id": null,
+        "bank": "HDFC",
+        "wallet": null,
+        "vpa": "sanitized_user@okhdfcbank",
+        "email": "customer.recovery@example.com",
+        "contact": "+919876543210",
+        "customer_id": "cust_C9dE8fG7hI6jK5",
+        "token_id": "token_T5uV4wX3yZ2aB1",
+        "notes": {
+          "case_id": "case_rec_001",
+          "mandate_id": "man_soft_001",
+          "merchant_id": "mer_001",
+          "attempt_count": "1",
+          "afa_required": "false",
+          "pre_debit_notice_sent": "true",
+          "customer_timezone": "Asia/Kolkata",
+          "channel_consent": "{\"WHATSAPP\": \"OPTED_IN\", \"SMS\": \"OPTED_IN\", \"PAYMENT_LINK\": \"OPTED_IN\"}"
+        },
+        "fee": null,
+        "tax": null,
+        "error_code": "BAD_REQUEST_ERROR",
+        "error_description": "Payment failed due to insufficient funds in customer bank account",
+        "error_source": "bank",
+        "error_step": "payment_authorization",
+        "error_reason": "payment_failed",
+        "acquirer_data": {
+          "rrn": "423456789012",
+          "auth_code": null,
+          "bank_transaction_id": "TX9876543210",
+          "bank_error_code": "Z9",
+          "bank_error_message": "Insufficient balance in account"
+        },
+        "created_at": 1756543200
+      }
+    }
+  },
+  "created_at": 1756543200
+}

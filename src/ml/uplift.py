@@ -100,16 +100,24 @@ def train_uplift_model(
         support[action] = len(action_rows)
         models[action] = _fit_action_model(list(features), list(outcomes), random_state=random_state)
 
+    all_features = [extract_features(s) for s in states]
+    X_all = features_list_to_array(all_features)
+    
+    def _get_probs(model_obj):
+        if hasattr(model_obj, "predict_proba"):
+            return model_obj.predict_proba(X_all)[:, 1]
+        return model_obj.predict(X_all).astype(float)
+
+    p_noop_all = _get_probs(models[NOOP_ACTION]) if NOOP_ACTION in models else np.zeros(len(states))
+
     pehe_by_action: Dict[str, float] = {}
     for action in UPLIFT_ACTIONS:
         if action == NOOP_ACTION or action not in models or NOOP_ACTION not in models:
             continue
-        errors = []
-        for state, cate_dict in zip(states, true_cates):
-            pred = predict_treatment_effect(state, ActionType(action), model_bundle={"models": models})
-            truth = float(cate_dict.get(action, 0.0))
-            errors.append((pred - truth) ** 2)
-        pehe_by_action[action] = float(np.sqrt(np.mean(errors))) if errors else 0.0
+        p_act_all = _get_probs(models[action])
+        pred_cate = np.clip(p_act_all - p_noop_all, -1.0, 1.0)
+        true_cate = np.array([float(cd.get(action, 0.0)) for cd in true_cates])
+        pehe_by_action[action] = float(np.sqrt(np.mean((pred_cate - true_cate) ** 2)))
 
     model_output_path.parent.mkdir(parents=True, exist_ok=True)
     bundle = {"models": models, "actions": UPLIFT_ACTIONS, "noop_action": NOOP_ACTION}

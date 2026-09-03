@@ -1,0 +1,61 @@
+{
+  "entity": "event",
+  "account_id": "acc_N0Gk2XvH8YwZ1a",
+  "event": "mandate.debit.failed",
+  "contains": [
+    "payment"
+  ],
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_ENach987654321",
+        "entity": "payment",
+        "amount": 750000,
+        "currency": "INR",
+        "status": "failed",
+        "order_id": "order_ENach123456",
+        "invoice_id": null,
+        "international": false,
+        "method": "emandate",
+        "amount_refunded": 0,
+        "refund_status": null,
+        "captured": false,
+        "description": "e-NACH SIP mandate auto-debit",
+        "card_id": null,
+        "bank": "SBIN",
+        "wallet": null,
+        "vpa": null,
+        "email": "enach.user@example.com",
+        "contact": "+919811122233",
+        "customer_id": "cust_ENach555",
+        "token_id": "token_ENach999",
+        "notes": {
+          "case_id": "case_enach_001",
+          "mandate_id": "man_enach_001",
+          "merchant_id": "mer_wealth_01",
+          "attempt_count": "2",
+          "afa_required": "false",
+          "pre_debit_notice_sent": "true",
+          "customer_timezone": "Asia/Kolkata",
+          "channel_consent": "{\"WHATSAPP\": \"OPTED_IN\", \"SMS\": \"OPTED_IN\"}"
+        },
+        "fee": null,
+        "tax": null,
+        "error_code": "BAD_REQUEST_ERROR",
+        "error_description": "Presentation failed: Balance Insufficient",
+        "error_source": "bank",
+        "error_step": "payment_authorization",
+        "error_reason": "payment_failed",
+        "acquirer_data": {
+          "rrn": "523456789012",
+          "auth_code": null,
+          "bank_transaction_id": "TXENACH555",
+          "bank_error_code": "04",
+          "bank_error_message": "Balance Insufficient"
+        },
+        "created_at": 1756543200
+      }
+    }
+  },
+  "created_at": 1756543200
+}

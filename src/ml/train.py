@@ -269,12 +269,26 @@ def train_and_evaluate(
     pipeline_save_path = model_output_dir / "recovery_propensity_pipeline.joblib"
     metadata_save_path = model_output_dir / "metadata.json"
 
+    # Ensure cross-version compatibility attributes are baked into the serialized artifact
+    try:
+        final_pipeline.named_steps["classifier"].multi_class = "auto"
+    except Exception:
+        pass
+    try:
+        final_pipeline.named_steps["preprocessor"].force_int_remainder_cols = False
+    except Exception:
+        pass
+
     joblib.dump(final_pipeline, pipeline_save_path)
     print(f"\nSerialized pipeline saved to {pipeline_save_path}")
+
+    with open(pipeline_save_path, "rb") as f:
+        model_hash = hashlib.sha256(f.read()).hexdigest()
 
     metadata = {
         "model_name": "LogisticRegressionRecoveryPropensity",
         "version": "1.0.0",
+        "model_sha256": model_hash,
         "training_timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "dataset_provenance": {
             "data_file": str(data_path),

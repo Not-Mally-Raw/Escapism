@@ -1,0 +1,25 @@
+{
+  "model_name": "SklearnTLearnerRecoveryUplift",
+  "training_data": "data/causal_batch_5000.jsonl",
+  "total_rows": 5000,
+  "action_support": {
+    "NOOP": 613,
+    "SILENT_RETRY": 237,
+    "PIN_PROMPTED_RETRY": 244,
+    "SMS_NUDGE": 783,
+    "PAYMENT_LINK": 358,
+    "WHATSAPP_NUDGE": 2243,
+    "RE_MANDATE_FLOW": 240,
+    "COOLDOWN_WAIT": 282
+  },
+  "pehe_by_action": {
+    "SILENT_RETRY": 0.299888615890831,
+    "PIN_PROMPTED_RETRY": 0.26005385845165746,
+    "SMS_NUDGE": 0.21199174330988252,
+    "PAYMENT_LINK": 0.24808159041786695,
+    "WHATSAPP_NUDGE": 0.20876249831702592,
+    "RE_MANDATE_FLOW": 0.2864378080909497,
+    "COOLDOWN_WAIT": 0.26525945046620303
+  },
+  "method": "One sklearn outcome model per logged action; CATE(action)=P(action)-P(NOOP)."
+}

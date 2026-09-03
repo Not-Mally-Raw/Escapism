@@ -60,6 +60,48 @@ def estimate_policy_value(records, policy_fn, num_bootstrap: int = 500, seed: in
     rng = np.random.default_rng(seed)
     n = len(records)
 
+    # Precompute per-record terms once across the dataset to avoid re-evaluating policy_fn in bootstrap loop
+    precomputed = []
+    for row in records:
+        state: MandateStateRecord = row["state"]
+        logged_action = row["observed_action"]
+        chosen_action = policy_fn(state)
+        segment = state.failure_class.value
+
+        is_match = (chosen_action == logged_action)
+        if not is_match:
+            precomputed.append({
+                "match": False,
+                "weight": 0.0,
+                "value": 0.0,
+                "cost": 0.0,
+                "fine": 0.0,
+                "segment": segment,
+            })
+            continue
+
+        propensity = max(float(row["propensity"]), 0.05)
+        weight = 1.0 / propensity
+        gross = float(bool(row["observed_outcome"])) * float(state.amount_inr)
+        cost = float(COST_TABLE.get(ActionType(chosen_action), 0.0)) if chosen_action != NOOP_ACTION else 0.0
+
+        fine = 0.0
+        if chosen_action == ActionType.SILENT_RETRY.value and state.failure_class in (
+            FailureClass.HARD_TERMINAL,
+            FailureClass.LEGAL_HOLD,
+        ):
+            fine = 500.0
+
+        value = gross - cost - fine
+        precomputed.append({
+            "match": True,
+            "weight": weight,
+            "value": value,
+            "cost": cost,
+            "fine": fine,
+            "segment": segment,
+        })
+
     def estimate(indices):
         weighted_value = 0.0
         weight_sum = 0.0
@@ -69,36 +111,25 @@ def estimate_policy_value(records, policy_fn, num_bootstrap: int = 500, seed: in
         by_segment = {}
 
         for idx in indices:
-            row = records[int(idx)]
-            state: MandateStateRecord = row["state"]
-            logged_action = row["observed_action"]
-            chosen_action = policy_fn(state)
-            segment = state.failure_class.value
+            item = precomputed[int(idx)]
+            segment = item["segment"]
             by_segment.setdefault(segment, {"value": 0.0, "weight": 0.0, "matches": 0})
 
-            if chosen_action != logged_action:
+            if not item["match"]:
                 continue
 
-            propensity = max(float(row["propensity"]), 1e-6)
-            weight = 1.0 / propensity
-            gross = float(bool(row["observed_outcome"])) * float(state.amount_inr)
-            cost = float(COST_TABLE.get(ActionType(chosen_action), 0.0)) if chosen_action != NOOP_ACTION else 0.0
+            w = item["weight"]
+            v = item["value"]
+            f = item["fine"]
+            c = item["cost"]
 
-            fine = 0.0
-            if chosen_action == ActionType.SILENT_RETRY.value and state.failure_class in (
-                FailureClass.HARD_TERMINAL,
-                FailureClass.LEGAL_HOLD,
-            ):
-                fine = 500.0
-
-            value = gross - cost - fine
-            weighted_value += weight * value
-            weight_sum += weight
+            weighted_value += w * v
+            weight_sum += w
             matched += 1
-            illegal_fines += fine * weight
-            action_costs += cost * weight
-            by_segment[segment]["value"] += weight * value
-            by_segment[segment]["weight"] += weight
+            illegal_fines += f * w
+            action_costs += c * w
+            by_segment[segment]["value"] += w * v
+            by_segment[segment]["weight"] += w
             by_segment[segment]["matches"] += 1
 
         estimate_per_case = weighted_value / weight_sum if weight_sum else 0.0

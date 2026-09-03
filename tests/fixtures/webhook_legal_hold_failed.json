@@ -1,0 +1,61 @@
+{
+  "entity": "event",
+  "account_id": "acc_N0Gk2XvH8YwZ1a",
+  "event": "mandate.debit.failed",
+  "contains": [
+    "payment"
+  ],
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_LegalHold12345",
+        "entity": "payment",
+        "amount": 1000000,
+        "currency": "INR",
+        "status": "failed",
+        "order_id": "order_LegalHold987",
+        "invoice_id": null,
+        "international": false,
+        "method": "emandate",
+        "amount_refunded": 0,
+        "refund_status": null,
+        "captured": false,
+        "description": "e-NACH debit under legal freeze",
+        "card_id": null,
+        "bank": "ICIC",
+        "wallet": null,
+        "vpa": null,
+        "email": "legal.case@example.com",
+        "contact": "+919800011122",
+        "customer_id": "cust_LegalHold01",
+        "token_id": "token_LegalHold01",
+        "notes": {
+          "case_id": "case_legal_hold_001",
+          "mandate_id": "man_legal_001",
+          "merchant_id": "mer_001",
+          "attempt_count": "1",
+          "afa_required": "false",
+          "pre_debit_notice_sent": "true",
+          "customer_timezone": "Asia/Kolkata",
+          "channel_consent": "{\"WHATSAPP\": \"OPTED_IN\"}"
+        },
+        "fee": null,
+        "tax": null,
+        "error_code": "BAD_REQUEST_ERROR",
+        "error_description": "Account frozen by court order / statutory authority",
+        "error_source": "bank",
+        "error_step": "payment_authorization",
+        "error_reason": "payment_failed",
+        "acquirer_data": {
+          "rrn": "623456789012",
+          "auth_code": null,
+          "bank_transaction_id": "TXLEGAL777",
+          "bank_error_code": "07",
+          "bank_error_message": "Account attached by court order / litigation freeze"
+        },
+        "created_at": 1756543200
+      }
+    }
+  },
+  "created_at": 1756543200
+}

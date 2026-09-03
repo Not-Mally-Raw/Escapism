@@ -1,10 +1,9 @@
+from contextlib import asynccontextmanager
 import json
 import hmac
 import hashlib
 import aiosqlite
 from fastapi import FastAPI, Request, HTTPException, Response
-
-app = FastAPI(title="Webhook Ingestion Gateway")
 
 WEBHOOK_SECRET = "test_secret"
 DB_PATH = "webhook.db"
@@ -15,9 +14,12 @@ async def init_db():
         with open("src/ingestion/schema.sql", "r") as f:
             await db.executescript(f.read())
 
-@app.on_event("startup")
-async def startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     await init_db()
+    yield
+
+app = FastAPI(title="Webhook Ingestion Gateway", lifespan=lifespan)
 
 @app.post("/webhook/razorpay")
 async def receive_webhook(request: Request):

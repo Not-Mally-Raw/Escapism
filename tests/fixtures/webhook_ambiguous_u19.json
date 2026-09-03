@@ -1,0 +1,61 @@
+{
+  "entity": "event",
+  "account_id": "acc_N0Gk2XvH8YwZ1a",
+  "event": "mandate.debit.failed",
+  "contains": [
+    "payment"
+  ],
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_AmbiguousU19_01",
+        "entity": "payment",
+        "amount": 150000,
+        "currency": "INR",
+        "status": "failed",
+        "order_id": "order_Ambiguous999",
+        "invoice_id": null,
+        "international": false,
+        "method": "upi",
+        "amount_refunded": 0,
+        "refund_status": null,
+        "captured": false,
+        "description": "UPI AutoPay debit",
+        "card_id": null,
+        "bank": "AXIS",
+        "wallet": null,
+        "vpa": "user@axisbank",
+        "email": "user.ambiguous@example.com",
+        "contact": "+919700011122",
+        "customer_id": "cust_Ambiguous01",
+        "token_id": "token_Ambiguous01",
+        "notes": {
+          "case_id": "case_ambiguous_001",
+          "mandate_id": "man_ambiguous_001",
+          "merchant_id": "mer_001",
+          "attempt_count": "1",
+          "afa_required": "false",
+          "pre_debit_notice_sent": "true",
+          "customer_timezone": "Asia/Kolkata",
+          "channel_consent": "{\"WHATSAPP\": \"OPTED_IN\", \"SMS\": \"OPTED_IN\"}"
+        },
+        "fee": null,
+        "tax": null,
+        "error_code": "BAD_REQUEST_ERROR",
+        "error_description": "Transaction declined by customer bank due to low balance",
+        "error_source": "bank",
+        "error_step": "payment_authorization",
+        "error_reason": "payment_failed",
+        "acquirer_data": {
+          "rrn": "723456789012",
+          "auth_code": null,
+          "bank_transaction_id": "TXAMB123",
+          "bank_error_code": "U19",
+          "bank_error_message": "Transaction declined by customer bank"
+        },
+        "created_at": 1756543200
+      }
+    }
+  },
+  "created_at": 1756543200
+}

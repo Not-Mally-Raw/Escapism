@@ -19,17 +19,31 @@ from src.guardrails.window_mask import next_valid_execution_window
 IST = ZoneInfo("Asia/Kolkata")
 
 
+from src.core.taxonomy import LEGAL_HOLD_CODES, MALFORMED_CODES
+from src.decision.optimizer import optimize_decision
+from src.guardrails.legal_hold_filter import requires_mandatory_escalation
+
+
 def test_compliance_invariants_500_states():
     """
     Exhaustively tests >= 500 randomized boundary states to verify regulatory invariants:
     1. INVARIANT A: If amount > 15,000 INR -> SILENT_RETRY is NEVER in feasible actions.
     2. INVARIANT B: If attempt_count >= 4 -> No auto-debit retries in feasible actions.
-    3. INVARIANT C: If failure_code == '07' -> Actions are strictly {ActionType.ESCALATE_HUMAN}.
-    4. Compliance Violation Count == 0 (CVR = 0.000%).
+    3. INVARIANT C: If failure_code in {'07', 'AP03'} or failure_class == LEGAL_HOLD ->
+       Actions are strictly {ActionType.ESCALATE_HUMAN} with zero notifications.
+    4. INVARIANT D: If failure_code is unknown/malformed -> Fail-closed to {ActionType.ESCALATE_HUMAN}.
+    5. INVARIANT E: optimize_decision routes all legal hold & unknown codes to ESCALATE_HUMAN
+       with p_hat=None and lift_ev_inr=None.
+    6. Compliance Violation Count == 0 (CVR = 0.000%).
     """
     random.seed(42)
 
-    failure_codes = ["Z9", "U19", "U30", "U69", "U28", "01", "04", "07", "AP01", "AP03"]
+    failure_codes = [
+        "Z9", "U19", "U30", "U69", "U28", "Z7", "Z8",
+        "01", "02", "04", "05", "06", "07",
+        "AP01", "AP02", "AP03", "AP04", "AP05",
+        *MALFORMED_CODES, "ERR_UNKNOWN_SWITCH", "RANDOM_999",
+    ]
     failure_classes = [
         FailureClass.SOFT_LIQUIDITY,
         FailureClass.HARD_TERMINAL,
@@ -48,7 +62,7 @@ def test_compliance_invariants_500_states():
         amount = Decimal(str(random.choice([100, 500, 14999, 15000, 15001, 25000, 100000])))
         attempt_count = random.choice([1, 2, 3, 4])
         code = random.choice(failure_codes)
-        fail_class = FailureClass.LEGAL_HOLD if code in {"07", "AP03"} else random.choice(failure_classes)
+        fail_class = FailureClass.LEGAL_HOLD if code in LEGAL_HOLD_CODES else random.choice(failure_classes)
         last_attempt = base_time - timedelta(hours=random.randint(1, 200))
         eval_time = base_time + timedelta(hours=random.randint(0, 48))
 
@@ -71,8 +85,13 @@ def test_compliance_invariants_500_states():
 
         primary_actions, notifications = compute_feasible_action_set(state, current_time=eval_time)
 
-        # Invariant 1: Legal Hold isolation
-        if code == "07" or fail_class == FailureClass.LEGAL_HOLD:
+        # Invariant 1: Legal Hold & Unknown Code isolation
+        is_mandatory = (
+            code in LEGAL_HOLD_CODES
+            or fail_class == FailureClass.LEGAL_HOLD
+            or requires_mandatory_escalation(code)
+        )
+        if is_mandatory:
             if primary_actions != {ActionType.ESCALATE_HUMAN} or len(notifications) != 0:
                 compliance_violations += 1
 
@@ -84,6 +103,18 @@ def test_compliance_invariants_500_states():
         # Invariant 3: Attempt Cap (k <= 4)
         if attempt_count >= 4:
             if ActionType.SILENT_RETRY in primary_actions or ActionType.PIN_PROMPTED_RETRY in primary_actions:
+                compliance_violations += 1
+
+        # Invariant 4: Decision Optimizer Structural Safety
+        if is_mandatory:
+            dec = optimize_decision(state, current_time=eval_time)
+            if dec.selected_action != ActionType.ESCALATE_HUMAN:
+                compliance_violations += 1
+            if not dec.is_mandatory_routing:
+                compliance_violations += 1
+            if dec.p_hat is not None or dec.lift_ev_inr is not None:
+                compliance_violations += 1
+            if len(dec.candidate_scores) != 0:
                 compliance_violations += 1
 
     assert compliance_violations == 0, f"Detected {compliance_violations} compliance violations!"
