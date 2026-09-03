@@ -134,8 +134,14 @@ def estimate_policy_value(records, policy_fn, num_bootstrap: int = 500, seed: in
 
         estimate_per_case = weighted_value / weight_sum if weight_sum else 0.0
         total_value = estimate_per_case * n
+
+        segment_sample_counts = {}
+        for idx in indices:
+            seg = precomputed[int(idx)]["segment"]
+            segment_sample_counts[seg] = segment_sample_counts.get(seg, 0) + 1
+
         segment_values = {
-            segment: (vals["value"] / vals["weight"] * n if vals["weight"] else 0.0)
+            segment: (vals["value"] / vals["weight"] * segment_sample_counts.get(segment, 0) if vals["weight"] else 0.0)
             for segment, vals in by_segment.items()
         }
         return total_value, matched, illegal_fines, action_costs, segment_values
@@ -199,3 +205,14 @@ if __name__ == "__main__":
         pivot = segments.pivot_table(index="failure_class", columns="Policy", values="SNIPS NRR (₹)", aggfunc="sum")
         print(pivot.to_string(float_format=lambda x: f"₹{x:,.0f}"))
     print("=================================================================================================")
+
+    # Save to data/benchmark_results.json for dashboard consumption
+    output_path = Path("data/benchmark_results.json")
+    benchmark_payload = {
+        "metrics": metrics.to_dict(orient="records"),
+        "segments": segments.to_dict(orient="records"),
+        "timestamp_utc": pd.Timestamp.utcnow().isoformat(),
+    }
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(benchmark_payload, f, indent=2)
+    print(f"\nSaved benchmark results to {output_path}")

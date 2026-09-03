@@ -189,3 +189,12 @@
 {"id": "mock_plink_12c9631591624ff0", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "1500.00", "idempotency_key": "evnt_replay_001", "reference_id": "evnt_replay_001", "mode": "mock", "created_at": 1788410819}
 {"id": "mock_plink_38a8fcd099e34c91", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "2500.00", "idempotency_key": "evnt_audit_expansion_001", "reference_id": "evnt_audit_expansion_001", "mode": "mock", "created_at": 1788410819}
 {"id": "mock_plink_4b318dfe8d2b403b", "action": "PAYMENT_LINK", "status": "created", "amount_inr": "500.00", "idempotency_key": "idem_key_mock_001", "reference_id": "idem_key_mock_001", "mode": "mock", "created_at": 1788410819}
+{"id": "mock_plink_06ebea0c6ab545ae", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "2500.00", "idempotency_key": "evnt_soft_liquidity_001", "reference_id": "evnt_soft_liquidity_001", "mode": "mock", "created_at": 1788446429}
+{"id": null, "action": "ESCALATE_HUMAN", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evnt_legal_hold_001", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evnt_terminal_001", "mode": "mock"}
+{"id": "mock_plink_c8f792ecf278479b", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "2500.00", "idempotency_key": "evt_e2e_fixture_001", "reference_id": "evt_e2e_fixture_001", "mode": "mock", "created_at": 1788446429}
+{"id": null, "action": "ESCALATE_HUMAN", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_legal_hold_001", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evnt_test_123", "mode": "mock"}
+{"id": "mock_plink_c47c3be00ccc456b", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "1500.00", "idempotency_key": "evnt_replay_001", "reference_id": "evnt_replay_001", "mode": "mock", "created_at": 1788446468}
+{"id": "mock_plink_21ed4f5b72174ebb", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "2500.00", "idempotency_key": "evnt_audit_expansion_001", "reference_id": "evnt_audit_expansion_001", "mode": "mock", "created_at": 1788446468}
+{"id": "mock_plink_cc23d94606f8439c", "action": "PAYMENT_LINK", "status": "created", "amount_inr": "500.00", "idempotency_key": "idem_key_mock_001", "reference_id": "idem_key_mock_001", "mode": "mock", "created_at": 1788446468}

@@ -1,0 +1,100 @@
+{
+  "metrics": [
+    {
+      "Policy": "Policy 1: Do Nothing (NOOP)",
+      "SNIPS NRR (\u20b9)": 18606781.776585728,
+      "95% CI (\u20b9)": "[14,000,958, 23,359,606]",
+      "Logged Match Rate": "12.3%"
+    },
+    {
+      "Policy": "Policy 2: Blind Retry",
+      "SNIPS NRR (\u20b9)": 23463331.223628692,
+      "95% CI (\u20b9)": "[17,899,418, 29,494,669]",
+      "Logged Match Rate": "4.7%"
+    },
+    {
+      "Policy": "Policy 3: AI Orchestrator",
+      "SNIPS NRR (\u20b9)": 29154368.01018838,
+      "95% CI (\u20b9)": "[24,888,678, 33,810,535]",
+      "Logged Match Rate": "43.7%"
+    }
+  ],
+  "segments": [
+    {
+      "Policy": "Policy 1: Do Nothing (NOOP)",
+      "failure_class": "AMBIGUOUS_DECLINE",
+      "SNIPS NRR (\u20b9)": 1306679.3391666668
+    },
+    {
+      "Policy": "Policy 1: Do Nothing (NOOP)",
+      "failure_class": "SOFT_LIQUIDITY",
+      "SNIPS NRR (\u20b9)": 13856460.1767548
+    },
+    {
+      "Policy": "Policy 1: Do Nothing (NOOP)",
+      "failure_class": "HARD_TERMINAL",
+      "SNIPS NRR (\u20b9)": 0.0
+    },
+    {
+      "Policy": "Policy 1: Do Nothing (NOOP)",
+      "failure_class": "TECHNICAL_RETRYABLE",
+      "SNIPS NRR (\u20b9)": 3527921.887586207
+    },
+    {
+      "Policy": "Policy 1: Do Nothing (NOOP)",
+      "failure_class": "LEGAL_HOLD",
+      "SNIPS NRR (\u20b9)": 0.0
+    },
+    {
+      "Policy": "Policy 2: Blind Retry",
+      "failure_class": "AMBIGUOUS_DECLINE",
+      "SNIPS NRR (\u20b9)": 121970.06333333334
+    },
+    {
+      "Policy": "Policy 2: Blind Retry",
+      "failure_class": "SOFT_LIQUIDITY",
+      "SNIPS NRR (\u20b9)": 15522246.203636361
+    },
+    {
+      "Policy": "Policy 2: Blind Retry",
+      "failure_class": "HARD_TERMINAL",
+      "SNIPS NRR (\u20b9)": -267526.75
+    },
+    {
+      "Policy": "Policy 2: Blind Retry",
+      "failure_class": "TECHNICAL_RETRYABLE",
+      "SNIPS NRR (\u20b9)": 7383101.395
+    },
+    {
+      "Policy": "Policy 2: Blind Retry",
+      "failure_class": "LEGAL_HOLD",
+      "SNIPS NRR (\u20b9)": -51505.15
+    },
+    {
+      "Policy": "Policy 3: AI Orchestrator",
+      "failure_class": "AMBIGUOUS_DECLINE",
+      "SNIPS NRR (\u20b9)": 2239998.568203984
+    },
+    {
+      "Policy": "Policy 3: AI Orchestrator",
+      "failure_class": "SOFT_LIQUIDITY",
+      "SNIPS NRR (\u20b9)": 18259938.704325948
+    },
+    {
+      "Policy": "Policy 3: AI Orchestrator",
+      "failure_class": "HARD_TERMINAL",
+      "SNIPS NRR (\u20b9)": 0.0
+    },
+    {
+      "Policy": "Policy 3: AI Orchestrator",
+      "failure_class": "TECHNICAL_RETRYABLE",
+      "SNIPS NRR (\u20b9)": 7909444.374105229
+    },
+    {
+      "Policy": "Policy 3: AI Orchestrator",
+      "failure_class": "LEGAL_HOLD",
+      "SNIPS NRR (\u20b9)": 0.0
+    }
+  ],
+  "timestamp_utc": "2026-09-03T14:37:50.025583+00:00"
+}
