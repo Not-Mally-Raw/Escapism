@@ -21,8 +21,9 @@ This document formalizes the analytical stress-testing that governed the paramet
 ## 3. Adversarial Cost Table Proofs
 **Decision:** The Lift-EV formula strictly respects relative cost differentials without requiring dynamic shrinkage.
 **Evidence:**
-- **Test 1 (Prohibitive Digital Costs):** When digital action costs were adversarially inflated to ₹999,999, 100% of non-mandatory cases safely fell through to `ABORT_COMPLIANT`. Mandatory legal cases (345 out of 5,000) correctly routed to human review, proving the compliance boundary is impenetrable by cost tuning.
-- **Test 2 (Prohibitive Human Costs):** When human costs were inflated and digital was free, digital actions dominated the feasible set, but the mandatory 345 cases still routed to human review, proving the system fails closed on compliance regardless of extreme cost skew.
+- **Test 1 (Prohibitive Digital Costs):** When digital action costs were adversarially inflated to ₹999,999, 100% of non-mandatory candidate cases safely fell through to `ABORT_COMPLIANT`. Exactly the mandatory compliance cases (100% of legal hold `07`/`AP03` and uncatalogued fail-closed codes) correctly routed to human review, proving the compliance boundary is impenetrable by cost tuning.
+- **Test 2 (Prohibitive Human Costs):** When human costs were inflated and digital was free, digital actions dominated the feasible set, but the mandatory compliance cases still routed to human review, proving the system fails closed on compliance regardless of extreme cost skew.
+- **Test 3 (CATE Adversarial Validation):** Dedicated adversarial tests verify that when CATE is active (`use_uplift=True`), passing `custom_costs` actively steers intervention rankings rather than bypassing the causal estimator or crashing.
 
 ## 4. Value-of-Information (VOI) Analysis & Roadmap
 Instead of building ungrounded uncertainty-aware optimizers (e.g., Upper Confidence Bounds, contextual bandits) prematurely, we have quantified the sensitivity of our AI Orchestrator's edge to our core assumptions.
@@ -32,3 +33,17 @@ Instead of building ungrounded uncertainty-aware optimizers (e.g., Upper Confide
 3. **Cost Table `C(a)`:** Perturbing digital costs by ±50% (e.g., ₹0.80 to ₹1.20) had negligible impact on NRR, as the magnitude of recovered revenue (₹500+) dominates marginal API costs. Precision here is low-priority.
 
 *Conclusion: Sophisticated stochastic control machinery is explicitly deferred. The expected value of resolving the base empirical channel multipliers vastly outweighs the value of algorithmic complexity.*
+
+## 5. Model Lineage & The Three-Profile Progression
+Over the course of development and rigorous adversarial auditing, the baseline recovery propensity estimator evolved across three distinct metric profiles, reflecting continuous methodological hardening rather than non-deterministic drift:
+
+1. **Profile 1 (Legacy Synthetic Exploration - 80.1% Acc, 0.875 ROC-AUC, Dataset `40f623dd...`):**
+   - *Design:* Early synthetic generation calibrated to 2.0% `LEGAL_HOLD` prevalence.
+   - *Limitation:* Lacked omnichannel merchant/customer diversity and causal counterfactual logging.
+2. **Profile 2 (Causal Shift & Policy Contamination - 72.1% Acc, 0.761 ROC-AUC, Dataset `4f4e09e2...`):**
+   - *Design:* Expanded to 20 merchants and 200 customers with causal action logging.
+   - *Limitation:* The target label `ground_truth_recoverable` was assigned to `observed_outcome` under an $\epsilon$-greedy treatment policy. The model was inadvertently estimating $P(\text{Recovery} \mid S, \pi(S))$, causing treatment lift to be double-counted when multiplied by $m(a)$ downstream.
+3. **Profile 3 (Certified Unconfounded Baseline - 74.4% Acc, 0.730 ROC-AUC, ECE 0.0372, Dataset `90b2d59a...`):**
+   - *Design:* Strict potential outcomes DGP where $Y_0 = \text{Bernoulli}(\mu_0(S))$ represents pure unconfounded passive recovery under `NOOP`.
+   - *Guarantee:* Training is 100% deterministic (`random_seed=42`). Bit-for-bit identical metrics are reproduced across successive runs. Full hash lineage is locked between `data/synthetic_batch_5000.jsonl`, `metadata.json`, and the model card.
+
