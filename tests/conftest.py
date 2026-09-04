@@ -26,7 +26,6 @@ def base_mandate_record() -> MandateStateRecord:
         failure_timestamp=datetime(2026, 8, 22, 9, 0, 0, tzinfo=IST),
         last_attempt_timestamp=datetime(2026, 8, 22, 9, 0, 0, tzinfo=IST),
         afa_required=False,
-        ground_truth_recoverable=True,
         pre_debit_notice_sent=True,
         customer_timezone="Asia/Kolkata",
     )
