@@ -1,3 +1,5 @@
+"""Live integration probe for Razorpay API credentials and endpoints."""
+
 import os
 import httpx
 import json

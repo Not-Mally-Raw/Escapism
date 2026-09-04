@@ -1,3 +1,5 @@
+"""Monte Carlo policy evaluation using Self-Normalized Inverse Propensity Scoring (SNIPS)."""
+
 import json
 import sys
 from pathlib import Path
