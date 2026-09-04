@@ -1,6 +1,0 @@
-⚠️  No real Razorpay test keys found in .env. Falling back to dummy keys to capture the API rejection.
-Executing real HTTP call to Razorpay Test Environment using Key ID: rzp_test_Y...
-
---- RAZORPAY CONNECTION FAILED (Sandbox Network) ---
-Error: [Errno 8] nodename nor servname provided, or not known
---------------------------------------------------

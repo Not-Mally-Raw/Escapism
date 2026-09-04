@@ -7,24 +7,31 @@ A production-ready, mathematically proven, and audit-traced AI orchestration eng
 ---
 
 ## ⚡ One-Command Demo
-To run the interactive Analytics and Decision Dashboard:
 
+### Bloomberg Terminal UI (Production Interface)
+Launch the low-latency FastAPI backend and high-density terminal interface:
 ```bash
 # 1. Setup Virtual Environment
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
 
-# 2. Run the Dashboard
+# 2. Run the Bloomberg Terminal Server
+python3 src/api/server.py
+```
+Open **`http://localhost:8000`** in your browser. Features 8 dynamic function modules (F1 TELEMETRY, F2 DECISION ENGINE, F3 DIAGNOSTIC, F4 ML EXPLAINABILITY, F5 COMPLIANCE, F6 POLICY BENCHMARK, F7 LIVE WORKER, F8 SYSTEM AUDIT), fail-closed safety overrides, and hotkeys.
+
+### Classic Streamlit Dashboard
+```bash
 streamlit run src/dashboard/app.py
 ```
 
-To reproduce the core Monte Carlo 3-Policy Benchmark in the terminal, run:
+### Reproduce Core Monte Carlo Benchmark (SNIPS OPE)
+To reproduce the 3-Policy Benchmark in your terminal:
 ```bash
 python3 scripts/run_monte_carlo.py
 ```
-
-This will run 1,000 bootstrap iterations over logged synthetic outcomes using Self-Normalized Inverse Propensity Scoring (SNIPS) to prove the net-revenue recovery (NRR) superiority of the AI Orchestrator over the Naive Blind-Retry policy, complete with 95% Confidence Intervals and segment-level breakdowns.
+Runs 1,000 bootstrap iterations over logged synthetic outcomes using Self-Normalized Inverse Propensity Scoring (SNIPS) to prove the net-revenue recovery (NRR) superiority of the AI Orchestrator over Naive Blind Retry, complete with 95% Confidence Intervals and segment-level breakdowns.
 
 ---
 
@@ -43,16 +50,16 @@ Most systems either prompt an LLM to be "compliant" (dangerous, non-deterministi
 The recovery propensity estimator (`src/ml/`) evolved through three distinct, audited stages:
 * **Profile 1 (Exploration - 80.1% Acc, 0.875 AUC, Dataset `40f623dd...`):** Early proof-of-concept calibrated to 2.0% legal hold base rates.
 * **Profile 2 (Causal Shift - 72.1% Acc, 0.761 AUC, Dataset `4f4e09e2...`):** Expanded merchant/customer diversity, but revealed policy contamination when `ground_truth_recoverable` was assigned as treatment-conditioned outcome.
-* **Profile 3 (Certified Production Baseline - 74.4% Acc, 0.730 AUC, ECE 0.0372, Dataset `90b2d59a...`):** Re-anchored on pure unconfounded passive recovery ($Y_0 = \text{Bernoulli}(\mu_0(S))$). Model training is 100% deterministic (`random_seed=42`), producing bit-for-bit identical parameters on successive runs with full SHA256 lineage tracking between dataset, joblib artifact, and model cards.
+* **Profile 3 (Certified Production Baseline - 74.4% Acc, 0.730 AUC, ECE 0.0372, Dataset `90b2d59a...`):** Re-anchored on pure unconfounded passive recovery ($Y_0 = \text{Bernoulli}(\mu_0(S))$). Model training is 100% deterministic (`random_seed=42`), producing bit-for-bit identical parameters on successive runs with full SHA256 lineage tracking between dataset, joblib artifact, and metadata.
 
 ---
 
-## 📚 Key Artifacts & Proofs
+## 🏛️ Core Architectural Invariants & Compliance Proofs
 
-- **[Project Defense & Market Context](docs/project_defense_and_justification.md)**: Explains the fundamental design choices, including why global baselines like SEPA rules fail under Indian regulations.
-- **[Decision Governance Record](docs/decision_governance_record.md)**: Documents the math behind the deterministic `θ_digital` safety margin, action multipliers, and three-profile model lineage.
-- **[Compliance Proof Appendix](docs/compliance_proof_appendix.md)**: A map of every hard Indian regulatory invariant and the automated tests that guarantee they are never violated.
-- **[Recovery Playbook](docs/recovery_playbook.md)**: A human-readable trace of real synthetic cases passing through the entire decision pipeline.
+- **Deterministic Regulatory Invariants**: Hard enforcement of RBI and NPCI mandates (4-attempt cap, 24h retry spacing, ₹15,000 AFA threshold, and mandatory `LEGAL_HOLD`/`07`/`AP03` escalation).
+- **Mathematical Decision Governance**: Deterministic `θ_digital` safety margins, action cost-benefit matrices, and three-profile model lineage progression.
+- **Fail-Closed Verification**: Zero-tolerance design ensuring unrecoverable segments (`HARD_TERMINAL`, `LEGAL_HOLD`) abort immediately rather than burning retry budgets or triggering regulatory fines.
+- **Auditable State Transitions**: Fully traceable decision logs detailing raw bank failure codes, extracted semantic root causes, candidate action expected values, and cryptographic execution intents.
 
 ---
 

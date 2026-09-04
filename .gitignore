@@ -54,3 +54,15 @@ htmlcov/
 *.db
 *.db-wal
 *.db-shm
+
+# Markdown Documentation & Internal Agent Traces
+.agents/
+docs/
+*.md
+!README.md
+
+# Logs & Traces
+*.log
+razorpay_calls.jsonl
+
+
