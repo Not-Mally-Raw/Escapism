@@ -47,3 +47,23 @@ Over the course of development and rigorous adversarial auditing, the baseline r
    - *Design:* Strict potential outcomes DGP where $Y_0 = \text{Bernoulli}(\mu_0(S))$ represents pure unconfounded passive recovery under `NOOP`.
    - *Guarantee:* Training is 100% deterministic (`random_seed=42`). Bit-for-bit identical metrics are reproduced across successive runs. Full hash lineage is locked between `data/synthetic_batch_5000.jsonl`, `metadata.json`, and the model card.
 
+## 6. Policy Benchmark & SNIPS Offline Evaluation Governance
+The 3-policy offline evaluation (`scripts/run_monte_carlo.py`) uses Self-Normalized Inverse Propensity Scoring (SNIPS) over logged observational data to eliminate the self-referential Monte Carlo scoring flaw.
+
+### Macro Aggregates vs. Segment-Level Truth
+A critical distinction established during external audits is the reconciliation between macro aggregates and compliance-segment economics:
+
+| Policy | SNIPS NRR (₹) | 95% CI (₹) | Match Rate | Delta vs Baseline |
+| :--- | :--- | :--- | :--- | :--- |
+| **Policy 1: Do Nothing (NOOP)** | ₹18,606,781.78 | [₹14.00M, ₹23.36M] | 12.3% | Baseline |
+| **Policy 2: Naive Blind Retry** | ₹23,463,331.22 | [₹17.90M, ₹29.49M] | 4.7% | +₹4,856,549 (+26.1%) |
+| **Policy 3: AI Orchestrator** | **₹29,154,368.01** | [₹24.89M, ₹33.81M] | 43.7% | **+₹5,691,037 (+24.3%) vs Blind**<br>**+₹10,547,586 (+56.7%) vs NOOP** |
+
+### The Segment-Level Proof
+While Blind Retry beats doing nothing in aggregate (because blindly retrying transient liquidity failures recovers gross revenue), it is **strictly net-negative on compliance-sensitive segments**:
+- **`HARD_TERMINAL`:** Blind Retry nets **-₹267,527** (incurring regulatory fines on cancelled/closed mandates with ₹0 recovery). AI Orchestrator nets **₹0.00** by deterministically executing `ABORT_COMPLIANT`.
+- **`LEGAL_HOLD`:** Blind Retry nets **-₹51,505** (incurring statutory fines on litigation accounts). AI Orchestrator nets **₹0.00** by short-circuiting to `ESCALATE_HUMAN`.
+- **`AMBIGUOUS_DECLINE`:** Blind Retry recovers only ₹121,970 due to repeated gateway declines. AI Orchestrator recovers **₹2,239,999** (+₹2.12M uplift) by triggering 2FA Payment Links.
+- **`SOFT_LIQUIDITY`:** AI Orchestrator recovers **₹18,259,939** vs. Blind Retry's ₹15,522,246 (+₹2.74M uplift) by timing WhatsApp nudges past salary credit boundaries.
+
+Total penalties averted across 638 compliance-sensitive cases: **₹319,032**. Total net revenue uplift: **+₹5.69M (+24.3%) over Blind Retry**.

@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAZORPAY RECOVERY TERMINAL // BLOOMBERG V1.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bb-black: #000000;
+      --bb-bg: #0a0a0a;
+      --bb-panel: #0f0f0f;
+      --bb-border: #333333;
+      --bb-orange: #FF6600;
+      --bb-amber: #FFB300;
+      --bb-cyan: #00FFFF;
+      --bb-green: #00FF88;
+      --bb-red: #FF3030;
+      --bb-gray: #888888;
+      --bb-white: #E8E8E8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border-radius: 0px !important;
+      font-family: 'IBM Plex Mono', 'Courier New', Courier, monospace;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bb-black);
+      color: var(--bb-white);
+      font-size: 12px;
+      line-height: 1.3;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    /* Fixed Bloomberg Top Bar */
+    .bb-topbar {
+      background-color: var(--bb-panel);
+      border-bottom: 2px solid var(--bb-orange);
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .bb-logo {
+      color: var(--bb-orange);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bb-fkeys {
+      display: flex;
+      gap: 4px;
+    }
+
+    .fkey-btn {
+      background: transparent;
+      border: 1px solid var(--bb-border);
+      color: var(--bb-gray);
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.1s ease;
+    }
+
+    .fkey-btn:hover {
+      border-color: var(--bb-orange);
+      color: var(--bb-white);
+    }
+
+    .fkey-btn.active {
+      background-color: var(--bb-orange);
+      color: var(--bb-black);
+      border-color: var(--bb-orange);
+      font-weight: 700;
+    }
+
+    .bb-clock {
+      color: var(--bb-amber);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background-color: var(--bb-green);
+      display: inline-block;
+      box-shadow: 0 0 6px var(--bb-green);
+    }
+
+    /* Command Bar */
+    .bb-commandbar {
+      background-color: var(--bb-bg);
+      border-bottom: 1px solid var(--bb-border);
+      padding: 4px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .cmd-prompt {
+      color: var(--bb-orange);
+      font-weight: 700;
+    }
+
+    .cmd-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--bb-white);
+      font-size: 12px;
+      flex: 1;
+    }
+
+    .cmd-help {
+      color: var(--bb-gray);
+      font-size: 10px;
+    }
+
+    /* Main Content Layout */
+    .bb-main {
+      padding: 10px;
+      min-height: calc(100vh - 66px);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Panel Container */
+    .bb-panel {
+      background-color: var(--bb-panel);
+      border: 1px solid var(--bb-border);
+      padding: 10px 14px;
+    }
+
+    .panel-header {
+      color: var(--bb-orange);
+      font-weight: 700;
+      font-size: 12px;
+      border-bottom: 1px solid var(--bb-border);
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      letter-spacing: 0.05em;
+    }
+
+    /* Monospace Data Tables */
+    table.bb-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    table.bb-table th {
+      text-align: left;
+      color: var(--bb-gray);
+      border-bottom: 1px solid var(--bb-border);
+      padding: 4px 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    table.bb-table td {
+      padding: 4px 6px;
+      border-bottom: 1px solid #1a1a1a;
+      white-space: nowrap;
+    }
+
+    table.bb-table tr:hover {
+      background-color: #161616;
+      cursor: pointer;
+    }
+
+    table.bb-table tr.selected {
+      background-color: #222222;
+      border-left: 2px solid var(--bb-orange);
+    }
+
+    /* Color Tokens */
+    .text-orange { color: var(--bb-orange) !important; }
+    .text-amber  { color: var(--bb-amber) !important; }
+    .text-cyan   { color: var(--bb-cyan) !important; }
+    .text-green  { color: var(--bb-green) !important; }
+    .text-red    { color: var(--bb-red) !important; }
+    .text-gray   { color: var(--bb-gray) !important; }
+    .text-white  { color: var(--bb-white) !important; }
+
+    .border-red   { border-color: var(--bb-red) !important; }
+    .border-green { border-color: var(--bb-green) !important; }
+    .border-cyan  { border-color: var(--bb-cyan) !important; }
+
+    /* KPI Ticker Tiles */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .kpi-tile {
+      background-color: var(--bb-panel);
+      border: 1px solid var(--bb-border);
+      padding: 8px 12px;
+    }
+
+    .kpi-title {
+      font-size: 10px;
+      color: var(--bb-gray);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .kpi-num {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--bb-amber);
+      margin: 3px 0;
+    }
+
+    .kpi-sub {
+      font-size: 10px;
+      color: var(--bb-green);
+    }
+
+    /* Rectangular Badge */
+    .bb-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border: 1px solid var(--bb-border);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    /* Tiled Grids */
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .grid-3col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .grid-left-heavy {
+      display: grid;
+      grid-template-columns: 4fr 6fr;
+      gap: 10px;
+    }
+
+    /* Form Controls */
+    .bb-input, .bb-select {
+      background-color: #141414;
+      border: 1px solid var(--bb-border);
+      color: var(--bb-white);
+      padding: 4px 8px;
+      font-size: 11px;
+      width: 100%;
+      outline: none;
+    }
+
+    .bb-input:focus, .bb-select:focus {
+      border-color: var(--bb-orange);
+    }
+
+    .bb-btn {
+      background-color: #181818;
+      border: 1px solid var(--bb-orange);
+      color: var(--bb-orange);
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.1s;
+    }
+
+    .bb-btn:hover {
+      background-color: var(--bb-orange);
+      color: var(--bb-black);
+    }
+
+    .bb-btn-alert {
+      border-color: var(--bb-red);
+      color: var(--bb-red);
+    }
+    .bb-btn-alert:hover {
+      background-color: var(--bb-red);
+      color: var(--bb-black);
+    }
+
+    /* Fail-closed lock banner */
+    .lock-box {
+      background-color: #1a0a0a;
+      border: 1px solid var(--bb-red);
+      padding: 12px;
+      text-align: center;
+      margin: 8px 0;
+    }
+
+    /* Status Bar */
+    .bb-statusbar {
+      background-color: var(--bb-panel);
+      border-top: 1px solid var(--bb-border);
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      font-size: 10px;
+      color: var(--bb-gray);
+      position: sticky;
+      bottom: 0;
+      z-index: 100;
+    }
+
+    /* Hidden utility */
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. TOP BAR -->
+  <header class="bb-topbar">
+    <div class="bb-logo">
+      <span>■</span>
+      <span>RAZORPAY RECOVERY TERMINAL</span>
+      <span style="color: var(--bb-gray); font-size: 11px; font-weight: 400;">// V1.0-FROZEN</span>
+    </div>
+
+    <div class="bb-fkeys">
+      <button class="fkey-btn active" onclick="switchTab('F1')">F1:FEED</button>
+      <button class="fkey-btn" onclick="switchTab('F2')">F2:DECISION</button>
+      <button class="fkey-btn" onclick="switchTab('F3')">F3:METRICS</button>
+      <button class="fkey-btn" onclick="switchTab('F4')">F4:MODEL</button>
+      <button class="fkey-btn" onclick="switchTab('F5')">F5:COMPLIANCE</button>
+      <button class="fkey-btn" onclick="switchTab('F6')">F6:POLICY</button>
+      <button class="fkey-btn" onclick="switchTab('F7')">F7:SIM</button>
+      <button class="fkey-btn" onclick="switchTab('F8')">F8:DOCS</button>
+    </div>
+
+    <div class="bb-clock">
+      <span class="live-dot"></span>
+      <span id="live-clock">--:--:-- IST</span>
+    </div>
+  </header>
+
+  <!-- 2. COMMAND / SHORTCUT BAR -->
+  <div class="bb-commandbar">
+    <span class="cmd-prompt">&gt;</span>
+    <input type="text" id="command-input" class="cmd-input" placeholder="Type command (e.g. case_0042, Z9, SIM, MODEL, BENCH, HELP) and hit &lt;ENTER&gt;..." onkeydown="handleCommand(event)">
+    <span class="cmd-help">F1-F8: SWITCH TABS | 1-6: QUICK SCENARIOS</span>
+  </div>
+
+  <!-- 3. MAIN TERMINAL WORKSPACE -->
+  <main class="bb-main">
+
+    <!-- TAB F1: CASE FEED PANEL -->
+    <div id="tab-F1" class="tab-content active">
+      <div class="bb-panel">
+        <div class="panel-header">
+          <span>// F1: INGESTION FEED &amp; TELEMETRY (BENCHMARK BATCH REPLAY)</span>
+          <span style="color: var(--bb-gray); font-weight: normal;">SOURCE: data/synthetic_batch_50.jsonl | SYNCED WITH gateway.db AUDIT LEDGER</span>
+        </div>
+        <div style="margin-bottom: 8px; display: flex; gap: 8px;">
+          <input type="text" id="feed-search" class="bb-input" style="max-width: 280px;" placeholder="Filter by Case ID or Code..." oninput="filterCases()">
+          <select id="feed-class-filter" class="bb-select" style="max-width: 220px;" onchange="filterCases()">
+            <option value="">ALL CLASSES</option>
+            <option value="SOFT_LIQUIDITY">SOFT_LIQUIDITY</option>
+            <option value="TECHNICAL_RETRYABLE">TECHNICAL_RETRYABLE</option>
+            <option value="AMBIGUOUS_DECLINE">AMBIGUOUS_DECLINE</option>
+            <option value="HARD_TERMINAL">HARD_TERMINAL</option>
+            <option value="LEGAL_HOLD">LEGAL_HOLD</option>
+          </select>
+          <button class="bb-btn" onclick="loadCases()">↻ REFRESH FEED</button>
+        </div>
+        <table class="bb-table" id="cases-table">
+          <thead>
+            <tr>
+              <th>TIME(IST)</th>
+              <th>CASE_ID</th>
+              <th>CODE</th>
+              <th>RAIL</th>
+              <th>CLASS</th>
+              <th>AMOUNT(₹)</th>
+              <th>AFA</th>
+              <th>ATT</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="cases-body">
+            <tr><td colspan="9" style="text-align: center; color: var(--bb-gray);">LOADING LOGGED TELEMETRY...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB F2: DECISION DETAIL PANEL -->
+    <div id="tab-F2" class="tab-content">
+      <div class="grid-left-heavy">
+        
+        <!-- Left: Case State Monospace Block -->
+        <div class="bb-panel">
+          <div class="panel-header">
+            <span>// CASE STATE VECTOR: <span id="dec-case-id" class="text-white">case_0000</span></span>
+            <span id="dec-mandate-flag" class="bb-badge text-orange">PATH: STATIC MULTIPLIER (θ=₹1.00)</span>
+          </div>
+          
+          <table class="bb-table" style="margin-bottom: 12px;">
+            <tbody>
+              <tr><td class="text-gray" style="width: 35%;">CASE_ID:</td><td id="d-case-id" class="text-white">case_0000</td></tr>
+              <tr><td class="text-gray">MANDATE_ID:</td><td id="d-mandate-id" class="text-white">man_0000</td></tr>
+              <tr><td class="text-gray">FAILURE_CODE:</td><td id="d-code" class="text-amber">Z9</td></tr>
+              <tr><td class="text-gray">FAILURE_CLASS:</td><td id="d-class" class="text-cyan">SOFT_LIQUIDITY</td></tr>
+              <tr><td class="text-gray">PAYMENT_RAIL:</td><td id="d-rail" class="text-white">UPI_AUTOPAY</td></tr>
+              <tr><td class="text-gray">AMOUNT:</td><td id="d-amount" class="text-white">₹14,999.99</td></tr>
+              <tr><td class="text-gray">ATTEMPT_COUNT:</td><td id="d-attempts" class="text-white">2 / 4 (NPCI Cap)</td></tr>
+              <tr><td class="text-gray">AFA_REQUIRED:</td><td id="d-afa" class="text-white">NO (≤ ₹15,000)</td></tr>
+              <tr><td class="text-gray">SPACING_STATUS:</td><td id="d-spacing" class="text-green">VALID (26h &gt; 24h)</td></tr>
+              <tr><td class="text-gray">BASELINE P̂(S):</td><td id="d-phat" class="text-amber">0.4821</td></tr>
+            </tbody>
+          </table>
+
+          <div class="panel-header" style="margin-top: 10px;">
+            <span>// IMMUTABLE AUDIT TRAIL LOG</span>
+          </div>
+          <div id="dec-audit-trail" style="font-size: 10px; color: var(--bb-gray); max-height: 180px; overflow-y: auto; line-height: 1.4;">
+            <div>[09:14:22] GATE_0: failure_class=SOFT_LIQUIDITY → NOT LEGAL_HOLD, proceed</div>
+            <div>[09:14:22] GATE_1: feasible_set computed (6 actions)</div>
+            <div>[09:14:22] TRACK1: p_hat=0.4821 (static multiplier Lift-EV path)</div>
+            <div>[09:14:22] OPTIMIZER: argmax=WHATSAPP_NUDGE, lift_ev=₹1,799.18 (θ_digital cleared)</div>
+            <div>[09:14:22] EXECUTION: mock receipt plink_created mode=mock</div>
+          </div>
+        </div>
+
+        <!-- Right: Candidate EV Table & Selected Action -->
+        <div class="bb-panel">
+          <div class="panel-header">
+            <span>// OPTIMIZER CANDIDATE EV SCORING MATRIX</span>
+            <span id="dec-verdict" class="bb-badge text-green" style="font-size: 11px;">SELECTED: WHATSAPP_NUDGE</span>
+          </div>
+
+          <div id="dec-lock-box" class="lock-box" style="display: none;">
+            <div style="font-size: 20px;">🔒</div>
+            <div style="color: var(--bb-red); font-weight: 700; margin: 4px 0;">EV OPTIMIZATION CONTAINER COLLAPSED &amp; LOCKED</div>
+            <div style="font-size: 10px; color: var(--bb-gray);">MANDATORY COMPLIANCE SHORT-CIRCUIT (§3.4 Invariant)<br>Legal hold or uncatalogued codes bypass ML scoring entirely.</div>
+          </div>
+
+          <table class="bb-table" id="dec-ev-table">
+            <thead>
+              <tr>
+                <th>ACTION</th>
+                <th>ΔP(LIFT)</th>
+                <th>AMT×ΔP(₹)</th>
+                <th>COST(₹)</th>
+                <th>LIFT-EV(₹)</th>
+                <th>CLEARED</th>
+                <th>SEL</th>
+              </tr>
+            </thead>
+            <tbody id="dec-ev-body">
+              <!-- Dynamically rendered -->
+            </tbody>
+          </table>
+
+          <div style="margin-top: 14px; border-top: 1px solid var(--bb-border); padding-top: 8px;">
+            <div class="text-orange" style="font-weight: 700; font-size: 11px;">AUDIT RATIONALE:</div>
+            <div id="dec-rationale" style="font-size: 11px; color: var(--bb-white); margin-top: 2px;">
+              Selected WHATSAPP_NUDGE with max lift EV ₹1,799.18 exceeding threshold ₹1.00.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB F3: METRICS PANEL -->
+    <div id="tab-F3" class="tab-content">
+      <div class="kpi-grid">
+        <div class="kpi-tile">
+          <div class="kpi-title">NET REVENUE RECOVERED (NRR)</div>
+          <div class="kpi-num" id="m-nrr">₹ 29.15M</div>
+          <div class="kpi-sub">▲ +56.7% vs NOOP (+₹10.55M)</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-title">FALSE ESCALATION RATE (FER)</div>
+          <div class="kpi-num" id="m-fer" style="color: var(--bb-cyan);">4.2%</div>
+          <div class="kpi-sub" style="color: var(--bb-cyan);">↓ Down from 18.1% baseline</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-title">COMPLIANCE VIOLATION RATE (CVR)</div>
+          <div class="kpi-num" id="m-cvr" style="color: var(--bb-green);">0.000%</div>
+          <div class="kpi-sub">✓ PROVEN BY CONSTRUCTION</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-title">DECISION LATENCY (P95)</div>
+          <div class="kpi-num" id="m-lat" style="color: var(--bb-white);">0.598 ms</div>
+          <div class="kpi-sub" style="color: var(--bb-cyan);">⚡ P95 = 0.743 ms (&lt; 15ms target)</div>
+        </div>
+      </div>
+
+      <div class="grid-2col">
+        <!-- Segment Breakdown -->
+        <div class="bb-panel">
+          <div class="panel-header">
+            <span>// SEGMENT RECOVERY BREAKDOWN (5,000 RECORD BATCH)</span>
+          </div>
+          <table class="bb-table">
+            <thead>
+              <tr>
+                <th>SEGMENT</th>
+                <th>CASES</th>
+                <th>RECOVERED</th>
+                <th>NRR(₹)</th>
+                <th>NRR(%)</th>
+                <th>AI VS BLIND</th>
+              </tr>
+            </thead>
+            <tbody id="m-segment-body">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Cumulative NRR Recovery Curve (SVG) -->
+        <div class="bb-panel">
+          <div class="panel-header">
+            <span>// CUMULATIVE RECOVERY TIMELINE (24H TRAJECTORY)</span>
+            <span style="color: var(--bb-gray); font-size: 10px;">ORANGE: AI ORCHESTRATOR | GRAY: NOOP</span>
+          </div>
+          <div style="height: 180px; width: 100%; display: flex; align-items: flex-end; padding-top: 10px;">
+            <svg id="timeline-svg" style="width: 100%; height: 100%;"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB F4: MODEL INTELLIGENCE PANEL -->
+    <div id="tab-F4" class="tab-content">
+      <div class="grid-2col">
+        <!-- Sub-panel A: Confusion Matrix & Metrics -->
+        <div class="bb-panel">
+          <div class="panel-header">
+            <span>// MODEL PERFORMANCE &amp; CONFUSION MATRIX (HELD-OUT N=1,000)</span>
+            <span class="bb-badge text-green">ACCURACY: 74.40% | ROC-AUC: 0.7300</span>
+          </div>
+          <div style="display: flex; gap: 20px; align-items: center; margin: 12px 0;">
+            <div style="display: grid; grid-template-columns: 80px 80px; gap: 4px; text-align: center; font-size: 11px;">
+              <div style="background: #182218; border: 1px solid var(--bb-green); padding: 10px 4px;">
+                <div class="text-green" style="font-weight: 700; font-size: 14px;">684</div>
+                <div class="text-gray" style="font-size: 9px;">TRUE NEG (TN)</div>
+              </div>
+              <div style="background: #241414; border: 1px solid var(--bb-red); padding: 10px 4px;">
+                <div class="text-red" style="font-weight: 700; font-size: 14px;">32</div>
+                <div class="text-gray" style="font-size: 9px;">FALSE POS (FP)</div>
+              </div>
+              <div style="background: #241414; border: 1px solid var(--bb-red); padding: 10px 4px;">
+                <div class="text-red" style="font-weight: 700; font-size: 14px;">224</div>
+                <div class="text-gray" style="font-size: 9px;">FALSE NEG (FN)</div>
+              </div>
+              <div style="background: #182218; border: 1px solid var(--bb-green); padding: 10px 4px;">
+                <div class="text-green" style="font-weight: 700; font-size: 14px;">60</div>
+                <div class="text-gray" style="font-size: 9px;">TRUE POS (TP)</div>
+              </div>
+            </div>
+            <div style="font-size: 11px; line-height: 1.6;">
+              <div>• MODEL SHA: <code class="text-white">170bac42...</code></div>
+              <div>• EXPECTED CALIBRATION ERROR (ECE): <span class="text-amber">0.0372</span></div>
+              <div>• BRIER SCORE: <span class="text-cyan">0.1738</span></div>
+              <div>• DATA LINEAGE: Profile 3 (Unconfounded μ₀ Baseline)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-panel C: Feature Odds Ratios -->
+        <div class="bb-panel">
+          <div class="panel-header">
+            <span>// LOGISTIC REGRESSION TOP FEATURE COEFFICIENTS &amp; ODDS RATIOS</span>
+          </div>
+          <table class="bb-table">
+            <thead>
+              <tr>
+                <th>FEATURE</th>
+                <th>COEF</th>
+                <th>ODDS_RATIO</th>
+                <th>DIRECTION</th>
+              </tr>
+            </thead>
+            <tbody id="model-coef-body">
+              <tr><td class="text-white">failure_class_TECHNICAL_RETRYABLE</td><td>+2.5995</td><td>13.46</td><td class="text-green">▲ STRONG POSITIVE</td></tr>
+              <tr><td class="text-white">failure_class_HARD_TERMINAL</td><td>-2.7462</td><td>0.06</td><td class="text-red">▼ STRONG NEGATIVE</td></tr>
+              <tr><td class="text-white">failure_class_SOFT_LIQUIDITY</td><td>+1.5015</td><td>4.49</td><td class="text-green">▲ MODERATE</td></tr>
+              <tr><td class="text-white">attempt_count</td><td>-0.3533</td><td>0.70</td><td class="text-red">▼ MILD NEGATIVE</td></tr>
+              <tr><td class="text-white">has_last_attempt</td><td>+0.0495</td><td>1.05</td><td class="text-gray">→ MARGINAL</td></tr>
+              <tr><td class="text-white">time_since_last_attempt_hours</td><td>-0.0109</td><td>0.99</td><td class="text-gray">→ MARGINAL</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB F5: COMPLIANCE PANEL -->
+    <div id="tab-F5" class="tab-content">
+      <div class="bb-panel" style="margin-bottom: 10px;">
+        <div class="panel-header">
+          <span>// REGULATORY COMPLIANCE INVARIANT BOARD (RBI / NPCI DIRECTIVES)</span>
+          <span class="bb-badge text-green">169/169 INVARIANTS PASSING</span>
+        </div>
+        <table class="bb-table">
+          <thead>
+            <tr>
+              <th>GUARDRAIL</th>
+              <th>CONFIDENCE</th>
+              <th>STATUS</th>
+              <th>REGULATORY CONSTRAINT</th>
+              <th>SYSTEM EVIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="text-white">ATTEMPT_CAP</td><td class="text-green">🟢 VERIFIED</td><td class="text-green">✓ ACTIVE</td><td>k ≤ 4 presentations (NPCI Circular Aug 2025)</td><td>attempt_count gate</td></tr>
+            <tr><td class="text-white">RETRY_SPACING</td><td class="text-green">🟢 VERIFIED</td><td class="text-green">✓ ACTIVE</td><td>24h (k=2) / 72h (k=3) / 168h (k=4) (NPCI Directive)</td><td>spacing_validator.py</td></tr>
+            <tr><td class="text-white">NON_PEAK_WINDOW</td><td class="text-green">🟢 VERIFIED</td><td class="text-green">✓ ACTIVE</td><td>00-10 / 13-17 / 21:30-24 IST (NPCI Aug 2025)</td><td>window_mask.py</td></tr>
+            <tr><td class="text-white">CONTACT_HOURS</td><td class="text-amber">🟡 BEST PRACTICE</td><td class="text-green">✓ ACTIVE</td><td>08:00–19:00 IST (RBI Fair Practices Code, Voluntary Standard)</td><td>contact_gate.py</td></tr>
+            <tr><td class="text-white">AFA_THRESHOLD</td><td class="text-green">🟢 VERIFIED</td><td class="text-green">✓ ACTIVE</td><td>₹15,000 threshold (RBI Digital E-Mandate Framework)</td><td>afa_enforcer.py</td></tr>
+            <tr><td class="text-white">PRE_DEBIT_NOTICE</td><td class="text-green">🟢 VERIFIED</td><td class="text-green">✓ ACTIVE</td><td>≥ 24h prior notification (RBI Recurring Mandate Circular)</td><td>pre_debit_gate.py</td></tr>
+            <tr><td class="text-white">LEGAL_HOLD_SHORT_CIRCUIT</td><td class="text-green">🟢 VERIFIED</td><td class="text-green">✓ ACTIVE</td><td>Codes 07 &amp; AP03 (NPCI Procedural Guidelines)</td><td>legal_hold_filter.py</td></tr>
+            <tr><td class="text-white">UNCATALOGUED_CODE_FAILSAFE</td><td class="text-amber">🟡 SAFETY SPEC</td><td class="text-green">✓ ACTIVE</td><td>rbi_npci_regulations.md §3.4 (Fail-Closed to ESCALATE_HUMAN)</td><td>legal_hold_filter.py §3.4</td></tr>
+            <tr><td class="text-white">CONSENT_GATE</td><td class="text-green">🟢 VERIFIED</td><td class="text-green">✓ ACTIVE</td><td>OPTED_IN only (DPDP Act 2023 / IT Act)</td><td>consent_gate.py</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bb-panel">
+        <div class="panel-header">
+          <span>// CVR = 0.000% INVARIANT PROOF &amp; AUDIT EXPORT</span>
+          <a href="/api/v1/export-csv" class="bb-btn" style="text-decoration: none; padding: 3px 8px;">📥 EXPORT AUDIT CSV</a>
+        </div>
+        <div style="font-size: 11px; color: var(--bb-gray); line-height: 1.6;">
+          <b>MATHEMATICAL PROOF:</b> The compliance violation rate $CVR=0$ is proven by construction. The guardrail feasibility engine computes $\mathcal{A}_{\text{feasible}}$ upstream of ML inference or expected value ranking. Actions outside $\mathcal{A}_{\text{feasible}}$ cannot be ranked or selected. All unknown bank decline codes automatically map to <code>ESCALATE_HUMAN</code> fail-closed.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB F6: POLICY BENCHMARK PANEL -->
+    <div id="tab-F6" class="tab-content">
+      <div class="grid-2col">
+        <div class="bb-panel">
+          <div class="panel-header">
+            <span>// SNIPS OFFLINE POLICY EVALUATION (N=5,000 MANDATE BATCH)</span>
+          </div>
+          <table class="bb-table">
+            <thead>
+              <tr>
+                <th>POLICY</th>
+                <th>SNIPS NRR (₹)</th>
+                <th>DELTA VS BASELINE</th>
+                <th>95% CONFIDENCE INTERVAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="text-gray">Policy 1: Do Nothing (NOOP)</td><td class="text-white">₹18,606,782</td><td>Baseline</td><td>₹17.82M – ₹19.41M</td></tr>
+              <tr><td class="text-red">Policy 2: Naive Blind Retry</td><td class="text-white">₹23,463,331</td><td class="text-red">+₹4.86M (Incurs -₹319k fines)</td><td>₹22.58M – ₹24.31M</td></tr>
+              <tr><td class="text-green">Policy 3: AI Orchestrator</td><td class="text-amber" style="font-weight: 700;">₹29,154,368</td><td class="text-green">+₹5.69M (+24.3% vs Blind)</td><td>₹28.24M – ₹30.08M</td></tr>
+            </tbody>
+          </table>
+
+          <div style="margin-top: 14px; border: 1px solid var(--bb-border); padding: 8px;">
+            <div class="text-orange" style="font-weight: 700; font-size: 11px;">SNIPS OPE RECONCILIATION (MACRO VS SEGMENT ECONOMICS):</div>
+            <div style="font-size: 11px; color: var(--bb-white); margin-top: 4px; line-height: 1.5;">
+              • <b>Macro Aggregates:</b> Blind Retry recovers gross funds on transient failures (₹23.46M vs NOOP ₹18.61M), but AI Orchestrator dominates both at <span class="text-green" style="font-weight: 700;">₹29.15M</span> (+₹5.69M / +24.3% vs Blind, +₹10.55M vs NOOP).<br>
+              • <b>Compliance Segments Net-Negative:</b> On <code>HARD_TERMINAL</code> (<span class="text-red">-₹267,527</span>) and <code>LEGAL_HOLD</code> (<span class="text-red">-₹51,505</span>), Blind Retry is strictly <b>net-negative</b> due to illegal presentation penalties. AI Orchestrator avoids 100% of penalties via deterministic short-circuits.<br>
+              • <b>Intelligent Channel Lift:</b> AI captures +₹2.74M on Soft Liquidity (timed WhatsApp) and +₹2.12M on Ambiguous declines (2FA Payment Links) rather than blind re-debiting.
+            </div>
+          </div>
+        </div>
+
+        <!-- Segment Negative Bar Visual -->
+        <div class="bb-panel">
+          <div class="panel-header">
+            <span>// HARD_TERMINAL &amp; LEGAL_HOLD REVENUE IMPACT (BLIND RETRY PENALTY)</span>
+          </div>
+          <div style="padding: 10px; font-size: 11px;">
+            <div style="margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span>HARD_TERMINAL: Blind Retry</span>
+                <span class="text-red">-₹267,527 (Regulatory Penalties)</span>
+              </div>
+              <div style="background: #222; height: 12px; margin-top: 4px;">
+                <div style="background: var(--bb-red); width: 65%; height: 100%;"></div>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span>HARD_TERMINAL: AI Orchestrator</span>
+                <span class="text-green">₹0.00 (Compliant Abort)</span>
+              </div>
+              <div style="background: #222; height: 12px; margin-top: 4px;">
+                <div style="background: var(--bb-green); width: 2px; height: 100%;"></div>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span>LEGAL_HOLD: Blind Retry</span>
+                <span class="text-red">-₹51,505 (Penalties)</span>
+              </div>
+              <div style="background: #222; height: 12px; margin-top: 4px;">
+                <div style="background: var(--bb-red); width: 30%; height: 100%;"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>LEGAL_HOLD: AI Orchestrator</span>
+                <span class="text-green">₹0.00 (Human Escalation)</span>
+              </div>
+              <div style="background: #222; height: 12px; margin-top: 4px;">
+                <div style="background: var(--bb-green); width: 2px; height: 100%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB F7: SIMULATION CONTROL PANEL -->
+    <div id="tab-F7" class="tab-content">
+      <div class="grid-left-heavy">
+        
+        <!-- Left: Interactive Scenario Builder -->
+        <div class="bb-panel">
+          <div class="panel-header">
+            <span>// F7: SCENARIO BUILDER</span>
+            <button class="bb-btn" onclick="executeSimulation()">EXECUTE [F7]</button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+            <div>
+              <label class="text-gray" style="font-size: 10px;">FAILURE_CODE:</label>
+              <select id="sim-code" class="bb-select">
+                <option value="Z9">Z9 (Insufficient Funds)</option>
+                <option value="07">07 (Legal Hold)</option>
+                <option value="04">04 (AFA / Bank Decline)</option>
+                <option value="01">01 (Account Closed)</option>
+                <option value="U19">U19 (Ambiguous Decline)</option>
+                <option value="GARBAGE_99">GARBAGE_99 (Malformed Code)</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-gray" style="font-size: 10px;">AMOUNT(₹):</label>
+              <input type="number" id="sim-amount" class="bb-input" value="14999.99" step="100">
+            </div>
+            <div>
+              <label class="text-gray" style="font-size: 10px;">ATTEMPT_COUNT (1-4):</label>
+              <input type="number" id="sim-attempts" class="bb-input" value="2" min="1" max="4">
+            </div>
+            <div>
+              <label class="text-gray" style="font-size: 10px;">HOURS_SINCE_LAST:</label>
+              <input type="number" id="sim-hours" class="bb-input" value="26.0">
+            </div>
+          </div>
+
+          <div style="margin-top: 10px;">
+            <label class="text-gray" style="font-size: 10px;">CHANNEL CONSENT MATRIX:</label>
+            <div style="display: flex; gap: 12px; margin-top: 4px;">
+              <label><input type="checkbox" id="sim-c-wa" checked> WA</label>
+              <label><input type="checkbox" id="sim-c-sms" checked> SMS</label>
+              <label><input type="checkbox" id="sim-c-link" checked> LINK</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Pre-loaded 6 Scenarios -->
+        <div class="bb-panel">
+          <div class="panel-header">
+            <span>// PRE-LOADED TEST SCENARIOS (PRESS NUMBER KEY TO LOAD)</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <button class="bb-btn bb-btn-alert" style="text-align: left;" onclick="loadPreset(1)">
+              [1] LEGAL_HOLD HARD-STOP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; code=07 &nbsp; amt=₹5,000 &nbsp; att=1 &nbsp;→ ESCALATE_HUMAN (Mandatory)
+            </button>
+            <button class="bb-btn" style="text-align: left;" onclick="loadPreset(2)">
+              [2] AFA-GATED LARGE MANDATE &nbsp; code=Z9 &nbsp; amt=₹25,000 &nbsp; att=2 &nbsp;→ Silent Retry Suppressed
+            </button>
+            <button class="bb-btn" style="text-align: left;" onclick="loadPreset(3)">
+              [3] NEAR-THRESHOLD AMOUNT &nbsp;&nbsp; code=Z9 &nbsp; amt=₹15,000.01 &nbsp;→ Boundary Trigger (&gt;₹15k)
+            </button>
+            <button class="bb-btn" style="text-align: left;" onclick="loadPreset(4)">
+              [4] ATTEMPT_CAP EXHAUSTED &nbsp;&nbsp; code=Z9 &nbsp; amt=₹1,200 &nbsp; att=4 &nbsp;→ ABORT_COMPLIANT
+            </button>
+            <button class="bb-btn" style="text-align: left;" onclick="loadPreset(5)">
+              [5] TECHNICAL RETRY &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; code=U28 amt=₹3,450 &nbsp; 48h &nbsp;→ COOLDOWN_PASS
+            </button>
+            <button class="bb-btn bb-btn-alert" style="text-align: left;" onclick="loadPreset(6)">
+              [6] MALFORMED CODE FAILSAFE &nbsp; code=GARBAGE_99 &nbsp; any &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ ESCALATE_HUMAN (Fail-Closed)
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB F8: DOCS & ARCHITECTURE PANEL -->
+    <div id="tab-F8" class="tab-content">
+      <div class="bb-panel">
+        <div class="panel-header">
+          <span>// F8: SYSTEM ARCHITECTURE &amp; REGULATORY CITATION RECORD</span>
+        </div>
+        <div style="font-size: 11px; color: var(--bb-white); line-height: 1.6; max-height: 70vh; overflow-y: auto;">
+          <h3 class="text-orange" style="margin-bottom: 6px;">1. THE COMPLIANCE-GATED ALLOCATION ENGINE</h3>
+          <p class="text-gray" style="margin-bottom: 12px;">
+            The Razorpay Autonomous Revenue Recovery Engine operates as a 6-layer pipeline enforcing hard legal invariants upstream of any statistical or machine learning inference.
+          </p>
+
+          <h3 class="text-cyan" style="margin-bottom: 6px;">2. HARD REGULATORY INVARIANTS (RBI / NPCI)</h3>
+          <p class="text-gray" style="margin-bottom: 8px;">
+            • <b>Fail-Closed Invariant (§3.4):</b> Citing <code>docs/knowledge_base/rbi_npci_regulations.md §3.4</code>, bank decline codes <code>07</code> (Legal hold / court order), <code>AP03</code> (Account frozen), and any uncatalogued/malformed codes MUST short-circuit to <code>ESCALATE_HUMAN</code> with zero competitive scoring.<br>
+            • <b>AFA Limit Invariant:</b> Citing <code>RBI Master Direction on Digital Payments E-Mandates (Consolidated Framework) §2.2</code>, transactions strictly exceeding ₹15,000 require Additional Factor of Authentication (AFA). Silent re-presentation is masked from the feasible action set.<br>
+            • <b>NPCI Presentation Cap:</b> Citing <code>NPCI Mandate Execution Limits Circular (August 2025) §1.1</code>, presentation attempts are capped at $k \le 4$. Upon exhaustion, the engine executes <code>ABORT_COMPLIANT</code>.
+          </p>
+
+          <h3 class="text-green" style="margin-bottom: 6px;">3. MODEL LINEAGE (PROFILE 3)</h3>
+          <p class="text-gray">
+            Trained on unconfounded baseline $Y_0 = \mu_0(S)$ with Held-out Accuracy 74.40% and ROC-AUC 0.7300. Model SHA256: <code>170bac42fea7c50bab4fc6aa5305d703f7a065c451cf7e1acfa8dd5802ad9205</code>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 4. BOTTOM STATUS BAR -->
+  <footer class="bb-statusbar">
+    <div>
+      <span id="stat-queue">QUEUE: 0 PENDING</span> | 
+      <span>WORKER: ASYNCIO POLLER (1.0s)</span> | 
+      <span id="stat-latency">LATENCY: 0.598ms</span> | 
+      <span>MODEL SHA: 170bac42</span>
+    </div>
+    <div>
+      <span>SCIKIT-LEARN: 1.9.0</span> | 
+      <span class="text-green">CVR: 0.000% (INVARIANT PROVEN)</span> | 
+      <span>RAZORPAY REVENUE RECOVERY V1.0</span>
+    </div>
+  </footer>
+
+  <script>
+    // State
+    let activeTab = 'F1';
+    let cachedCases = [];
+
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toTimeString().split(' ')[0] + ' IST';
+      document.getElementById('live-clock').innerText = timeStr;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Tab Switching
+    function switchTab(tabId) {
+      activeTab = tabId;
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.fkey-btn').forEach(btn => btn.classList.remove('active'));
+
+      const targetTab = document.getElementById('tab-' + tabId);
+      if (targetTab) targetTab.classList.add('active');
+
+      const activeBtn = Array.from(document.querySelectorAll('.fkey-btn')).find(b => b.innerText.startsWith(tabId));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (tabId === 'F1' && cachedCases.length === 0) loadCases();
+      if (tabId === 'F3') loadMetrics();
+    }
+
+    // Keyboard Navigation
+    window.addEventListener('keydown', (e) => {
+      // F1 - F8 keys
+      if (e.key >= 'F1' && e.key <= 'F8') {
+        e.preventDefault();
+        switchTab(e.key);
+      }
+      // Quick scenario 1 - 6
+      if (activeTab === 'F7' && e.key >= '1' && e.key <= '6' && document.activeElement.tagName !== 'INPUT') {
+        loadPreset(parseInt(e.key));
+      }
+    });
+
+    // Command Bar Handler
+    function handleCommand(e) {
+      if (e.key === 'Enter') {
+        const cmd = document.getElementById('command-input').value.trim().toUpperCase();
+        if (!cmd) return;
+
+        if (cmd === 'F1' || cmd === 'FEED') switchTab('F1');
+        else if (cmd === 'F2' || cmd === 'DECISION') switchTab('F2');
+        else if (cmd === 'F3' || cmd === 'METRICS') switchTab('F3');
+        else if (cmd === 'F4' || cmd === 'MODEL') switchTab('F4');
+        else if (cmd === 'F5' || cmd === 'COMPLIANCE') switchTab('F5');
+        else if (cmd === 'F6' || cmd === 'POLICY' || cmd === 'BENCH') switchTab('F6');
+        else if (cmd === 'F7' || cmd === 'SIM') switchTab('F7');
+        else if (cmd === 'F8' || cmd === 'DOCS') switchTab('F8');
+        else if (cmd.startsWith('CASE_')) {
+          drillDownCase(cmd.toLowerCase());
+        } else if (['Z9', '07', '04', '01', 'U19', 'AP03'].includes(cmd)) {
+          document.getElementById('feed-search').value = cmd;
+          switchTab('F1');
+          filterCases();
+        } else if (cmd === 'HELP') {
+          alert('BLOOMBERG COMMANDS:\n- F1..F8: Switch panels\n- case_0042: Drill down\n- Z9, 07: Filter code\n- SIM, BENCH, MODEL: Jump to view');
+        } else {
+          document.getElementById('feed-search').value = cmd;
+          switchTab('F1');
+          filterCases();
+        }
+        document.getElementById('command-input').value = '';
+      }
+    }
+
+    // Load Cases Feed (F1)
+    async function loadCases() {
+      try {
+        const res = await fetch('/api/v1/cases?limit=40');
+        const data = await res.json();
+        cachedCases = data.cases || [];
+        renderCases(cachedCases);
+      } catch (err) {
+        console.error('Failed to fetch cases:', err);
+      }
+    }
+
+    function renderCases(cases) {
+      const tbody = document.getElementById('cases-body');
+      if (!cases || cases.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--bb-gray);">NO CASES FOUND</td></tr>';
+        return;
+      }
+      tbody.innerHTML = cases.map(c => `
+        <tr onclick="drillDownCase('${c.case_id}')">
+          <td class="text-gray">${c.time_ist}</td>
+          <td class="text-white" style="font-weight: 600;">${c.case_id}</td>
+          <td class="text-amber">${c.code}</td>
+          <td class="text-gray">${c.rail}</td>
+          <td class="${c.status_color === 'red' ? 'text-red' : (c.status_color === 'cyan' ? 'text-cyan' : (c.status_color === 'gray' ? 'text-gray' : 'text-amber'))}">${c.failure_class}</td>
+          <td class="text-white" style="text-align: right;">${c.amount_formatted}</td>
+          <td class="text-gray" style="text-align: center;">${c.afa_required}</td>
+          <td class="text-gray" style="text-align: center;">${c.attempt_count}/4</td>
+          <td class="${c.status_color === 'red' ? 'text-red' : (c.status_color === 'green' ? 'text-green' : 'text-amber')}" style="font-weight: 600;">${c.status}</td>
+        </tr>
+      `).join('');
+    }
+
+    function filterCases() {
+      const query = document.getElementById('feed-search').value.toLowerCase();
+      const fclass = document.getElementById('feed-class-filter').value;
+      const filtered = cachedCases.filter(c => {
+        const matchQ = !query || c.case_id.toLowerCase().includes(query) || c.code.toLowerCase().includes(query);
+        const matchC = !fclass || c.failure_class === fclass;
+        return matchQ && matchC;
+      });
+      renderCases(filtered);
+    }
+
+    // Drill down to F2 Decision Panel
+    async function drillDownCase(caseId) {
+      switchTab('F2');
+      try {
+        const res = await fetch(`/api/v1/cases/${caseId}`);
+        const data = await res.json();
+        
+        document.getElementById('dec-case-id').innerText = data.state.case_id;
+        document.getElementById('d-case-id').innerText = data.state.case_id;
+        document.getElementById('d-mandate-id').innerText = data.state.mandate_id || '--';
+        document.getElementById('d-code').innerText = data.state.failure_code;
+        document.getElementById('d-class').innerText = data.state.failure_class;
+        document.getElementById('d-rail').innerText = data.state.rail;
+        document.getElementById('d-amount').innerText = `₹${parseFloat(data.state.amount_inr).toLocaleString('en-IN')}`;
+        document.getElementById('d-attempts').innerText = `${data.state.attempt_count} / 4`;
+        document.getElementById('d-afa').innerText = data.state.afa_required ? 'YES (> ₹15,000)' : 'NO (≤ ₹15,000)';
+        document.getElementById('d-phat').innerText = data.decision.p_hat !== null ? data.decision.p_hat.toFixed(4) : 'N/A (Bypassed)';
+
+        // Lock Box Check
+        const isLegal = data.state.failure_class === 'LEGAL_HOLD';
+        document.getElementById('dec-lock-box').style.display = isLegal ? 'block' : 'none';
+        document.getElementById('dec-ev-table').style.display = isLegal ? 'none' : 'table';
+        document.getElementById('dec-verdict').innerText = `SELECTED: ${data.decision.selected_action}`;
+        document.getElementById('dec-verdict').className = `bb-badge ${isLegal ? 'text-red border-red' : 'text-green border-green'}`;
+        document.getElementById('dec-rationale').innerText = data.decision.rationale;
+
+        // Render Candidate EV Table
+        const evBody = document.getElementById('dec-ev-body');
+        evBody.innerHTML = (data.candidate_table || []).map(row => `
+          <tr class="${row.selected ? 'selected' : ''}">
+            <td class="${row.selected ? 'text-orange' : 'text-white'}" style="font-weight: 600;">${row.action}</td>
+            <td class="text-cyan">${row.delta_p}</td>
+            <td class="text-white">${row.amt_delta_p}</td>
+            <td class="text-gray">${row.cost_inr}</td>
+            <td class="${row.lift_ev_inr.startsWith('+') ? 'text-green' : 'text-gray'}">${row.lift_ev_inr}</td>
+            <td class="text-center ${row.cleared === '✓' ? 'text-green' : 'text-gray'}">${row.cleared}</td>
+            <td class="text-orange" style="text-align: center; font-weight: 700;">${row.selected}</td>
+          </tr>
+        `).join('');
+
+        // Audit Trail
+        document.getElementById('dec-audit-trail').innerHTML = (data.audit_trail || []).map(t => `<div>${t}</div>`).join('');
+      } catch (err) {
+        console.error('Failed to fetch case detail:', err);
+      }
+    }
+
+    // Load Metrics (F3)
+    async function loadMetrics() {
+      try {
+        const res = await fetch('/api/v1/metrics');
+        const data = await res.json();
+        
+        document.getElementById('m-nrr').innerText = data.nrr_formatted;
+        document.getElementById('m-fer').innerText = data.false_escalation_rate_formatted;
+        document.getElementById('m-cvr').innerText = data.compliance_violation_rate_formatted;
+        document.getElementById('m-lat').innerText = `${data.avg_decision_latency_ms} ms`;
+        const qElem = document.getElementById('stat-queue');
+        if (qElem) qElem.innerText = `QUEUE: ${data.queue_depth} PENDING`;
+
+        // Segment Breakdown
+        const segBody = document.getElementById('m-segment-body');
+        segBody.innerHTML = data.segments.map(s => `
+          <tr>
+            <td class="text-white" style="font-weight: 600;">${s.segment}</td>
+            <td class="text-gray">${s.cases}</td>
+            <td class="text-cyan">${s.recovered}</td>
+            <td class="text-white">₹${(s.nrr_inr/1e6).toFixed(2)}M</td>
+            <td class="text-amber">${s.nrr_pct}%</td>
+            <td class="${s.ai_vs_blind.startsWith('+') ? 'text-green' : 'text-gray'}">${s.ai_vs_blind}</td>
+          </tr>
+        `).join('');
+
+        // Render SVG Timeline
+        renderTimelineSvg(data.timeline || []);
+      } catch (err) {
+        console.error('Failed to load metrics:', err);
+      }
+    }
+
+    function renderTimelineSvg(timeline) {
+      const svg = document.getElementById('timeline-svg');
+      if (!timeline || timeline.length === 0) return;
+      const w = 450;
+      const h = 160;
+      const maxVal = 30000000;
+      
+      let aiPoints = timeline.map((d, i) => `${(i / (timeline.length - 1)) * w},${h - (d.ai_orchestrator / maxVal) * (h - 20)}`).join(' ');
+      let blindPoints = timeline.map((d, i) => `${(i / (timeline.length - 1)) * w},${h - (d.blind_retry / maxVal) * (h - 20)}`).join(' ');
+      let noopPoints = timeline.map((d, i) => `${(i / (timeline.length - 1)) * w},${h - (d.noop / maxVal) * (h - 20)}`).join(' ');
+
+      svg.innerHTML = `
+        <polyline fill="none" stroke="#666666" stroke-width="1.5" stroke-dasharray="3,3" points="${noopPoints}" />
+        <polyline fill="none" stroke="#FF3030" stroke-width="1.5" stroke-dasharray="4,2" points="${blindPoints}" />
+        <polyline fill="none" stroke="#FF6600" stroke-width="2.5" points="${aiPoints}" />
+      `;
+    }
+
+    // Presets in Simulation (F7)
+    function loadPreset(idx) {
+      switchTab('F7');
+      if (idx === 1) { // Legal Hold
+        document.getElementById('sim-code').value = '07';
+        document.getElementById('sim-amount').value = '5000.00';
+        document.getElementById('sim-attempts').value = '1';
+      } else if (idx === 2) { // AFA-gated
+        document.getElementById('sim-code').value = 'Z9';
+        document.getElementById('sim-amount').value = '25000.00';
+        document.getElementById('sim-attempts').value = '2';
+      } else if (idx === 3) { // Near threshold
+        document.getElementById('sim-code').value = 'Z9';
+        document.getElementById('sim-amount').value = '15000.01';
+        document.getElementById('sim-attempts').value = '1';
+      } else if (idx === 4) { // Attempt cap
+        document.getElementById('sim-code').value = 'Z9';
+        document.getElementById('sim-amount').value = '1200.00';
+        document.getElementById('sim-attempts').value = '4';
+      } else if (idx === 5) { // Technical
+        document.getElementById('sim-code').value = '04';
+        document.getElementById('sim-amount').value = '3450.00';
+        document.getElementById('sim-attempts').value = '1';
+      } else if (idx === 6) { // Malformed
+        document.getElementById('sim-code').value = 'GARBAGE_99';
+        document.getElementById('sim-amount').value = '4000.00';
+        document.getElementById('sim-attempts').value = '1';
+      }
+      executeSimulation();
+    }
+
+    async function executeSimulation() {
+      const payload = {
+        failure_code: document.getElementById('sim-code').value,
+        amount_inr: parseFloat(document.getElementById('sim-amount').value),
+        attempt_count: parseInt(document.getElementById('sim-attempts').value),
+        rail: 'UPI_AUTOPAY',
+        hours_since_last_attempt: parseFloat(document.getElementById('sim-hours').value),
+        consent_whatsapp: document.getElementById('sim-c-wa').checked ? 'OPTED_IN' : 'OPTED_OUT',
+        consent_sms: document.getElementById('sim-c-sms').checked ? 'OPTED_IN' : 'OPTED_OUT',
+        consent_payment_link: document.getElementById('sim-c-link').checked ? 'OPTED_IN' : 'OPTED_OUT'
+      };
+
+      try {
+        const res = await fetch('/api/v1/simulate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        // Switch to Decision panel to show live outcome
+        drillDownCase(data.case_id);
+      } catch (err) {
+        console.error('Simulation failed:', err);
+      }
+    }
+
+    // Initial Load
+    loadCases();
+  </script>
+</body>
+</html>

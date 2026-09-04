@@ -198,3 +198,49 @@
 {"id": "mock_plink_c47c3be00ccc456b", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "1500.00", "idempotency_key": "evnt_replay_001", "reference_id": "evnt_replay_001", "mode": "mock", "created_at": 1788446468}
 {"id": "mock_plink_21ed4f5b72174ebb", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "2500.00", "idempotency_key": "evnt_audit_expansion_001", "reference_id": "evnt_audit_expansion_001", "mode": "mock", "created_at": 1788446468}
 {"id": "mock_plink_cc23d94606f8439c", "action": "PAYMENT_LINK", "status": "created", "amount_inr": "500.00", "idempotency_key": "idem_key_mock_001", "reference_id": "idem_key_mock_001", "mode": "mock", "created_at": 1788446468}
+{"id": "mock_plink_0011bb6050be4759", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "500.00", "idempotency_key": "test_idem_123", "reference_id": "test_idem_123", "mode": "mock", "created_at": 1788453824}
+{"id": "mock_plink_61fd9c7be8fd4cea", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "500.00", "idempotency_key": "test_idem_123", "reference_id": "test_idem_123", "mode": "mock", "created_at": 1788453837}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_000", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_001", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_002", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_003", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_004", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_005", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_006", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_007", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_008", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_009", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_010", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_011", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_012", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_013", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_014", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_015", "mode": "mock"}
+{"id": null, "action": "ESCALATE_HUMAN", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_016", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_017", "mode": "mock"}
+{"id": null, "action": "ESCALATE_HUMAN", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_018", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_019", "mode": "mock"}
+{"id": null, "action": "ESCALATE_HUMAN", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_020", "mode": "mock"}
+{"id": null, "action": "ESCALATE_HUMAN", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_021", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_022", "mode": "mock"}
+{"id": null, "action": "ESCALATE_HUMAN", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_023", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_024", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_025", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_026", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_027", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_028", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_live_029", "mode": "mock"}
+{"id": null, "action": "ESCALATE_HUMAN", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "sim_idem_sim_1788460273", "mode": "mock"}
+{"id": "mock_plink_c80f39fdb2f04b16", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "1200.0", "idempotency_key": "sim_idem_sim_1788460273", "reference_id": "sim_idem_sim_1788460273", "mode": "mock", "created_at": 1788460273}
+{"id": null, "action": "ESCALATE_HUMAN", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "sim_idem_sim_1788460314", "mode": "mock"}
+{"id": "mock_plink_503663c0393c44a8", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "1200.0", "idempotency_key": "sim_idem_sim_1788460314", "reference_id": "sim_idem_sim_1788460314", "mode": "mock", "created_at": 1788460314}
+{"id": "mock_plink_9015866c38054628", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "2500.00", "idempotency_key": "evnt_soft_liquidity_001", "reference_id": "evnt_soft_liquidity_001", "mode": "mock", "created_at": 1788460360}
+{"id": null, "action": "ESCALATE_HUMAN", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evnt_legal_hold_001", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evnt_terminal_001", "mode": "mock"}
+{"id": "mock_plink_2008e8fe5c8b479b", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "2500.00", "idempotency_key": "evt_e2e_fixture_001", "reference_id": "evt_e2e_fixture_001", "mode": "mock", "created_at": 1788460361}
+{"id": null, "action": "ESCALATE_HUMAN", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evt_legal_hold_001", "mode": "mock"}
+{"id": null, "action": "ABORT_COMPLIANT", "status": "not_dispatched", "reason": "terminal_or_non_external_action", "idempotency_key": "evnt_test_123", "mode": "mock"}
+{"id": "mock_plink_03bc775b6f244387", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "1500.00", "idempotency_key": "evnt_replay_001", "reference_id": "evnt_replay_001", "mode": "mock", "created_at": 1788460415}
+{"id": "mock_plink_5ed79092aa06461c", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "2500.00", "idempotency_key": "evnt_audit_expansion_001", "reference_id": "evnt_audit_expansion_001", "mode": "mock", "created_at": 1788460415}
+{"id": "mock_plink_4f640d2dd770407c", "action": "PAYMENT_LINK", "status": "created", "amount_inr": "500.00", "idempotency_key": "idem_key_mock_001", "reference_id": "idem_key_mock_001", "mode": "mock", "created_at": 1788460415}
+{"id": "mock_plink_3e3ea608ea0f4046", "action": "WHATSAPP_NUDGE", "status": "created", "amount_inr": "15000.01", "idempotency_key": "sim_idem_sim_1788460984", "reference_id": "sim_idem_sim_1788460984", "mode": "mock", "created_at": 1788460984}

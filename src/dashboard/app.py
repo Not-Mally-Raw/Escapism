@@ -626,7 +626,7 @@ with tab_mechanics:
                     </div>
                 </div>
                 <div style="font-size: 11px; color: #94A3B8; font-family: ui-monospace, Menlo, monospace; margin-top: 2px;">
-                    Taxonomy Rule: {diag_res.root_cause}
+                    Taxonomy Rule: {", ".join(diag_res.evidence) if diag_res.evidence else "Deterministic lookup"}
                 </div>
             </div>
             """,
