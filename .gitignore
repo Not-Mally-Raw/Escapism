@@ -48,7 +48,7 @@ htmlcov/
 .env.local
 *.pem
 *.key
-.streamlit/credentials.toml
+.streamlit/
 
 # Local Databases
 *.db
