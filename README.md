@@ -24,11 +24,6 @@ python3 src/api/server.py
 ```
 Open **`http://localhost:8000`** in your browser. Interactive keyboard navigation (`F1`–`F8`), real-time worker telemetry, and instant simulation.
 
-### Classic Streamlit Dashboard
-```bash
-streamlit run src/dashboard/app.py
-```
-
 ### Reproduce Core Monte Carlo Benchmark (SNIPS OPE)
 To reproduce the 3-Policy Benchmark in your terminal:
 ```bash
