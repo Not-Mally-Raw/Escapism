@@ -1,12 +1,5 @@
-"""
-Evaluation Metrics for AI Revenue Recovery System.
-Enforces the strict terminal financial success state definition for NRR.
+"""Evaluation metrics for revenue recovery (NRR, FER, terminal financial states)."""
 
-Architecture note: Production execution outcomes (ProductionOutcome) are
-physically separated from ground-truth evaluation labels (GroundTruthLabel).
-The join is performed only in the evaluation harness, never in production code.
-This prevents label leakage by construction.
-"""
 from decimal import Decimal
 from typing import List, Optional
 from enum import StrEnum
