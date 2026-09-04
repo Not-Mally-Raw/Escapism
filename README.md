@@ -6,20 +6,23 @@ A production-ready, mathematically proven, and audit-traced AI orchestration eng
 
 ---
 
-## ⚡ One-Command Demo
+## 🚀 3-Step Ingestion & Deployment
 
-### Bloomberg Terminal UI (Production Interface)
-Launch the low-latency FastAPI backend and high-density terminal interface:
+Deploy the entire engine and launch the terminal interface in three steps:
+
 ```bash
-# 1. Setup Virtual Environment
-python3 -m venv .venv
-source .venv/bin/activate
+# Step 1: Clone repository and activate environment
+git clone https://github.com/Not-Mally-Raw/Razorpay-Escapism-Track-03.git
+cd Razorpay-Escapism-Track-03
+python3 -m venv .venv && source .venv/bin/activate
+
+# Step 2: Install dependencies
 pip install -e .
 
-# 2. Run the Bloomberg Terminal Server
+# Step 3: Launch decision engine & Bloomberg Terminal UI
 python3 src/api/server.py
 ```
-Open **`http://localhost:8000`** in your browser. Features 8 dynamic function modules (F1 TELEMETRY, F2 DECISION ENGINE, F3 DIAGNOSTIC, F4 ML EXPLAINABILITY, F5 COMPLIANCE, F6 POLICY BENCHMARK, F7 LIVE WORKER, F8 SYSTEM AUDIT), fail-closed safety overrides, and hotkeys.
+Open **`http://localhost:8000`** in your browser. Interactive keyboard navigation (`F1`–`F8`), real-time worker telemetry, and instant simulation.
 
 ### Classic Streamlit Dashboard
 ```bash
