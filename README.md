@@ -74,11 +74,14 @@ Existing recovery tools either:
 
 ---
 
-## 📐 Enterprise Architecture: 5 Integrated Pillars
+## 📐 System Architecture: Decision Journey & Engine Pillars
 
+### Architecture A: Decision Journey Flow (Video & Executive View)
 <div align="center">
-  <img src="./docs/v6_engine_architecture.png" alt="Escapism Architecture Flow" width="960" style="border: 1px solid #2a2a2a; border-radius: 8px; box-shadow: 0 16px 40px rgba(0,0,0,0.8);" />
+  <img src="./docs/escapism_video_architecture.png" alt="Escapism Video Architecture Flow" width="960" style="border: 1px solid #2a2a2a; border-radius: 8px; box-shadow: 0 16px 40px rgba(0,0,0,0.8);" />
 </div>
+
+*For full low-level implementation details (HMAC cryptographic gates, WAL SQLite engine schemas, 16-code hash tables, ECE reliability curves, and worker retry state machines), inspect [Architecture B: Technical Deep Dive](./docs/architecture_deep_dive.png).*
 
 ### 1. Ingestion Boundary (`src/ingestion/gateway.py`)
 * **Cryptographic Ingress:** Authenticates incoming webhooks via constant-time `hmac.compare_digest()` using merchant API secrets (`X-Razorpay-Signature`).
