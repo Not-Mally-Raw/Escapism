@@ -1,6 +1,8 @@
-# Razorpay V6 Autonomous Revenue Recovery Engine
+# Escapism: Autonomous Revenue Recovery Engine
 ### Compliance-Gated Machine Learning for Mandate & UPI AutoPay Subscriptions
-*PS3 · Track 03 · Flaw B: Mandate & UPI AutoPay Debit Recovery*
+*Command Center for Failed Payments · PS3 · Track 03 · Flaw B: Mandate & UPI AutoPay Debit Recovery*
+
+> *Every month, subscription debits burn capital in blind retries, statutory penalties, and uncoordinated outreach. Escapism replaces guesswork with deterministic regulatory gating and calibrated expected value optimization.*
 
 ---
 
@@ -33,7 +35,7 @@ By implementing a deterministic **"Law Before Math"** governor, the **Razorpay V
 
 ## 3-Step Ingestion & Deployment
 
-Get the entire V6 Engine, API Gateway, and Bloomberg Terminal running in under 60 seconds:
+Get the entire V6 Engine, API Gateway, and Recovery Console running in under 60 seconds:
 
 ```bash
 # Step 1: Clone repository and activate environment
@@ -49,7 +51,7 @@ python3 src/api/server.py
 ```
 
 ### Access Points
-* **Terminal Interface:** [http://localhost:8000](http://localhost:8000) — Full keyboard-driven Bloomberg Terminal UI (`F1`–`F8` navigation, live telemetry, and instant simulation).
+* **Console Interface:** [http://localhost:8000](http://localhost:8000) — Full keyboard-driven Recovery Console UI (`F1`–`F8` navigation, live telemetry, and instant simulation).
 * **Product Overview & ROI Calculator:** [http://localhost:8000/landing](http://localhost:8000/landing) — Interactive enterprise presentation, live ARR recovery calculator, and architecture breakdown.
 * **Reproduce SNIPS Benchmark:**
   ```bash
@@ -195,7 +197,7 @@ razorpay-revenue-recovery/
 │   └── api/
 │       ├── server.py                      # FastAPI server exposing telemetry, simulation, endpoints
 │       └── static/
-│           ├── index.html                 # Bloomberg Terminal UI (Keyboard-driven F1–F8)
+│           ├── index.html                 # Escapism Recovery Console UI (Keyboard-driven F1–F8)
 │           └── landing.html               # High-converting enterprise marketing landing page
 ├── scripts/
 │   └── run_monte_carlo.py                 # SNIPS offline policy evaluation benchmark (1,000 runs)
