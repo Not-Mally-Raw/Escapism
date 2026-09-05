@@ -98,6 +98,7 @@ async def get_metrics():
         "p95_decision_latency_ms": 0.743,
         "queue_depth": queue_depth,
         "worker_telemetry": "ASYNCIO POLLER (INTERVAL: 1.0s)",
+        "data_sha256": "90b2d59a5d9610bb4e5cb77e0e5c96f7ac3990c559ab9066d9d76089620678df",
         "feed_source": "SYNTHETIC BENCHMARK BATCH REPLAY (N=50)",
         "segments": segments,
         "timeline": timeline,
@@ -194,12 +195,16 @@ def build_candidate_table(state: MandateStateRecord, diag, feasible_set, decisio
         score_match = next((cs for cs in (decision.candidate_scores or []) if cs.action == act), None)
         
         if is_feasible and score_match:
+            lev = float(score_match.lift_ev_inr)
+            lev_str = f"+₹{lev:,.2f}" if lev >= 0 else f"-₹{abs(lev):,.2f}"
+            amt_lift = float(state.amount_inr) * float(score_match.lift_probability)
+            amt_lift_str = f"+₹{amt_lift:,.2f}" if amt_lift >= 0 else f"-₹{abs(amt_lift):,.2f}"
             candidate_table.append({
                 "action": act.value,
                 "delta_p": f"{float(score_match.lift_probability):+.4f}",
-                "amt_delta_p": f"+₹{float(state.amount_inr) * float(score_match.lift_probability):,.2f}",
+                "amt_delta_p": amt_lift_str,
                 "cost_inr": f"-₹{float(score_match.cost_inr):.2f}",
-                "lift_ev_inr": f"+₹{float(score_match.lift_ev_inr):,.2f}",
+                "lift_ev_inr": lev_str,
                 "cleared": "✓" if score_match.cleared_threshold else "✗",
                 "selected": "★" if act == decision.selected_action else "",
                 "status": "FEASIBLE",
@@ -219,15 +224,30 @@ def build_candidate_table(state: MandateStateRecord, diag, feasible_set, decisio
     return candidate_table
 
 
-def build_audit_trail(diag, feasible_set, decision) -> List[str]:
+def build_audit_trail(state: MandateStateRecord, diag, feasible_set, decision) -> List[str]:
+    now_str = datetime.now().strftime('%H:%M:%S')
     p_hat_str = f"{float(decision.p_hat):.4f}" if decision.p_hat is not None else "N/A (Bypassed)"
     lift_ev_str = f"₹{float(decision.lift_ev_inr):,.2f}" if decision.lift_ev_inr is not None else "N/A"
+    
+    # Prepend Diagnostic Tier & Confidence
+    diag_tier_str = diag.evidence[0] if (diag.evidence and len(diag.evidence) > 0) else "Deterministic Taxonomy Lookup"
+    diag_entry = f"[{now_str}] DIAGNOSIS: {diag_tier_str} -> {diag.failure_class.value} (confidence={diag.confidence:.2f})"
+    
+    # Gate 0 message differentiation
+    if diag.failure_class == FailureClass.LEGAL_HOLD:
+        gate_0_msg = f"[{now_str}] GATE_0: LEGAL_HOLD MANDATORY ESCALATION (Short-circuit to ESCALATE_HUMAN)"
+    elif requires_mandatory_escalation(state.failure_code):
+        gate_0_msg = f"[{now_str}] GATE_0: UNCATALOGUED/UNSAFE CODE '{state.failure_code}' (§3.4 Fail-Closed to ESCALATE_HUMAN)"
+    else:
+        gate_0_msg = f"[{now_str}] GATE_0: failure_class={diag.failure_class.value} -> NOT LEGAL_HOLD, proceed to guardrails"
+
     return [
-        f"[{datetime.now().strftime('%H:%M:%S')}] GATE_0: failure_class={diag.failure_class.value} -> {'LEGAL_HOLD SHORT-CIRCUIT' if diag.failure_class == FailureClass.LEGAL_HOLD else 'NOT LEGAL_HOLD, proceed'}",
-        f"[{datetime.now().strftime('%H:%M:%S')}] GATE_1: computed feasible_set={[a.value for a in feasible_set]}",
-        f"[{datetime.now().strftime('%H:%M:%S')}] TRACK1: p_hat={p_hat_str}",
-        f"[{datetime.now().strftime('%H:%M:%S')}] OPTIMIZER: argmax={decision.selected_action.value}, lift_ev={lift_ev_str}",
-        f"[{datetime.now().strftime('%H:%M:%S')}] EXECUTION: Action dispatched -> status=created mode=mock"
+        diag_entry,
+        gate_0_msg,
+        f"[{now_str}] GATE_1: computed feasible_set={[a.value for a in feasible_set]}",
+        f"[{now_str}] TRACK1: p_hat={p_hat_str}",
+        f"[{now_str}] OPTIMIZER: argmax={decision.selected_action.value}, lift_ev={lift_ev_str}",
+        f"[{now_str}] EXECUTION: Action dispatched -> status=created mode=mock"
     ]
 
 
@@ -301,7 +321,7 @@ async def get_case_detail(case_id: str):
     decision = optimize_decision(state)
 
     candidate_table = build_candidate_table(state, diag, feasible_set, decision)
-    audit_trail = build_audit_trail(diag, feasible_set, decision)
+    audit_trail = build_audit_trail(state, diag, feasible_set, decision)
 
     return {
         "state": target_record,
@@ -332,6 +352,7 @@ async def get_model_info():
         "model_name": "LogisticRegressionRecoveryPropensity",
         "version": "1.0.0",
         "model_sha256": get_model_version_hash() or "170bac42fea7c50bab4fc6aa5305d703f7a065c451cf7e1acfa8dd5802ad9205",
+        "data_sha256": "90b2d59a5d9610bb4e5cb77e0e5c96f7ac3990c559ab9066d9d76089620678df",
         "training_data": "data/synthetic_batch_5000.jsonl",
         "train_instances": 4000,
         "test_instances": 1000,
@@ -467,7 +488,7 @@ async def run_simulation(req: SimulationRequest):
     )
 
     candidate_table = build_candidate_table(state, diag, feasible_set, decision)
-    audit_trail = build_audit_trail(diag, feasible_set, decision)
+    audit_trail = build_audit_trail(state, diag, feasible_set, decision)
 
     return {
         "case_id": state.case_id,
