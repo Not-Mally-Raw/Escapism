@@ -59,6 +59,12 @@ async def serve_terminal():
     index_file = STATIC_DIR / "index.html"
     return FileResponse(index_file)
 
+# Landing Page
+@app.get("/landing", include_in_schema=False)
+async def serve_landing():
+    landing_file = STATIC_DIR / "landing.html"
+    return FileResponse(landing_file)
+
 # Webhook Ingestion Gateway Endpoint
 @app.post("/webhook/razorpay")
 async def receive_webhook(request: Request):
