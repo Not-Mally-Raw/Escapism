@@ -32,8 +32,8 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(
-    title="Razorpay Autonomous Revenue Recovery Terminal",
-    description="Compliance-Gated AI Allocation Engine with Bloomberg Terminal Interface",
+    title="Escapism: Autonomous Revenue Recovery Console",
+    description="Compliance-Gated AI Allocation Engine for Mandate & UPI AutoPay Subscriptions",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -53,7 +53,7 @@ app.include_router(v1_router)
 # Mount Static Assets
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
-# Root endpoint serves the Bloomberg Terminal UI
+# Root endpoint serves the Escapism Recovery Console UI
 @app.get("/", include_in_schema=False)
 async def serve_terminal():
     index_file = STATIC_DIR / "index.html"

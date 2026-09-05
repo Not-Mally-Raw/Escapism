@@ -3,52 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Razorpay V6 Revenue Recovery Engine | Autonomous Mandate Intelligence</title>
+  <title>Escapism // Command Center for Failed Payments</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #070707;
-      --card-bg: #0f0f0f;
-      --card-border: #1e1e1e;
-      --text-main: #f0f0f0;
+      --bg: #0a0a0a;
+      --bg-alt: #0d0d0d;
+      --panel: #111111;
+      --panel-elevated: #151515;
+      --border: #222222;
+      --border-bright: #333333;
+      
+      --text: #f0f0f0;
       --text-muted: #888888;
-      --text-sub: #555555;
+      --text-dim: #555555;
       
       --orange: #FF6600;
-      --orange-glow: rgba(255, 102, 0, 0.15);
+      --orange-dim: rgba(255, 102, 0, 0.12);
+      --amber: #FFB300;
       --cyan: #00BFFF;
       --green: #00FF88;
       --red: #FF3333;
-      --amber: #FFB300;
       --purple: #8B5CF6;
       
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
+      --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
       background-color: var(--bg);
-      color: var(--text-main);
+      color: var(--text);
       font-family: var(--font-sans);
-      line-height: 1.6;
+      line-height: 1.55;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 32px 32px;
     }
 
     a { color: inherit; text-decoration: none; }
 
-    /* Top Nav */
+    /* Top Navigation */
     nav {
       position: sticky;
       top: 0;
-      z-index: 100;
-      background: rgba(7, 7, 7, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--card-border);
-      padding: 14px 40px;
+      z-index: 1000;
+      background: rgba(10, 10, 10, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -58,58 +67,63 @@
       align-items: center;
       gap: 12px;
       font-weight: 800;
-      font-size: 16px;
-      letter-spacing: -0.3px;
-    }
-    .v6-badge {
-      background: var(--orange);
-      color: #000;
-      font-family: var(--font-mono);
-      font-weight: 900;
-      font-size: 11px;
-      padding: 3px 7px;
-      border-radius: 4px;
+      font-size: 15px;
       letter-spacing: 0.5px;
+    }
+    .brand-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--orange);
+      background: var(--orange-dim);
+      border: 1px solid rgba(255, 102, 0, 0.3);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .brand-sub {
+      color: var(--text-dim);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      font-weight: 500;
     }
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 28px;
-      font-size: 13.5px;
+      gap: 24px;
+      font-size: 13px;
       font-weight: 500;
       color: var(--text-muted);
     }
     .nav-links a:hover { color: #fff; }
     .nav-cta {
-      background: #181818;
+      background: #141414;
       border: 1px solid var(--orange);
       color: var(--orange);
       font-family: var(--font-mono);
       font-size: 12px;
       font-weight: 700;
-      padding: 8px 16px;
-      border-radius: 6px;
-      transition: all 0.2s ease;
-      display: flex;
+      padding: 7px 14px;
+      border-radius: 4px;
+      transition: all 0.15s ease;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
     }
     .nav-cta:hover {
       background: var(--orange);
       color: #000;
-      box-shadow: 0 0 16px rgba(255, 102, 0, 0.4);
     }
 
     /* Container */
     .container {
-      max-width: 1180px;
+      max-width: 1160px;
       margin: 0 auto;
       padding: 0 24px;
     }
 
-    /* Hero */
+    /* Hero Section */
     .hero {
-      padding: 90px 0 60px;
+      padding: 76px 0 54px;
       text-align: center;
       position: relative;
     }
@@ -118,15 +132,16 @@
       align-items: center;
       gap: 8px;
       background: #121212;
-      border: 1px solid #2a2a2a;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12px;
+      border: 1px solid var(--border-bright);
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 11.5px;
       font-family: var(--font-mono);
       color: var(--orange);
       margin-bottom: 24px;
+      letter-spacing: 0.5px;
     }
-    .hero-eyebrow span.dot {
+    .live-dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
@@ -135,376 +150,446 @@
       box-shadow: 0 0 6px var(--green);
     }
     .hero h1 {
-      font-size: 54px;
+      font-size: 52px;
       font-weight: 900;
       letter-spacing: -1.5px;
       line-height: 1.12;
-      margin-bottom: 22px;
-      max-width: 960px;
+      margin-bottom: 18px;
+      max-width: 900px;
       margin-left: auto;
       margin-right: auto;
     }
-    .hero h1 span.gradient-text {
-      background: linear-gradient(135deg, #FFFFFF 40%, #888888 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .hero h1 span.accent-text {
-      color: var(--orange);
-    }
-    .hero p.lead {
-      font-size: 18px;
-      color: var(--text-muted);
+    .hero-subheadline {
+      font-size: 20px;
+      font-weight: 500;
+      color: #dddddd;
       max-width: 780px;
-      margin: 0 auto 36px;
+      margin: 0 auto 14px;
+      line-height: 1.4;
+    }
+    .hero-caption {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 32px;
       line-height: 1.6;
     }
     .hero-actions {
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: 16px;
-      margin-bottom: 50px;
+      margin-bottom: 48px;
     }
     .btn-primary {
       background: var(--orange);
       color: #000;
+      font-family: var(--font-mono);
       font-weight: 800;
-      font-size: 14px;
-      padding: 14px 28px;
-      border-radius: 8px;
+      font-size: 13px;
+      padding: 12px 24px;
+      border-radius: 4px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.2s;
+      transition: all 0.15s ease;
+      letter-spacing: 0.5px;
     }
     .btn-primary:hover {
       background: #ff771a;
-      box-shadow: 0 0 24px rgba(255, 102, 0, 0.5);
-      transform: translateY(-1px);
+      box-shadow: 0 0 20px rgba(255, 102, 0, 0.4);
     }
     .btn-secondary {
       background: #141414;
-      border: 1px solid #282828;
-      color: var(--text-main);
+      border: 1px solid var(--border-bright);
+      color: var(--text);
       font-family: var(--font-mono);
-      font-weight: 600;
-      font-size: 13.5px;
-      padding: 14px 24px;
-      border-radius: 8px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
+      font-size: 13px;
+      padding: 12px 20px;
+      border-radius: 4px;
+      transition: all 0.15s ease;
     }
     .btn-secondary:hover {
-      border-color: #444;
-      background: #181818;
+      border-color: #555;
+      background: #1a1a1a;
     }
 
-    /* KPI Bar */
-    .kpi-bar {
+    /* Live Terminal Status Strip */
+    .status-strip {
+      background: #0f0f0f;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 20px;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 16px;
-      margin-bottom: 80px;
-      background: #0d0d0d;
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 24px;
-    }
-    .kpi-item {
       text-align: left;
-      border-left: 2px solid var(--card-border);
-      padding-left: 18px;
+      margin-bottom: 72px;
     }
-    .kpi-item:first-child { border-left: none; padding-left: 4px; }
-    .kpi-val {
+    .status-cell {
+      border-right: 1px solid #1c1c1c;
+      padding-right: 12px;
+    }
+    .status-cell:last-child { border-right: none; }
+    .status-lbl {
+      font-size: 10px;
       font-family: var(--font-mono);
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-    .kpi-lbl {
-      font-size: 11px;
-      color: var(--text-muted);
       text-transform: uppercase;
-      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 4px;
       letter-spacing: 0.5px;
-      margin-top: 4px;
     }
-    .kpi-sub {
-      font-size: 11px;
+    .status-val {
+      font-size: 18px;
       font-family: var(--font-mono);
+      font-weight: 800;
+    }
+    .status-note {
+      font-size: 10.5px;
+      color: var(--text-dim);
       margin-top: 2px;
     }
 
-    /* Section Headers */
-    .section-head {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-    .section-eyebrow {
-      font-family: var(--font-mono);
-      color: var(--orange);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
+    /* The Problem Section */
+    .section-header {
+      text-align: left;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
     }
     .section-title {
-      font-size: 34px;
+      font-size: 22px;
       font-weight: 800;
-      letter-spacing: -0.8px;
+      letter-spacing: -0.5px;
     }
-    .section-desc {
-      color: var(--text-muted);
-      font-size: 15px;
-      max-width: 650px;
-      margin: 8px auto 0;
+    .section-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--orange);
     }
+    .brutal-sentence {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.25;
+      color: #ffffff;
+      margin-bottom: 24px;
+    }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 80px;
+    }
+    .prob-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px;
+    }
+    .prob-card.bad {
+      border-top: 3px solid var(--red);
+    }
+    .prob-card.good {
+      border-top: 3px solid var(--green);
+    }
+    .prob-card-title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed #1a1a1a;
+      font-size: 13px;
+    }
+    .metric-row:last-child { border-bottom: none; }
+    .metric-lbl { color: var(--text-muted); }
+    .metric-val { font-family: var(--font-mono); font-weight: 700; }
 
-    /* V6 Cylinders Grid */
-    .cylinders-grid {
+    /* Three-Question Flow */
+    .flow-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
       margin-bottom: 80px;
     }
-    .cylinder-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 24px;
+    .flow-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 28px 24px;
       position: relative;
-      overflow: hidden;
-      transition: all 0.25s ease;
     }
-    .cylinder-card:hover {
-      border-color: #333;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-    }
-    .cylinder-card-stripe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-    }
-    .cyl-badge {
-      display: inline-block;
+    .flow-step {
       font-family: var(--font-mono);
+      font-size: 11px;
       font-weight: 800;
-      font-size: 12px;
-      padding: 3px 8px;
-      border-radius: 4px;
+      color: var(--orange);
       margin-bottom: 12px;
+      display: block;
+      letter-spacing: 0.5px;
     }
-    .cyl-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 6px;
+    .flow-q {
+      font-size: 19px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .flow-sub {
+      font-size: 13px;
+      color: #b0b0b0;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .flow-badge-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .flow-pill {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      background: #181818;
+      border: 1px solid #282828;
+      padding: 3px 8px;
+      border-radius: 3px;
+      color: #999;
+    }
+
+    /* Architecture Strip (V1 to V6) */
+    .cylinders-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .cyl-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+    .cyl-card:hover {
+      border-color: #444;
+      transform: translateY(-2px);
+    }
+    .cyl-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .cyl-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 3px;
     }
     .cyl-file {
       font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-sub);
-      margin-bottom: 14px;
+      font-size: 10.5px;
+      color: var(--text-dim);
+    }
+    .cyl-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
     .cyl-desc {
-      font-size: 13px;
-      color: #aaa;
+      font-size: 12.5px;
+      color: var(--text-muted);
       line-height: 1.55;
-      margin-bottom: 16px;
     }
-    .cyl-stat {
-      border-top: 1px dashed #222;
-      padding-top: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 11.5px;
-    }
-    .cyl-stat-lbl { color: var(--text-sub); text-transform: uppercase; font-weight: 600; }
-    .cyl-stat-val { font-family: var(--font-mono); font-weight: 700; }
 
-    /* Comparison Section */
-    .moat-box {
+    /* Diagram Section */
+    .diagram-wrap {
       background: #0d0d0d;
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 36px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px;
+      text-align: center;
       margin-bottom: 80px;
     }
-    .moat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      margin-top: 28px;
+    .diagram-img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--border-bright);
+      border-radius: 4px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.7);
     }
-    .moat-card {
-      background: #141414;
-      border-radius: 8px;
-      padding: 24px;
-    }
-    .moat-card.bad { border: 1px solid rgba(255, 51, 51, 0.3); }
-    .moat-card.good { border: 1px solid rgba(0, 255, 136, 0.4); }
-    .moat-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    .moat-title { font-size: 16px; font-weight: 800; }
-    .moat-stat { font-family: var(--font-mono); font-size: 18px; font-weight: 800; }
-    .moat-list { list-style: none; font-size: 13px; color: #aaa; }
-    .moat-list li { margin-bottom: 10px; display: flex; gap: 8px; }
 
     /* Interactive Calculator */
     .calc-box {
-      background: #0d0d0d;
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 36px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 32px;
       margin-bottom: 80px;
     }
     .calc-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 40px;
+      gap: 36px;
       align-items: center;
     }
-    .calc-inputs { display: flex; flex-direction: column; gap: 24px; }
-    .calc-slider-group label {
+    .calc-control {
+      margin-bottom: 24px;
+    }
+    .calc-lbl-wrap {
       display: flex;
       justify-content: space-between;
       font-size: 13px;
       font-weight: 600;
       margin-bottom: 8px;
     }
-    .calc-slider-group input[type="range"] {
+    .calc-slider {
       width: 100%;
       accent-color: var(--orange);
     }
-    .calc-results {
-      background: #141414;
-      border: 1px solid #242424;
-      border-radius: 10px;
+    .calc-display {
+      background: #161616;
+      border: 1px solid #282828;
+      border-radius: 6px;
       padding: 28px;
       text-align: center;
     }
-    .calc-res-num {
+    .calc-num {
+      font-size: 38px;
       font-family: var(--font-mono);
-      font-size: 42px;
       font-weight: 900;
       color: var(--green);
       letter-spacing: -1px;
     }
-    .calc-res-lbl {
+    .calc-note {
       font-size: 12px;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
-    .calc-sub-grid {
+    .calc-substats {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      border-top: 1px dashed #262626;
+      border-top: 1px dashed #282828;
       padding-top: 16px;
+      text-align: left;
     }
 
     /* 3-Step Setup */
-    .setup-box {
-      background: #0d0d0d;
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 36px;
+    .setup-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
       margin-bottom: 80px;
     }
-    .step-row {
-      display: grid;
-      grid-template-columns: 48px 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
-      align-items: start;
+    .setup-step {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
     }
     .step-num {
-      width: 36px;
-      height: 36px;
-      background: #181818;
-      border: 1px solid var(--orange);
-      color: var(--orange);
       font-family: var(--font-mono);
+      font-size: 12px;
       font-weight: 800;
-      font-size: 15px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      color: var(--orange);
+      margin-bottom: 8px;
     }
-    .step-content h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-    .step-content p { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
-    .code-snippet {
-      background: #050505;
+    .step-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .step-code {
+      background: #070707;
       border: 1px solid #222;
-      border-radius: 6px;
-      padding: 12px 16px;
+      border-radius: 4px;
+      padding: 8px 10px;
       font-family: var(--font-mono);
-      font-size: 13px;
-      color: #FFB300;
-      display: block;
+      font-size: 11.5px;
+      color: var(--amber);
       overflow-x: auto;
+      white-space: nowrap;
+      display: block;
     }
 
-    /* Diagram Embed */
-    .diagram-preview {
-      margin-bottom: 80px;
+    /* Final CTA Section */
+    .cta-banner {
+      background: #0f0f0f;
+      border: 1px solid var(--border-bright);
+      border-radius: 6px;
+      padding: 56px 32px;
       text-align: center;
+      margin-bottom: 80px;
+      position: relative;
     }
-    .diagram-img {
-      max-width: 100%;
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.8);
+    .cta-banner h2 {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+    .cta-banner p {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 28px;
     }
 
     /* Footer */
     footer {
-      border-top: 1px solid var(--card-border);
-      padding: 50px 0;
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
       font-size: 12px;
-      color: var(--text-sub);
+      color: var(--text-dim);
       text-align: center;
+      background: #080808;
     }
     .footer-links {
       display: flex;
       justify-content: center;
-      gap: 24px;
-      margin-bottom: 16px;
+      gap: 20px;
+      margin-bottom: 12px;
       font-family: var(--font-mono);
     }
-    .footer-links a:hover { color: var(--text-main); }
+    .footer-links a:hover { color: var(--text); }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation -->
+  <!-- Navigation -->
   <nav>
     <div class="brand">
-      <span class="v6-badge">V6</span>
-      <span>RAZORPAY RECOVERY ENGINE</span>
+      <span class="brand-tag">ESCAPISM</span>
+      <span>V6 REVENUE RECOVERY</span>
+      <span class="brand-sub">// COMMAND CENTER FOR FAILED PAYMENTS</span>
     </div>
     <div class="nav-links">
-      <a href="#cylinders">Architecture</a>
-      <a href="#comparison">Compliance Moat</a>
+      <a href="#problem">The Problem</a>
+      <a href="#three-step">Three-Question Engine</a>
+      <a href="#architecture">Architecture</a>
       <a href="#calculator">ROI Calculator</a>
-      <a href="#quickstart">3-Step Setup</a>
+      <a href="#deploy">3-Step Deploy</a>
     </div>
     <a href="/" class="nav-cta">
-      <span>LAUNCH TERMINAL (F1-F8)</span>
+      <span>OPEN RECOVERY CONSOLE [F1-F8]</span>
       <span>→</span>
     </a>
   </nav>
@@ -512,235 +597,316 @@
   <!-- Hero Section -->
   <section class="hero container">
     <div class="hero-eyebrow">
-      <span class="dot"></span>
-      <span>V6 AUTONOMOUS REVENUE RECOVERY · COMPLIANCE-GATED</span>
+      <span class="live-dot"></span>
+      <span>ESCAPISM V6 · AUTONOMOUS REVENUE RECOVERY · COMPLIANCE-GATED</span>
     </div>
-    <h1>
-      <span class="gradient-text">The Autonomous Revenue Recovery Engine for</span><br>
-      <span class="accent-text">India's Strictest Mandate Regulations.</span>
-    </h1>
-    <p class="lead">
-      Recovering failed UPI AutoPay and e-NACH subscriptions with zero regulatory drift. 
-      Our deterministic <b>Law Before Math</b> compliance kernel eliminates illegal debit penalties, while calibrated machine learning maximizes net recovered revenue.
+    <h1>Stop losing money on failed payments.</h1>
+    <p class="hero-subheadline">
+      A compliance-first recovery engine that decides what is legal before it decides what is profitable.
+    </p>
+    <p class="hero-caption">
+      Every month, recurring debits burn capital in blind retries, statutory penalties, and uncoordinated outreach. 
+      Escapism replaces guesswork with deterministic regulatory gating and calibrated expected value optimization.
     </p>
     <div class="hero-actions">
       <a href="/" class="btn-primary">
-        <span>ENTER BLOOMBERG TERMINAL</span>
-        <span>⚡</span>
+        <span>⚡ OPEN RECOVERY CONSOLE</span>
+        <span>[F1-F8]</span>
       </a>
-      <a href="#quickstart" class="btn-secondary">
+      <a href="#deploy" class="btn-secondary">
         <span>$ git clone &amp; run locally</span>
       </a>
     </div>
 
-    <!-- Live Performance Strip -->
-    <div class="kpi-bar">
-      <div class="kpi-item">
-        <div class="kpi-val" style="color: var(--green);">₹ 29.15M</div>
-        <div class="kpi-lbl">Net Revenue Recovered</div>
-        <div class="kpi-sub" style="color: var(--green);">▲ +24.3% vs Blind Retry</div>
+    <!-- Live Status Strip -->
+    <div class="status-strip">
+      <div class="status-cell">
+        <div class="status-lbl">Compliance Violation Rate</div>
+        <div class="status-val" style="color: var(--green);">0.000%</div>
+        <div class="status-note">Proven by construction</div>
       </div>
-      <div class="kpi-item">
-        <div class="kpi-val" style="color: var(--green);">0.000%</div>
-        <div class="kpi-lbl">Compliance Violation Rate</div>
-        <div class="kpi-sub" style="color: var(--text-muted);">Proven by Construction</div>
+      <div class="status-cell">
+        <div class="status-lbl">Decision Latency (P50)</div>
+        <div class="status-val" style="color: var(--cyan);">0.598 ms</div>
+        <div class="status-note">Sub-millisecond inference</div>
       </div>
-      <div class="kpi-item">
-        <div class="kpi-val" style="color: var(--cyan);">4.2%</div>
-        <div class="kpi-lbl">False Escalation Rate</div>
-        <div class="kpi-sub" style="color: var(--cyan);">↓ Down from 18.1%</div>
+      <div class="status-cell">
+        <div class="status-lbl">Audit Invariants</div>
+        <div class="status-val" style="color: var(--green);">169 / 169</div>
+        <div class="status-note">Deterministic verification</div>
       </div>
-      <div class="kpi-item">
-        <div class="kpi-val" style="color: #fff;">0.598 ms</div>
-        <div class="kpi-lbl">Decision Latency (P50)</div>
-        <div class="kpi-sub" style="color: var(--amber);">P95 = 0.743 ms</div>
+      <div class="status-cell">
+        <div class="status-lbl">Net Revenue Recovered</div>
+        <div class="status-val" style="color: var(--orange);">₹29.15M</div>
+        <div class="status-note">▲ +24.3% vs blind retry</div>
       </div>
-      <div class="kpi-item">
-        <div class="kpi-val" style="color: var(--orange);">169 / 169</div>
-        <div class="kpi-lbl">Automated Test Suite</div>
-        <div class="kpi-sub" style="color: var(--green);">100% Invariants Green</div>
+      <div class="status-cell">
+        <div class="status-lbl">False Escalation Rate</div>
+        <div class="status-val" style="color: var(--cyan);">4.2%</div>
+        <div class="status-note">Cascaded diagnosis</div>
       </div>
     </div>
   </section>
 
-  <!-- Section: The 6 Cylinders -->
-  <section id="cylinders" class="container">
-    <div class="section-head">
-      <div class="section-eyebrow">Modular Decoupled Execution</div>
-      <h2 class="section-title">The Six Synchronized Cylinders (V1 – V6)</h2>
-      <p class="section-desc">Each cylinder performs a dedicated responsibility in sequence with microsecond latency and zero race conditions.</p>
+  <!-- Section 1: The Problem -->
+  <section id="problem" class="container">
+    <div class="section-header">
+      <div class="section-title">THE BRUTAL REALITY OF BLIND RETRIES</div>
+      <div class="section-tag">// CAPITAL PRESERVATION MOAT</div>
+    </div>
+    
+    <div class="brutal-sentence">
+      Blind retries lose money. We stop them before they start.
+    </div>
+
+    <div class="problem-grid">
+      <!-- Card A: Conventional Blind Retries -->
+      <div class="prob-card bad">
+        <div class="prob-card-title">
+          <span style="color: var(--red);">CONVENTIONAL BILLING (BLIND RETRY)</span>
+          <span style="color: var(--red);">CAPITAL DESTRUCTION</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-lbl">Wasted Gateway Fees (HARD_TERMINAL)</span>
+          <span class="metric-val" style="color: var(--red);">-₹267,527</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-lbl">Statutory Bank Fines (LEGAL_HOLD)</span>
+          <span class="metric-val" style="color: var(--red);">-₹51,505</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-lbl">NPCI 4-Attempt Breaches</span>
+          <span class="metric-val" style="color: var(--red);">Unchecked / High Risk</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-lbl">Customer Churn on Unwanted Debits</span>
+          <span class="metric-val" style="color: var(--red);">Elevated</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-lbl">Total Edge-Case Net Destruction</span>
+          <span class="metric-val" style="color: var(--red); font-size: 15px;">-₹319,032 IN FINES</span>
+        </div>
+      </div>
+
+      <!-- Card B: Escapism Autonomous Recovery -->
+      <div class="prob-card good">
+        <div class="prob-card-title">
+          <span style="color: var(--green);">ESCAPISM V6 ENGINE (LAW BEFORE MATH)</span>
+          <span style="color: var(--green);">STRUCTURALLY PROTECTED</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-lbl">Wasted Gateway Fees (HARD_TERMINAL)</span>
+          <span class="metric-val" style="color: var(--green);">₹0.00 (Floored Instantly)</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-lbl">Statutory Bank Fines (LEGAL_HOLD)</span>
+          <span class="metric-val" style="color: var(--green);">₹0.00 (Short-Circuited)</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-lbl">Compliance Violation Rate (CVR)</span>
+          <span class="metric-val" style="color: var(--green);">0.000% (Proven)</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-lbl">Uplift Over Naive Retry Policy</span>
+          <span class="metric-val" style="color: var(--green);">+₹5,691,037 (+24.3%)</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-lbl">Aggregate Net Revenue Recovered</span>
+          <span class="metric-val" style="color: var(--green); font-size: 15px;">₹29,154,368 NRR</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Three-Question Flow -->
+  <section id="three-step" class="container">
+    <div class="section-header">
+      <div class="section-title">THE THREE-QUESTION NARRATIVE ENGINE</div>
+      <div class="section-tag">// DECISION FOUNDATION</div>
+    </div>
+
+    <div class="flow-grid">
+      <!-- Step 1 -->
+      <div class="flow-card">
+        <span class="flow-step">STAGE 01</span>
+        <h3 class="flow-q">What happened?</h3>
+        <p class="flow-sub">
+          <strong>Semantic Diagnostic Cascade:</strong> Instant $O(1)$ lookup for 16 standard bank codes (82% volume at 0ms latency). Unstructured bank decline strings cascade to an OWASP LLM01:2025 hardened semantic interpreter with strict PII scrubbing.
+        </p>
+        <div class="flow-badge-list">
+          <span class="flow-pill">Z9 · Insufficient Funds</span>
+          <span class="flow-pill">U28 · Bank VPA Down</span>
+          <span class="flow-pill">07 · Legal Hold</span>
+          <span class="flow-pill">OWASP Defenses</span>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="flow-card" style="border-top: 2px solid var(--orange);">
+        <span class="flow-step">STAGE 02</span>
+        <h3 class="flow-q">What are we allowed to do?</h3>
+        <p class="flow-sub">
+          <strong>The Compliance Kernel:</strong> "Law Before Math". The governor deterministically computes the legal action set $\mathcal{A}_{\text{feasible}}$ before any economic scoring begins. If an action violates NPCI or RBI guidelines, it is pruned instantly.
+        </p>
+        <div class="flow-badge-list">
+          <span class="flow-pill">NPCI 4-Attempt Cap</span>
+          <span class="flow-pill">24h/72h/168h Spacing</span>
+          <span class="flow-pill">₹15k AFA Line</span>
+          <span class="flow-pill">DPDP Act Consent</span>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="flow-card">
+        <span class="flow-step">STAGE 03</span>
+        <h3 class="flow-q">What is worth doing?</h3>
+        <p class="flow-sub">
+          <strong>Lift-EV Mathematical Optimizer:</strong> Only legal candidate actions are scored. Evaluates calibrated recovery probability $\hat{P}(S)$ against channel lift multipliers $m(a)$ and operational communication costs $C(a)$, subject to hurdle $\theta_{\text{digital}} = ₹1.00$.
+        </p>
+        <div class="flow-badge-list">
+          <span class="flow-pill">WhatsApp Nudge (1.20×)</span>
+          <span class="flow-pill">Payment Link (1.15×)</span>
+          <span class="flow-pill">Silent Retry (1.00×)</span>
+          <span class="flow-pill">Capital Floor Gate</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Architecture Strip (V1 to V6) -->
+  <section id="architecture" class="container">
+    <div class="section-header">
+      <div class="section-title">V6 PIPELINE ARCHITECTURE</div>
+      <div class="section-tag">// SIX DISCRETE CYLINDERS</div>
     </div>
 
     <div class="cylinders-grid">
-      
-      <!-- Cylinder V1 -->
-      <div class="cylinder-card">
-        <div class="cylinder-card-stripe" style="background: var(--orange);"></div>
-        <span class="cyl-badge" style="background: rgba(255,102,0,0.15); color: var(--orange);">V1 · INTAKE</span>
-        <h3 class="cyl-title">Ingestion &amp; Deduplication</h3>
-        <div class="cyl-file">src/ingestion/gateway.py · SQLite WAL</div>
-        <p class="cyl-desc">Constant-time HMAC-SHA256 signature verification. Replay protection checks <code>x-razorpay-event-id</code> against atomic SQLite ledger, returning HTTP 202 on duplicates.</p>
-        <div class="cyl-stat">
-          <span class="cyl-stat-lbl">RELIABILITY</span>
-          <span class="cyl-stat-val" style="color: var(--orange);">IDEMPOTENT</span>
+      <!-- V1 -->
+      <div class="cyl-card">
+        <div class="cyl-header">
+          <span class="cyl-tag" style="background: rgba(0, 191, 255, 0.15); color: var(--cyan);">V1 INTAKE</span>
+          <span class="cyl-file">src/ingestion/gateway.py</span>
+        </div>
+        <div class="cyl-title">Intake &amp; Idempotency</div>
+        <div class="cyl-desc">
+          Cryptographic HMAC-SHA256 signature verification, deduplication on <code>x-razorpay-event-id</code>, and durable SQLite WAL inbox persistence.
         </div>
       </div>
 
-      <!-- Cylinder V2 -->
-      <div class="cylinder-card">
-        <div class="cylinder-card-stripe" style="background: var(--cyan);"></div>
-        <span class="cyl-badge" style="background: rgba(0,191,255,0.15); color: var(--cyan);">V2 · DIAGNOSIS</span>
-        <h3 class="cyl-title">Three-Tier Failure Cascade</h3>
-        <div class="cyl-file">src/diagnosis/classifier.py</div>
-        <p class="cyl-desc">Tier 1 deterministic hashmap resolves 82% of batch volume in 0ms. Tier 3 LLM fallback strips PII and extracts root cause from free text under strict Pydantic schema locks.</p>
-        <div class="cyl-stat">
-          <span class="cyl-stat-lbl">TIER 1 COVERAGE</span>
-          <span class="cyl-stat-val" style="color: var(--cyan);">82% AT 0ms</span>
+      <!-- V2 -->
+      <div class="cyl-card">
+        <div class="cyl-header">
+          <span class="cyl-tag" style="background: rgba(0, 255, 136, 0.15); color: var(--green);">V2 DIAGNOSTIC</span>
+          <span class="cyl-file">src/decision/classifier.py</span>
+        </div>
+        <div class="cyl-title">Diagnostic Cascade</div>
+        <div class="cyl-desc">
+          Tier 1 deterministic code lookup (0ms, 82% vol), Tier 2 missing-text gate, Tier 3 PII-scrubbed LLM fallback. Fail-closed on anomaly.
         </div>
       </div>
 
-      <!-- Cylinder V3 -->
-      <div class="cylinder-card">
-        <div class="cylinder-card-stripe" style="background: var(--red);"></div>
-        <span class="cyl-badge" style="background: rgba(255,51,51,0.15); color: var(--red);">V3 · GOVERNOR</span>
-        <h3 class="cyl-title">Compliance Kernel</h3>
-        <div class="cyl-file">src/guardrails/ (7 Modules)</div>
-        <p class="cyl-desc"><b>Law Before Math.</b> Hard enforcement of NPCI 4-attempt caps, escalating 24h/72h/168h spacing, and RBI ₹15,000 AFA ceilings. Non-compliant actions are deleted from the feasible set.</p>
-        <div class="cyl-stat">
-          <span class="cyl-stat-lbl">VIOLATION RATE</span>
-          <span class="cyl-stat-val" style="color: var(--red);">CVR = 0.000%</span>
+      <!-- V3 -->
+      <div class="cyl-card">
+        <div class="cyl-header">
+          <span class="cyl-tag" style="background: rgba(255, 102, 0, 0.15); color: var(--orange);">V3 GOVERNOR</span>
+          <span class="cyl-file">src/guardrails/</span>
+        </div>
+        <div class="cyl-title">Compliance Kernel</div>
+        <div class="cyl-desc">
+          "Law Before Math" structural invariant. NPCI 4-attempt cap, 24h/72h/168h spacing, ₹15k AFA threshold, and DPDP customer consent.
         </div>
       </div>
 
-      <!-- Cylinder V4 -->
-      <div class="cylinder-card">
-        <div class="cylinder-card-stripe" style="background: var(--amber);"></div>
-        <span class="cyl-badge" style="background: rgba(255,179,0,0.15); color: var(--amber);">V4 · PROPENSITY</span>
-        <h3 class="cyl-title">Calibrated ML Estimator</h3>
-        <div class="cyl-file">src/ml/pipeline.py · Profile 3</div>
-        <p class="cyl-desc">Logistic Regression trained on unconfounded baseline outcomes Y₀ = Bernoulli(μ₀). Produces continuous, highly calibrated probability estimates P̂(S) rather than noisy binary predictions.</p>
-        <div class="cyl-stat">
-          <span class="cyl-stat-lbl">CALIBRATION</span>
-          <span class="cyl-stat-val" style="color: var(--amber);">ECE = 0.0372</span>
+      <!-- V4 -->
+      <div class="cyl-card">
+        <div class="cyl-header">
+          <span class="cyl-tag" style="background: rgba(255, 179, 0, 0.15); color: var(--amber);">V4 ML MODEL</span>
+          <span class="cyl-file">src/ml/pipeline.py</span>
+        </div>
+        <div class="cyl-title">Propensity Pipeline</div>
+        <div class="cyl-desc">
+          Profile 3 Certified Production Baseline calibrated to unconfounded passive recovery ($Y_0$). ECE = 0.0372 across deciles, P50 latency 0.598ms.
         </div>
       </div>
 
-      <!-- Cylinder V5 -->
-      <div class="cylinder-card">
-        <div class="cylinder-card-stripe" style="background: var(--orange);"></div>
-        <span class="cyl-badge" style="background: rgba(255,119,0,0.15); color: var(--orange);">V5 · OPTIMIZER</span>
-        <h3 class="cyl-title">Lift-EV Decision Argmax</h3>
-        <div class="cyl-file">src/decision/optimizer.py</div>
-        <p class="cyl-desc">Selects optimal channel: <code>argmax(P̂ · ΔP · Amount − Cost)</code>. Dispatches interactive WhatsApp, 2FA payment links, or PIN prompts. Enforces θ = ₹1.00 hurdle rate and negative EV floor.</p>
-        <div class="cyl-stat">
-          <span class="cyl-stat-lbl">SAFETY HURDLE</span>
-          <span class="cyl-stat-val" style="color: var(--orange);">θ = ₹1.00 NET</span>
+      <!-- V5 -->
+      <div class="cyl-card">
+        <div class="cyl-header">
+          <span class="cyl-tag" style="background: rgba(139, 92, 246, 0.15); color: var(--purple);">V5 OPTIMIZER</span>
+          <span class="cyl-file">src/decision/optimizer.py</span>
+        </div>
+        <div class="cyl-title">Lift-EV Optimizer</div>
+        <div class="cyl-desc">
+          Calculates $\text{Lift-EV} = \hat{P}(S) \cdot \Delta P(a) \cdot \text{Amount} - C(a)$. Filters against digital hurdle $\theta_{\text{digital}} = ₹1.00$.
         </div>
       </div>
 
-      <!-- Cylinder V6 -->
-      <div class="cylinder-card">
-        <div class="cylinder-card-stripe" style="background: var(--green);"></div>
-        <span class="cyl-badge" style="background: rgba(0,255,136,0.15); color: var(--green);">V6 · DISPATCH</span>
-        <h3 class="cyl-title">Execution &amp; Evaluation</h3>
-        <div class="cyl-file">src/execution/worker.py · SNIPS OPE</div>
-        <p class="cyl-desc">Two-phase intent logging guarantees crash safety. Offline policy evaluation across 500 bootstrap iterations proves +₹5.69M (+24.3%) uplift over blind retries and zero penalties.</p>
-        <div class="cyl-stat">
-          <span class="cyl-stat-lbl">RECOVERY UPLIFT</span>
-          <span class="cyl-stat-val" style="color: var(--green);">+₹5.69M (+24%)</span>
+      <!-- V6 -->
+      <div class="cyl-card">
+        <div class="cyl-header">
+          <span class="cyl-tag" style="background: rgba(0, 255, 136, 0.15); color: var(--green);">V6 EXECUTION</span>
+          <span class="cyl-file">src/execution/worker.py</span>
         </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Architecture Visual Embed -->
-  <section class="container diagram-preview">
-    <div class="section-head">
-      <div class="section-eyebrow">Engine Architecture Blueprint</div>
-      <h2 class="section-title">The Vertical Flow Architecture</h2>
-      <p class="section-desc">Deterministic statutory filtering protects the outer banking rails while machine learning operates inside safe boundaries.</p>
-    </div>
-    <img src="/static/v6_engine_architecture.png" alt="Razorpay V6 Architecture Flow" class="diagram-img">
-  </section>
-
-  <!-- Section: Moat / Comparison -->
-  <section id="comparison" class="container">
-    <div class="moat-box">
-      <div class="section-head" style="margin-bottom: 20px;">
-        <div class="section-eyebrow">Economic Proof</div>
-        <h2 class="section-title">The Negative Selection Moat</h2>
-        <p class="section-desc">Why industry-standard Naive Blind Retry actively destroys merchant capital in India.</p>
-      </div>
-
-      <div class="moat-grid">
-        <div class="moat-card bad">
-          <div class="moat-head">
-            <span class="moat-title" style="color: var(--red);">Policy 2: Naive Blind Retry</span>
-            <span class="moat-stat" style="color: var(--red);">-₹319,032</span>
-          </div>
-          <ul class="moat-list">
-            <li><span>✗</span> <b>Hard Terminal Cohort:</b> Incurs -₹267,527 in regulatory presentation penalties on closed/blocked accounts.</li>
-            <li><span>✗</span> <b>Legal Hold Cohort:</b> Incurs -₹51,505 in statutory fines on court-frozen bank mandates (Codes 07 / AP03).</li>
-            <li><span>✗</span> <b>Merchant Churn:</b> Repeated silent attempts trigger bank fraud scoring and customer notification fatigue.</li>
-          </ul>
-        </div>
-
-        <div class="moat-card good">
-          <div class="moat-head">
-            <span class="moat-title" style="color: var(--green);">Policy 3: V6 AI Orchestrator</span>
-            <span class="moat-stat" style="color: var(--green);">₹0.00 FINES</span>
-          </div>
-          <ul class="moat-list">
-            <li><span>✓</span> <b>Compliant Abort:</b> Deterministic Gate 0 short-circuits 100% of legal holds directly to human review.</li>
-            <li><span>✓</span> <b>₹0 Regulatory Penalties:</b> Zero presentation fines incurred across all 5,000 evaluated benchmark mandates.</li>
-            <li><span>✓</span> <b>+₹5.69M Net Uplift:</b> Channels soft liquidity failures into timely WhatsApp nudges and 2FA payment links.</li>
-          </ul>
+        <div class="cyl-title">Replay-Safe Dispatch</div>
+        <div class="cyl-desc">
+          Two-phase execution intent logged before gateway dispatch. Evaluated via 1,000 bootstrap SNIPS iterations with zero compliance fines.
         </div>
       </div>
     </div>
+
+    <!-- Embedded Architecture Flow Diagram -->
+    <div class="diagram-wrap">
+      <div style="margin-bottom: 16px; font-family: var(--font-mono); font-size: 11.5px; color: var(--text-dim); text-transform: uppercase;">
+        // Full V6 Engine Architectural Vector Diagram (High-Density Pipeline Flow)
+      </div>
+      <img src="/static/v6_engine_architecture.png" alt="Escapism V6 Architecture Flow" class="diagram-img">
+    </div>
   </section>
 
-  <!-- Interactive Calculator -->
+  <!-- Section 4: Dynamic ROI & Recovery Calculator -->
   <section id="calculator" class="container">
+    <div class="section-header">
+      <div class="section-title">ANNUAL SUBSCRIPTION RECOVERY ESTIMATOR</div>
+      <div class="section-tag">// INTERACTIVE ROI SIMULATOR</div>
+    </div>
+
     <div class="calc-box">
-      <div class="section-head" style="margin-bottom: 24px;">
-        <div class="section-eyebrow">Interactive ROI Modeler</div>
-        <h2 class="section-title">Calculate Your Recoverable ARR</h2>
-        <p class="section-desc">Estimate monthly revenue gains and penalty avoidance based on your recurring payment volume.</p>
-      </div>
-
       <div class="calc-grid">
-        <div class="calc-inputs">
-          <div class="calc-slider-group">
-            <label>
-              <span>Monthly Failed Mandates</span>
-              <span id="mandates-val" style="color: var(--orange); font-family: var(--font-mono); font-weight: 700;">10,000</span>
-            </label>
-            <input type="range" id="mandates-slider" min="1000" max="100000" step="1000" value="10000">
+        <div>
+          <div class="calc-control">
+            <div class="calc-lbl-wrap">
+              <span>Annual Recurring Revenue (ARR)</span>
+              <span id="arr-val" style="color: var(--orange); font-family: var(--font-mono);">₹ 50,000,000</span>
+            </div>
+            <input type="range" id="arr-range" class="calc-slider" min="5000000" max="500000000" step="5000000" value="50000000" oninput="updateCalc()">
           </div>
-
-          <div class="calc-slider-group">
-            <label>
-              <span>Average Ticket Size (₹)</span>
-              <span id="ticket-val" style="color: var(--orange); font-family: var(--font-mono); font-weight: 700;">₹ 5,000</span>
-            </label>
-            <input type="range" id="ticket-slider" min="500" max="50000" step="500" value="5000">
+          <div class="calc-control">
+            <div class="calc-lbl-wrap">
+              <span>Initial Mandate Debit Failure Rate</span>
+              <span id="fail-val" style="color: var(--cyan); font-family: var(--font-mono);">12.5%</span>
+            </div>
+            <input type="range" id="fail-range" class="calc-slider" min="3" max="30" step="0.5" value="12.5" oninput="updateCalc()">
           </div>
+          <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5;">
+            Estimates incremental revenue recovered through Escapism's +24.3% lift over standard retry logic, combined with 100% elimination of statutory fines and wasted gateway fees.
+          </p>
         </div>
 
-        <div class="calc-results">
-          <div class="calc-res-num" id="arr-recovered">₹ 1.14 Cr</div>
-          <div class="calc-res-lbl">Projected Annual Net Uplift</div>
+        <div class="calc-display">
+          <div class="calc-note">Estimated Net Recovered Capital</div>
+          <div class="calc-num" id="recovered-sum">₹ 1,518,750</div>
+          <div style="font-size: 11.5px; color: var(--green); margin-bottom: 20px; font-family: var(--font-mono);">
+            ▲ +₹ 296,250 over standard blind retries
+          </div>
 
-          <div class="calc-sub-grid">
+          <div class="calc-substats">
             <div>
-              <div style="font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--green);" id="penalties-averted">₹ 6.38 L</div>
-              <div style="font-size: 10px; color: var(--text-sub); text-transform: uppercase; margin-top: 2px;">Regulatory Fines Avoided</div>
+              <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase;">Penalties Averted</div>
+              <div id="penalties-sum" style="font-family: var(--font-mono); font-weight: 700; color: #fff; font-size: 14px;">₹ 39,879</div>
             </div>
             <div>
-              <div style="font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--cyan);" id="monthly-nrr">₹ 9.50 L</div>
-              <div style="font-size: 10px; color: var(--text-sub); text-transform: uppercase; margin-top: 2px;">Net Monthly Lift</div>
+              <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase;">Compliance Violations</div>
+              <div style="font-family: var(--font-mono); font-weight: 700; color: var(--green); font-size: 14px;">0.000%</div>
             </div>
           </div>
         </div>
@@ -748,41 +914,43 @@
     </div>
   </section>
 
-  <!-- 3-Step Setup -->
-  <section id="quickstart" class="container">
-    <div class="setup-box">
-      <div class="section-head" style="margin-bottom: 30px;">
-        <div class="section-eyebrow">Developer Fast-Track</div>
-        <h2 class="section-title">Deploy in Three Steps</h2>
-        <p class="section-desc">Run the entire autonomous recovery engine and Bloomberg terminal UI locally.</p>
-      </div>
+  <!-- Section 5: 3-Step Ingestion & Deployment -->
+  <section id="deploy" class="container">
+    <div class="section-header">
+      <div class="section-title">3-STEP INGESTION &amp; DEPLOYMENT</div>
+      <div class="section-tag">// UNDER 60 SECONDS</div>
+    </div>
 
-      <div class="step-row">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Clone Repository &amp; Activate Environment</h3>
-          <p>Clone the certified repository and initialize a Python 3.11+ virtual environment.</p>
-          <code class="code-snippet">git clone https://github.com/Not-Mally-Raw/Razorpay-Escapism-Track-03.git && cd Razorpay-Escapism-Track-03 && python3 -m venv .venv && source .venv/bin/activate</code>
-        </div>
+    <div class="setup-grid">
+      <div class="setup-step">
+        <div class="step-num">STEP 01</div>
+        <div class="step-title">Clone Repository &amp; Init Virtualenv</div>
+        <code class="step-code">git clone https://github.com/Not-Mally-Raw/Razorpay-Escapism-Track-03.git &amp;&amp; cd Razorpay-Escapism-Track-03 &amp;&amp; python3 -m venv .venv &amp;&amp; source .venv/bin/activate</code>
       </div>
+      <div class="setup-step">
+        <div class="step-num">STEP 02</div>
+        <div class="step-title">Install Runtime Dependencies</div>
+        <code class="step-code">pip install -e .</code>
+      </div>
+      <div class="setup-step">
+        <div class="step-num">STEP 03</div>
+        <div class="step-title">Launch Escapism Console</div>
+        <code class="step-code">python3 src/api/server.py</code>
+      </div>
+    </div>
+  </section>
 
-      <div class="step-row">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Install Engine &amp; Dependencies</h3>
-          <p>Install all dependencies (FastAPI, Scikit-Learn, AioSQLite, Uvicorn) in editable mode.</p>
-          <code class="code-snippet">pip install -e .</code>
-        </div>
-      </div>
-
-      <div class="step-row">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Launch V6 Engine &amp; Bloomberg Terminal UI</h3>
-          <p>Starts the FastAPI server on port 8000 and mounts the interactive operations console.</p>
-          <code class="code-snippet">python3 src/api/server.py</code>
-        </div>
-      </div>
+  <!-- Final CTA Banner -->
+  <section class="container">
+    <div class="cta-banner">
+      <h2>Command your mandate recovery pipeline.</h2>
+      <p>
+        Zero compliance drift. Deterministic capital preservation. Calibrated machine learning optimization.
+      </p>
+      <a href="/" class="btn-primary" style="padding: 14px 28px; font-size: 14px;">
+        <span>⚡ LAUNCH ESCAPISM RECOVERY CONSOLE</span>
+        <span>[F1-F8]</span>
+      </a>
     </div>
   </section>
 
@@ -790,50 +958,36 @@
   <footer>
     <div class="container">
       <div class="footer-links">
-        <a href="/">Terminal Console (F1-F8)</a>
-        <a href="/docs">API Documentation</a>
+        <a href="/">Console UI</a>
+        <a href="/docs">API Docs</a>
         <a href="https://github.com/Not-Mally-Raw/Razorpay-Escapism-Track-03" target="_blank">GitHub Repository</a>
       </div>
-      <p>Razorpay Autonomous Revenue Recovery Engine · V6 Engine Architecture · Built for Track 03 (Flaw B)</p>
-      <p style="margin-top: 4px; color: #444;">Statutory Compliance Citations: RBI Master Direction §2.2 · NPCI Operating Management Aug 2025 · DPDP Act 2023</p>
+      <div>
+        ESCAPISM // RECOVERY CONSOLE · V6-ENGINE · COMPLIANCE-GATED RECOVERY
+      </div>
+      <div style="margin-top: 6px; font-size: 11px;">
+        Aligned with NPCI Circular NPCI/2024-25/NACH/008, RBI Circular DPSS.CO.PD No. 1310/02.14.008/2020-21, and DPDP Act 2023.
+      </div>
     </div>
   </footer>
 
   <script>
-    const mSlider = document.getElementById('mandates-slider');
-    const tSlider = document.getElementById('ticket-slider');
-    const mVal = document.getElementById('mandates-val');
-    const tVal = document.getElementById('ticket-val');
-    const arrElem = document.getElementById('arr-recovered');
-    const penElem = document.getElementById('penalties-averted');
-    const monElem = document.getElementById('monthly-nrr');
-
-    function formatINR(val) {
-      if (val >= 10000000) return `₹ ${(val / 10000000).toFixed(2)} Cr`;
-      if (val >= 100000) return `₹ ${(val / 100000).toFixed(2)} L`;
-      return `₹ ${val.toLocaleString('en-IN')}`;
-    }
-
     function updateCalc() {
-      const mandates = parseInt(mSlider.value, 10);
-      const ticket = parseInt(tSlider.value, 10);
-      
-      mVal.innerText = mandates.toLocaleString('en-IN');
-      tVal.innerText = `₹ ${ticket.toLocaleString('en-IN')}`;
+      const arr = parseFloat(document.getElementById('arr-range').value);
+      const failRate = parseFloat(document.getElementById('fail-range').value) / 100.0;
 
-      // Net uplift factor: ~24.3% vs blind retry, baseline recovery lift ~19% on gross volume
-      const grossVolume = mandates * ticket;
-      const monthlyLift = grossVolume * 0.0228; // Net lift across all segments
-      const annualLift = monthlyLift * 12;
-      const annualFines = mandates * 12 * 0.12 * 45; // Avoided penalties on terminal/legal cohorts
+      document.getElementById('arr-val').textContent = '₹ ' + arr.toLocaleString('en-IN');
+      document.getElementById('fail-val').textContent = (failRate * 100).toFixed(1) + '%';
 
-      arrElem.innerText = formatINR(annualLift);
-      penElem.innerText = formatINR(annualFines);
-      monElem.innerText = formatINR(monthlyLift);
+      const failedVol = arr * failRate;
+      const baseRecovered = failedVol * 0.20;
+      const escapismRecovered = baseRecovered * 1.243;
+      const deltaRecovered = escapismRecovered - baseRecovered;
+      const penaltiesAvoided = failedVol * 0.00638;
+
+      document.getElementById('recovered-sum').textContent = '₹ ' + Math.round(escapismRecovered).toLocaleString('en-IN');
+      document.getElementById('penalties-sum').textContent = '₹ ' + Math.round(penaltiesAvoided).toLocaleString('en-IN');
     }
-
-    mSlider.addEventListener('input', updateCalc);
-    tSlider.addEventListener('input', updateCalc);
     updateCalc();
   </script>
 </body>

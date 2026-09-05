@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RAZORPAY RECOVERY TERMINAL // BLOOMBERG V1.0</title>
+  <title>ESCAPISM // RECOVERY CONSOLE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
       user-select: none;
     }
 
-    /* Fixed Bloomberg Top Bar */
+    /* Fixed Top Bar */
     .bb-topbar {
       background-color: var(--bb-panel);
       border-bottom: 2px solid var(--bb-orange);
@@ -357,7 +357,7 @@
   <header class="bb-topbar">
     <div class="bb-logo">
       <span>■</span>
-      <span>RAZORPAY RECOVERY TERMINAL</span>
+      <span>ESCAPISM RECOVERY CONSOLE</span>
       <span style="color: var(--bb-gray); font-size: 11px; font-weight: 400;">// V6-ENGINE</span>
     </div>
 
@@ -1102,7 +1102,7 @@
           switchTab('F1');
           filterCases();
         } else if (cmd === 'HELP') {
-          alert('BLOOMBERG COMMANDS:\n- F1..F8: Switch panels\n- case_0042: Drill down\n- Z9, 07: Filter code\n- SIM, BENCH, MODEL: Jump to view');
+          alert('CONSOLE COMMANDS:\n- F1..F8: Switch panels\n- case_0042: Drill down\n- Z9, 07: Filter code\n- SIM, BENCH, MODEL: Jump to view');
         } else {
           document.getElementById('feed-search').value = cmd;
           switchTab('F1');
