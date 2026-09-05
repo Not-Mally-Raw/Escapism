@@ -57,7 +57,9 @@ htmlcov/
 
 # Markdown Documentation & Internal Agent Traces
 .agents/
-docs/
+docs/*
+!docs/v6_engine_architecture.png
+!docs/v6_engine_architecture.svg
 *.md
 !README.md
 

@@ -1,0 +1,268 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 1376" width="1040" height="1376">
+  <defs>
+    <style>
+      .bg { fill: #070707; }
+      .title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 800; fill: #FFFFFF; font-size: 26px; letter-spacing: -0.5px; }
+      .subtitle { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 500; fill: #888888; font-size: 13px; }
+      .card-bg { fill: #111111; stroke-width: 1.5px; }
+      .cylinder-num { font-family: 'SF Mono', Menlo, Consolas, monospace; font-weight: 800; font-size: 15px; text-anchor: middle; dominant-baseline: central; }
+      .card-title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 15px; fill: #FFFFFF; letter-spacing: -0.2px; }
+      .card-file { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 11px; fill: #777777; }
+      .card-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 400; font-size: 12.5px; fill: #CCCCCC; }
+      .card-metric-lbl { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 9.5px; font-weight: 700; fill: #777777; text-transform: uppercase; letter-spacing: 0.5px; }
+      .card-metric-val { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 13.5px; font-weight: 700; }
+      .conn-line { stroke: #262626; stroke-width: 2px; stroke-dasharray: 4,4; }
+      .conn-pill { fill: #141414; stroke: #333333; stroke-width: 1px; rx: 10px; ry: 10px; }
+      .conn-text { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 10.5px; font-weight: 600; fill: #FF6600; text-anchor: middle; dominant-baseline: central; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect class="bg" width="1040" height="1376" rx="16"/>
+
+  <!-- Top Header -->
+  <g transform="translate(48, 44)">
+    <rect x="0" y="0" width="46" height="24" rx="4" fill="#FF6600"/>
+    <text x="23" y="12" class="cylinder-num" fill="#000000" font-size="12">V6</text>
+    <text x="56" y="17" class="title">AUTONOMOUS REVENUE RECOVERY ENGINE</text>
+    <text x="0" y="44" class="subtitle">Six Synchronized Architectural Cylinders · Compliance-Gated Reinforcement &amp; EV Maximization</text>
+  </g>
+
+  <!-- Header border line -->
+  <line x1="48" y1="104" x2="992" y2="104" stroke="#1F1F1F" stroke-width="1"/>
+
+  <!-- Card V1 -->
+  <g transform="translate(48, 120)">
+    <rect class="card-bg" width="944" height="146" rx="10" stroke="#FF6600" stroke-opacity="0.5"/>
+    <rect x="0" y="0" width="5" height="146" rx="2.5" fill="#FF6600"/>
+    
+    <!-- Cylinder Badge -->
+    <rect x="18" y="14" width="38" height="26" rx="5" fill="#FF6600" fill-opacity="0.15" stroke="#FF6600" stroke-width="1.2"/>
+    <text x="37" y="27" class="cylinder-num" fill="#FF6600">V1</text>
+    
+    <!-- Title & File -->
+    <text x="68" y="25" class="card-title">V1 · INTAKE &amp; IDEMPOTENCY GATEWAY</text>
+    <text x="68" y="40" class="card-file">src/ingestion/gateway.py · gateway.db (WAL)</text>
+    
+    <!-- Right Metric Box -->
+    <rect x="788" y="14" width="140" height="40" rx="6" fill="#181818" stroke="#262626" stroke-width="1"/>
+    <text x="858" y="26" class="card-metric-lbl" text-anchor="middle">GUARANTEE</text>
+    <text x="858" y="42" class="card-metric-val" fill="#FF6600" text-anchor="middle">REPLAY-SAFE</text>
+    
+    <!-- Bullet Points -->
+    <g transform="translate(22, 54)">
+      <circle cx="2" cy="10" r="2" fill="#FF6600"/>
+      <text x="12" y="14" class="card-body">Post-processed <tspan font-weight="700" fill="#FFFFFF">mandate.debit.failed</tspan> webhooks with constant-time HMAC-SHA256 signature authentication</text>
+      <circle cx="2" cy="29" r="2" fill="#FF6600"/>
+      <text x="12" y="33" class="card-body">Idempotency Gate on <tspan font-family="monospace" fill="#FFB300">x-razorpay-event-id</tspan> via atomic SQLite <tspan font-family="monospace" fill="#FFB300">seen_events</tspan> (returns HTTP 202 on duplicate)</text>
+      <circle cx="2" cy="48" r="2" fill="#FF6600"/>
+      <text x="12" y="52" class="card-body">Durable SQLite <tspan font-family="monospace" fill="#FFB300">inbox</tspan> insertion (WAL mode, retry_count=0, status=PENDING) before thread handoff</text>
+    </g>
+  </g>
+
+  <!-- Connector 1 -> 2 -->
+  <line x1="520" y1="266" x2="520" y2="308" class="conn-line"/>
+  <rect x="370" y="277" width="300" height="20" class="conn-pill"/>
+  <text x="520" y="287" class="conn-text">① Event Envelope (PENDING)</text>
+
+  <!-- Card V2 -->
+  <g transform="translate(48, 308)">
+    <rect class="card-bg" width="944" height="146" rx="10" stroke="#00BFFF" stroke-opacity="0.5"/>
+    <rect x="0" y="0" width="5" height="146" rx="2.5" fill="#00BFFF"/>
+    
+    <!-- Cylinder Badge -->
+    <rect x="18" y="14" width="38" height="26" rx="5" fill="#00BFFF" fill-opacity="0.15" stroke="#00BFFF" stroke-width="1.2"/>
+    <text x="37" y="27" class="cylinder-num" fill="#00BFFF">V2</text>
+    
+    <!-- Title & File -->
+    <text x="68" y="25" class="card-title">V2 · THREE-TIER DIAGNOSTIC CASCADE</text>
+    <text x="68" y="40" class="card-file">src/diagnosis/classifier.py · ambiguity_handler.py</text>
+    
+    <!-- Right Metric Box -->
+    <rect x="788" y="14" width="140" height="40" rx="6" fill="#181818" stroke="#262626" stroke-width="1"/>
+    <text x="858" y="26" class="card-metric-lbl" text-anchor="middle">TIER 1 COVERAGE</text>
+    <text x="858" y="42" class="card-metric-val" fill="#00BFFF" text-anchor="middle">82% AT 0ms</text>
+    
+    <!-- Bullet Points -->
+    <g transform="translate(22, 54)">
+      <circle cx="2" cy="10" r="2" fill="#00BFFF"/>
+      <text x="12" y="14" class="card-body"><tspan font-weight="700" fill="#FFFFFF">Tier 1 Deterministic Hashmap:</tspan> 16 canonical bank response codes resolved in 0ms (82% of all volume)</text>
+      <circle cx="2" cy="29" r="2" fill="#00BFFF"/>
+      <text x="12" y="33" class="card-body"><tspan font-weight="700" fill="#FFFFFF">Tier 2 Missing Text Gate:</tspan> Unannotated ambiguous declines (U19/U30) bypass LLM with tau=0.0 to prevent hallucinations</text>
+      <circle cx="2" cy="48" r="2" fill="#00BFFF"/>
+      <text x="12" y="52" class="card-body"><tspan font-weight="700" fill="#FFFFFF">Tier 3 LLM Semantic Extraction:</tspan> OWASP LLM01:2025 hardened, PII-stripped, Pydantic schema-locked (tau &gt;= 0.40)</text>
+      <circle cx="2" cy="67" r="2" fill="#00BFFF"/>
+      <text x="12" y="71" class="card-body"><tspan font-weight="700" fill="#FFFFFF">Fail-Closed Invariant:</tspan> Any timeout, parse error, or uncatalogued bank code immediately routes to <tspan font-family="monospace" fill="#FFB300">ESCALATE_HUMAN</tspan></text>
+    </g>
+  </g>
+
+  <!-- Connector 2 -> 3 -->
+  <line x1="520" y1="454" x2="520" y2="496" class="conn-line"/>
+  <rect x="370" y="465" width="300" height="20" class="conn-pill"/>
+  <text x="520" y="475" class="conn-text">② FailureClass + State Vector</text>
+
+  <!-- Card V3 -->
+  <g transform="translate(48, 496)">
+    <rect class="card-bg" width="944" height="146" rx="10" stroke="#FF3333" stroke-opacity="0.5"/>
+    <rect x="0" y="0" width="5" height="146" rx="2.5" fill="#FF3333"/>
+    
+    <!-- Cylinder Badge -->
+    <rect x="18" y="14" width="38" height="26" rx="5" fill="#FF3333" fill-opacity="0.15" stroke="#FF3333" stroke-width="1.2"/>
+    <text x="37" y="27" class="cylinder-num" fill="#FF3333">V3</text>
+    
+    <!-- Title & File -->
+    <text x="68" y="25" class="card-title">V3 · COMPLIANCE KERNEL (THE GOVERNOR) [LAW BEFORE MATH]</text>
+    <text x="68" y="40" class="card-file">src/guardrails/ (7 independent verification modules)</text>
+    
+    <!-- Right Metric Box -->
+    <rect x="788" y="14" width="140" height="40" rx="6" fill="#181818" stroke="#262626" stroke-width="1"/>
+    <text x="858" y="26" class="card-metric-lbl" text-anchor="middle">COMPLIANCE VIOLATION</text>
+    <text x="858" y="42" class="card-metric-val" fill="#FF4444" text-anchor="middle">CVR = 0.000%</text>
+    
+    <!-- Bullet Points -->
+    <g transform="translate(22, 54)">
+      <circle cx="2" cy="10" r="2" fill="#FF3333"/>
+      <text x="12" y="14" class="card-body"><tspan font-weight="700" fill="#FFFFFF">Gate 0 Short-Circuit:</tspan> Mandatory legal holds (Codes 07, AP03, uncatalogued) bypass ML scoring directly to human escalation</text>
+      <circle cx="2" cy="29" r="2" fill="#FF3333"/>
+      <text x="12" y="33" class="card-body"><tspan font-weight="700" fill="#FFFFFF">Statutory Gating:</tspan> NPCI 4-attempt presentation cap · Escalating spacing intervals (24h / 72h / 168h between attempts)</text>
+      <circle cx="2" cy="48" r="2" fill="#FF3333"/>
+      <text x="12" y="52" class="card-body"><tspan font-weight="700" fill="#FFFFFF">RBI Financial Ceiling:</tspan> §2.2 ₹15,000 AFA threshold structurally excises <tspan font-family="monospace" fill="#FFB300">SILENT_RETRY</tspan>; requires PIN / 2FA Payment Link</text>
+      <circle cx="2" cy="67" r="2" fill="#FF3333"/>
+      <text x="12" y="71" class="card-body"><tspan font-weight="700" fill="#FFFFFF">COMPLIANCE WALL:</tspan> Non-compliant actions permanently deleted from A_feasible before scoring -&gt; <tspan font-weight="700" fill="#FFFFFF">CVR = 0.000%</tspan></text>
+    </g>
+  </g>
+
+  <!-- Connector 3 -> 4 -->
+  <line x1="520" y1="642" x2="520" y2="684" class="conn-line"/>
+  <rect x="370" y="653" width="300" height="20" class="conn-pill"/>
+  <text x="520" y="663" class="conn-text">③ A_feasible (Compliant Subset Only)</text>
+
+  <!-- Card V4 -->
+  <g transform="translate(48, 684)">
+    <rect class="card-bg" width="944" height="146" rx="10" stroke="#FFB300" stroke-opacity="0.5"/>
+    <rect x="0" y="0" width="5" height="146" rx="2.5" fill="#FFB300"/>
+    
+    <!-- Cylinder Badge -->
+    <rect x="18" y="14" width="38" height="26" rx="5" fill="#FFB300" fill-opacity="0.15" stroke="#FFB300" stroke-width="1.2"/>
+    <text x="37" y="27" class="cylinder-num" fill="#FFB300">V4</text>
+    
+    <!-- Title & File -->
+    <text x="68" y="25" class="card-title">V4 · CALIBRATED ML PROPENSITY ESTIMATOR</text>
+    <text x="68" y="40" class="card-file">src/ml/pipeline.py · Profile 3 Lineage (SHA: 170bac42...)</text>
+    
+    <!-- Right Metric Box -->
+    <rect x="788" y="14" width="140" height="40" rx="6" fill="#181818" stroke="#262626" stroke-width="1"/>
+    <text x="858" y="26" class="card-metric-lbl" text-anchor="middle">CALIBRATION ERROR</text>
+    <text x="858" y="42" class="card-metric-val" fill="#FFB300" text-anchor="middle">ECE = 0.0372</text>
+    
+    <!-- Bullet Points -->
+    <g transform="translate(22, 54)">
+      <circle cx="2" cy="10" r="2" fill="#FFB300"/>
+      <text x="12" y="14" class="card-body">Scikit-learn Logistic Regression (C=1.0, lbfgs) trained on pure unconfounded baseline outcomes Y0 = Bernoulli(mu_0(S))</text>
+      <circle cx="2" cy="29" r="2" fill="#FFB300"/>
+      <text x="12" y="33" class="card-body">Calibrated recovery probability P̂(S) with <tspan font-weight="700" fill="#FFFFFF">Expected Calibration Error (ECE) = 0.0372</tspan> and Brier Score = 0.1738</text>
+      <circle cx="2" cy="48" r="2" fill="#FFB300"/>
+      <text x="12" y="52" class="card-body">Real-time sub-millisecond inference: <tspan font-weight="700" fill="#FFFFFF">P50 = 0.598 ms, P95 = 0.743 ms</tspan> (well within &lt;15ms payment gateway SLAs)</text>
+      <circle cx="2" cy="67" r="2" fill="#FFB300"/>
+      <text x="12" y="71" class="card-body">Interpretable odds ratios: TECHNICAL_RETRYABLE = 13.46 (strong positive), HARD_TERMINAL = 0.064 (strong negative)</text>
+    </g>
+  </g>
+
+  <!-- Connector 4 -> 5 -->
+  <line x1="520" y1="830" x2="520" y2="872" class="conn-line"/>
+  <rect x="370" y="841" width="300" height="20" class="conn-pill"/>
+  <text x="520" y="851" class="conn-text">④ Calibrated Propensity P̂(S)</text>
+
+  <!-- Card V5 -->
+  <g transform="translate(48, 872)">
+    <rect class="card-bg" width="944" height="146" rx="10" stroke="#FF7700" stroke-opacity="0.5"/>
+    <rect x="0" y="0" width="5" height="146" rx="2.5" fill="#FF7700"/>
+    
+    <!-- Cylinder Badge -->
+    <rect x="18" y="14" width="38" height="26" rx="5" fill="#FF7700" fill-opacity="0.15" stroke="#FF7700" stroke-width="1.2"/>
+    <text x="37" y="27" class="cylinder-num" fill="#FF7700">V5</text>
+    
+    <!-- Title & File -->
+    <text x="68" y="25" class="card-title">V5 · LIFT-EV DECISION OPTIMIZER</text>
+    <text x="68" y="40" class="card-file">src/decision/optimizer.py · decision/models.py</text>
+    
+    <!-- Right Metric Box -->
+    <rect x="788" y="14" width="140" height="40" rx="6" fill="#181818" stroke="#262626" stroke-width="1"/>
+    <text x="858" y="26" class="card-metric-lbl" text-anchor="middle">HURDLE RATE</text>
+    <text x="858" y="42" class="card-metric-val" fill="#FF7700" text-anchor="middle">θ = ₹1.00</text>
+    
+    <!-- Bullet Points -->
+    <g transform="translate(22, 54)">
+      <circle cx="2" cy="10" r="2" fill="#FF7700"/>
+      <text x="12" y="14" class="card-body">Evaluates Expected Value: <tspan font-weight="700" fill="#FFFFFF">Lift-EV(a|S) = P̂(S) · ΔP(a) · Amount - Cost(a)</tspan> across all feasible recovery actions</text>
+      <circle cx="2" cy="29" r="2" fill="#FF7700"/>
+      <text x="12" y="33" class="card-body">Pre-registered multipliers: WhatsApp 1.20 (₹0.80) · Payment Link 1.15 (₹0.75) · SMS 1.10 (₹0.50) · Retry 1.05 (₹0.10)</text>
+      <circle cx="2" cy="48" r="2" fill="#FF7700"/>
+      <text x="12" y="52" class="card-body">Economic Hurdle Rate: <tspan font-weight="700" fill="#FFFFFF">theta_digital = ₹1.00</tspan> net lift requirement · Negative EV Floor (max EV &lt; ₹0 -&gt; ABORT_COMPLIANT)</text>
+      <circle cx="2" cy="67" r="2" fill="#FF7700"/>
+      <text x="12" y="71" class="card-body">Capital Protection: Sub-threshold cases safely abort to preserve merchant margin rather than burning dunning costs</text>
+    </g>
+  </g>
+
+  <!-- Connector 5 -> 6 -->
+  <line x1="520" y1="1018" x2="520" y2="1060" class="conn-line"/>
+  <rect x="370" y="1029" width="300" height="20" class="conn-pill"/>
+  <text x="520" y="1039" class="conn-text">⑤ Optimal Action (a*) + Lift-EV</text>
+
+  <!-- Card V6 -->
+  <g transform="translate(48, 1060)">
+    <rect class="card-bg" width="944" height="146" rx="10" stroke="#00FF88" stroke-opacity="0.5"/>
+    <rect x="0" y="0" width="5" height="146" rx="2.5" fill="#00FF88"/>
+    
+    <!-- Cylinder Badge -->
+    <rect x="18" y="14" width="38" height="26" rx="5" fill="#00FF88" fill-opacity="0.15" stroke="#00FF88" stroke-width="1.2"/>
+    <text x="37" y="27" class="cylinder-num" fill="#00FF88">V6</text>
+    
+    <!-- Title & File -->
+    <text x="68" y="25" class="card-title">V6 · REPLAY-SAFE DISPATCH &amp; POLICY EVALUATOR</text>
+    <text x="68" y="40" class="card-file">src/execution/worker.py · scripts/run_monte_carlo.py</text>
+    
+    <!-- Right Metric Box -->
+    <rect x="788" y="14" width="140" height="40" rx="6" fill="#181818" stroke="#262626" stroke-width="1"/>
+    <text x="858" y="26" class="card-metric-lbl" text-anchor="middle">BENCHMARK UPLIFT</text>
+    <text x="858" y="42" class="card-metric-val" fill="#00FF88" text-anchor="middle">+₹5.69M (+24%)</text>
+    
+    <!-- Bullet Points -->
+    <g transform="translate(22, 54)">
+      <circle cx="2" cy="10" r="2" fill="#00FF88"/>
+      <text x="12" y="14" class="card-body"><tspan font-weight="700" fill="#FFFFFF">Two-Phase Intent:</tspan> <tspan font-family="monospace" fill="#FFB300">record_execution_intent()</tspan> written to SQLite BEFORE calling Razorpay API (crash-resilient)</text>
+      <circle cx="2" cy="29" r="2" fill="#00FF88"/>
+      <text x="12" y="33" class="card-body">Razorpay Gateway Adapter: Mock execution default for safe offline testing; live dispatch via <tspan font-family="monospace" fill="#FFB300">POST /v1/payment_links</tspan></text>
+      <circle cx="2" cy="48" r="2" fill="#00FF88"/>
+      <text x="12" y="52" class="card-body"><tspan font-weight="700" fill="#FFFFFF">SNIPS Benchmark (500 iters):</tspan> <tspan font-weight="700" fill="#FFFFFF">₹29.15M NRR</tspan> (+₹5.69M / +24.3% vs Blind Retry, +₹10.55M / +56.7% vs Do-Nothing)</text>
+      <circle cx="2" cy="67" r="2" fill="#00FF88"/>
+      <text x="12" y="71" class="card-body"><tspan font-weight="700" fill="#FFFFFF">Capital Preservation Moat:</tspan> Completely avoids -₹267,527 (Terminal) and -₹51,505 (Legal Hold) in regulatory penalties</text>
+    </g>
+  </g>
+
+  <!-- Connector V6 -> UI -->
+  <line x1="520" y1="1352" x2="520" y2="1248" class="conn-line"/>
+  <rect x="370" y="1363" width="300" height="20" class="conn-pill"/>
+  <text x="520" y="1373" class="conn-text" fill="#8B5CF6">⑦ Real-Time WebSocket &amp; REST Ingestion Feed</text>
+
+  <!-- Bloomberg Terminal UI Card -->
+  <g transform="translate(48, 1248)">
+    <rect class="card-bg" width="944" height="88" rx="10" stroke="#7C3AED" stroke-opacity="0.5"/>
+    <rect x="0" y="0" width="5" height="88" rx="2.5" fill="#7C3AED"/>
+    
+    <rect x="18" y="14" width="38" height="26" rx="5" fill="#7C3AED" fill-opacity="0.15" stroke="#7C3AED" stroke-width="1.2"/>
+    <text x="37" y="27" class="cylinder-num" fill="#A78BFA">UI</text>
+    
+    <text x="68" y="25" class="card-title">PERSISTENCE &amp; BLOOMBERG TERMINAL OPERATING SYSTEM</text>
+    <text x="68" y="40" class="card-file">src/api/static/index.html · REST /api/v1 (FastAPI on http://localhost:8000)</text>
+    
+    <!-- Right Metric Box -->
+    <rect x="788" y="14" width="140" height="40" rx="6" fill="#181818" stroke="#262626" stroke-width="1"/>
+    <text x="858" y="26" class="card-metric-lbl" text-anchor="middle">WORKSTATIONS</text>
+    <text x="858" y="42" class="card-metric-val" fill="#A78BFA" text-anchor="middle">F1 ··· F8 LIVE</text>
+    
+    <g transform="translate(22, 54)">
+      <text x="12" y="12" class="card-body">Interactive Hotkey Navigation: <tspan fill="#A78BFA" font-weight="700">F1:Feed</tspan> · <tspan fill="#A78BFA" font-weight="700">F2:Decision</tspan> · <tspan fill="#A78BFA" font-weight="700">F3:Metrics</tspan> · <tspan fill="#A78BFA" font-weight="700">F4:Model</tspan> · <tspan fill="#A78BFA" font-weight="700">F5:Compliance</tspan> · <tspan fill="#A78BFA" font-weight="700">F6:Policy</tspan> · <tspan fill="#A78BFA" font-weight="700">F7:Sim</tspan> · <tspan fill="#A78BFA" font-weight="700">F8:Docs</tspan></text>
+    </g>
+  </g>
+</svg>
