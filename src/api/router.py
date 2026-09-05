@@ -178,6 +178,59 @@ async def get_cases(
 
     return {"count": len(cases), "cases": cases}
 
+def build_candidate_table(state: MandateStateRecord, diag, feasible_set, decision) -> List[Dict[str, Any]]:
+    all_actions = [
+        ActionType.WHATSAPP_NUDGE,
+        ActionType.PAYMENT_LINK,
+        ActionType.SMS_NUDGE,
+        ActionType.SILENT_RETRY,
+        ActionType.PIN_PROMPTED_RETRY,
+        ActionType.ABORT_COMPLIANT,
+        ActionType.ESCALATE_HUMAN,
+    ]
+    candidate_table = []
+    for act in all_actions:
+        is_feasible = act in feasible_set
+        score_match = next((cs for cs in (decision.candidate_scores or []) if cs.action == act), None)
+        
+        if is_feasible and score_match:
+            candidate_table.append({
+                "action": act.value,
+                "delta_p": f"{float(score_match.lift_probability):+.4f}",
+                "amt_delta_p": f"+₹{float(state.amount_inr) * float(score_match.lift_probability):,.2f}",
+                "cost_inr": f"-₹{float(score_match.cost_inr):.2f}",
+                "lift_ev_inr": f"+₹{float(score_match.lift_ev_inr):,.2f}",
+                "cleared": "✓" if score_match.cleared_threshold else "✗",
+                "selected": "★" if act == decision.selected_action else "",
+                "status": "FEASIBLE",
+            })
+        else:
+            reason = "[LEGAL_HOLD]" if diag.failure_class == FailureClass.LEGAL_HOLD else ("[AFA_RESTRICTED]" if act == ActionType.SILENT_RETRY and state.afa_required else "[GUARDRAIL_BLOCKED]")
+            candidate_table.append({
+                "action": act.value,
+                "delta_p": "BLOCKED",
+                "amt_delta_p": "--",
+                "cost_inr": "--",
+                "lift_ev_inr": "--",
+                "cleared": "✗",
+                "selected": "★" if act == decision.selected_action else "",
+                "status": f"BLOCKED {reason}",
+            })
+    return candidate_table
+
+
+def build_audit_trail(diag, feasible_set, decision) -> List[str]:
+    p_hat_str = f"{float(decision.p_hat):.4f}" if decision.p_hat is not None else "N/A (Bypassed)"
+    lift_ev_str = f"₹{float(decision.lift_ev_inr):,.2f}" if decision.lift_ev_inr is not None else "N/A"
+    return [
+        f"[{datetime.now().strftime('%H:%M:%S')}] GATE_0: failure_class={diag.failure_class.value} -> {'LEGAL_HOLD SHORT-CIRCUIT' if diag.failure_class == FailureClass.LEGAL_HOLD else 'NOT LEGAL_HOLD, proceed'}",
+        f"[{datetime.now().strftime('%H:%M:%S')}] GATE_1: computed feasible_set={[a.value for a in feasible_set]}",
+        f"[{datetime.now().strftime('%H:%M:%S')}] TRACK1: p_hat={p_hat_str}",
+        f"[{datetime.now().strftime('%H:%M:%S')}] OPTIMIZER: argmax={decision.selected_action.value}, lift_ev={lift_ev_str}",
+        f"[{datetime.now().strftime('%H:%M:%S')}] EXECUTION: Action dispatched -> status=created mode=mock"
+    ]
+
+
 # -----------------------------------------------------------------------------
 # 3. CASE DETAIL ENDPOINT
 # -----------------------------------------------------------------------------
@@ -247,54 +300,8 @@ async def get_case_detail(case_id: str):
     feasible_set, _ = compute_feasible_action_set(state)
     decision = optimize_decision(state)
 
-    # Build Candidate EV Table
-    all_actions = [
-        ActionType.WHATSAPP_NUDGE,
-        ActionType.PAYMENT_LINK,
-        ActionType.SMS_NUDGE,
-        ActionType.SILENT_RETRY,
-        ActionType.PIN_PROMPTED_RETRY,
-        ActionType.ABORT_COMPLIANT,
-        ActionType.ESCALATE_HUMAN
-    ]
-    candidate_table = []
-    for act in all_actions:
-        is_feasible = act in feasible_set
-        score_match = next((cs for cs in (decision.candidate_scores or []) if cs.action == act), None)
-        
-        if is_feasible and score_match:
-            candidate_table.append({
-                "action": act.value,
-                "delta_p": f"{score_match.lift_probability:+.4f}",
-                "amt_delta_p": f"+₹{float(state.amount_inr) * float(score_match.lift_probability):,.2f}",
-                "cost_inr": f"-₹{score_match.cost_inr:.2f}",
-                "lift_ev_inr": f"+₹{score_match.lift_ev_inr:,.2f}",
-                "cleared": "✓" if score_match.cleared_threshold else "✗",
-                "selected": "★" if act == decision.selected_action else "",
-                "status": "FEASIBLE"
-            })
-        else:
-            reason = "[LEGAL_HOLD]" if diag.failure_class == FailureClass.LEGAL_HOLD else ("[AFA_RESTRICTED]" if act == ActionType.SILENT_RETRY and state.afa_required else "[GUARDRAIL_BLOCKED]")
-            candidate_table.append({
-                "action": act.value,
-                "delta_p": "BLOCKED",
-                "amt_delta_p": "--",
-                "cost_inr": "--",
-                "lift_ev_inr": "--",
-                "cleared": "✗",
-                "selected": "★" if act == decision.selected_action else "",
-                "status": f"BLOCKED {reason}"
-            })
-
-    # Step Audit Trail
-    p_hat_str = f"{decision.p_hat:.4f}" if decision.p_hat is not None else "N/A (Bypassed)"
-    audit_trail = [
-        f"[{datetime.now().strftime('%H:%M:%S')}] GATE_0: failure_class={diag.failure_class.value} -> {'LEGAL_HOLD SHORT-CIRCUIT' if diag.failure_class == FailureClass.LEGAL_HOLD else 'NOT LEGAL_HOLD, proceed'}",
-        f"[{datetime.now().strftime('%H:%M:%S')}] GATE_1: computed feasible_set={[a.value for a in feasible_set]}",
-        f"[{datetime.now().strftime('%H:%M:%S')}] TRACK1: p_hat={p_hat_str}",
-        f"[{datetime.now().strftime('%H:%M:%S')}] OPTIMIZER: argmax={decision.selected_action.value}, lift_ev={decision.lift_ev_inr if decision.lift_ev_inr is not None else 'N/A'}",
-        f"[{datetime.now().strftime('%H:%M:%S')}] EXECUTION: Action dispatched -> status=created mode=mock"
-    ]
+    candidate_table = build_candidate_table(state, diag, feasible_set, decision)
+    audit_trail = build_audit_trail(diag, feasible_set, decision)
 
     return {
         "state": target_record,
@@ -459,8 +466,24 @@ async def run_simulation(req: SimulationRequest):
         amount_inr=state.amount_inr
     )
 
+    candidate_table = build_candidate_table(state, diag, feasible_set, decision)
+    audit_trail = build_audit_trail(diag, feasible_set, decision)
+
     return {
         "case_id": state.case_id,
+        "state": {
+            "case_id": state.case_id,
+            "mandate_id": state.mandate_id,
+            "merchant_id": state.merchant_id,
+            "customer_id": state.customer_id,
+            "rail": state.rail.value,
+            "amount_inr": str(state.amount_inr),
+            "attempt_count": state.attempt_count,
+            "failure_code": state.failure_code,
+            "failure_class": f_class.value,
+            "afa_required": state.afa_required,
+            "pre_debit_notice_sent": state.pre_debit_notice_sent,
+        },
         "failure_code": req.failure_code,
         "failure_class": f_class.value,
         "diagnostic": {
@@ -477,7 +500,7 @@ async def run_simulation(req: SimulationRequest):
         },
         "decision": {
             "selected_action": decision.selected_action.value,
-            "p_hat": decision.p_hat,
+            "p_hat": float(decision.p_hat) if decision.p_hat is not None else None,
             "lift_ev_inr": float(decision.lift_ev_inr) if decision.lift_ev_inr is not None else None,
             "cost_inr": float(decision.cost_inr),
             "is_mandatory_routing": decision.is_mandatory_routing,
@@ -494,6 +517,8 @@ async def run_simulation(req: SimulationRequest):
                 for cs in (decision.candidate_scores or [])
             ]
         },
+        "candidate_table": candidate_table,
+        "audit_trail": audit_trail,
         "execution_receipt": receipt
     }
 

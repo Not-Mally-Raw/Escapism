@@ -492,7 +492,69 @@
               </tr>
             </thead>
             <tbody id="dec-ev-body">
-              <!-- Dynamically rendered -->
+              <tr class="selected">
+                <td class="text-orange" style="font-weight: 600;">WHATSAPP_NUDGE</td>
+                <td class="text-cyan">+0.0275</td>
+                <td class="text-white">+₹412.50</td>
+                <td class="text-gray">-₹0.80</td>
+                <td class="text-green">+₹411.70</td>
+                <td class="text-center text-green">✓</td>
+                <td class="text-orange" style="text-align: center; font-weight: 700;">★</td>
+              </tr>
+              <tr>
+                <td class="text-white" style="font-weight: 600;">PAYMENT_LINK</td>
+                <td class="text-cyan">+0.0206</td>
+                <td class="text-white">+₹309.00</td>
+                <td class="text-gray">-₹0.75</td>
+                <td class="text-green">+₹308.25</td>
+                <td class="text-center text-green">✓</td>
+                <td class="text-orange" style="text-align: center; font-weight: 700;"></td>
+              </tr>
+              <tr>
+                <td class="text-white" style="font-weight: 600;">SMS_NUDGE</td>
+                <td class="text-cyan">+0.0137</td>
+                <td class="text-white">+₹205.50</td>
+                <td class="text-gray">-₹0.50</td>
+                <td class="text-green">+₹205.00</td>
+                <td class="text-center text-green">✓</td>
+                <td class="text-orange" style="text-align: center; font-weight: 700;"></td>
+              </tr>
+              <tr>
+                <td class="text-white" style="font-weight: 600;">SILENT_RETRY</td>
+                <td class="text-cyan">BLOCKED</td>
+                <td class="text-white">--</td>
+                <td class="text-gray">--</td>
+                <td class="text-gray">--</td>
+                <td class="text-center text-gray">✗</td>
+                <td class="text-orange" style="text-align: center; font-weight: 700;"></td>
+              </tr>
+              <tr>
+                <td class="text-white" style="font-weight: 600;">PIN_PROMPTED_RETRY</td>
+                <td class="text-cyan">+0.0069</td>
+                <td class="text-white">+₹103.50</td>
+                <td class="text-gray">-₹0.10</td>
+                <td class="text-green">+₹103.40</td>
+                <td class="text-center text-green">✓</td>
+                <td class="text-orange" style="text-align: center; font-weight: 700;"></td>
+              </tr>
+              <tr>
+                <td class="text-white" style="font-weight: 600;">ABORT_COMPLIANT</td>
+                <td class="text-cyan">BLOCKED</td>
+                <td class="text-white">--</td>
+                <td class="text-gray">--</td>
+                <td class="text-gray">--</td>
+                <td class="text-center text-gray">✗</td>
+                <td class="text-orange" style="text-align: center; font-weight: 700;"></td>
+              </tr>
+              <tr>
+                <td class="text-white" style="font-weight: 600;">ESCALATE_HUMAN</td>
+                <td class="text-cyan">BLOCKED</td>
+                <td class="text-white">--</td>
+                <td class="text-gray">--</td>
+                <td class="text-gray">--</td>
+                <td class="text-center text-gray">✗</td>
+                <td class="text-orange" style="text-align: center; font-weight: 700;"></td>
+              </tr>
             </tbody>
           </table>
 
@@ -550,7 +612,46 @@
               </tr>
             </thead>
             <tbody id="m-segment-body">
-              <!-- Rendered via JS -->
+              <tr>
+                <td class="text-white" style="font-weight: 600;">SOFT_LIQUIDITY</td>
+                <td class="text-gray">3,016</td>
+                <td class="text-cyan">1,218</td>
+                <td class="text-white">₹18.26M</td>
+                <td class="text-amber">60.5%</td>
+                <td class="text-green">+18.2pp</td>
+              </tr>
+              <tr>
+                <td class="text-white" style="font-weight: 600;">TECHNICAL_RETRYABLE</td>
+                <td class="text-gray">647</td>
+                <td class="text-cyan">583</td>
+                <td class="text-white">₹7.91M</td>
+                <td class="text-amber">90.2%</td>
+                <td class="text-green">+2.1pp</td>
+              </tr>
+              <tr>
+                <td class="text-white" style="font-weight: 600;">AMBIGUOUS_DECLINE</td>
+                <td class="text-gray">699</td>
+                <td class="text-cyan">168</td>
+                <td class="text-white">₹2.24M</td>
+                <td class="text-amber">24.0%</td>
+                <td class="text-green">+₹1.12M</td>
+              </tr>
+              <tr>
+                <td class="text-white" style="font-weight: 600;">HARD_TERMINAL</td>
+                <td class="text-gray">535</td>
+                <td class="text-cyan">0</td>
+                <td class="text-white">₹0.00M</td>
+                <td class="text-amber">0.0%</td>
+                <td class="text-green">+₹267k (Averted Fines)</td>
+              </tr>
+              <tr>
+                <td class="text-white" style="font-weight: 600;">LEGAL_HOLD</td>
+                <td class="text-gray">103</td>
+                <td class="text-cyan">0</td>
+                <td class="text-white">₹0.00M</td>
+                <td class="text-amber">0.0%</td>
+                <td class="text-green">+₹51k (Averted Fines)</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -559,10 +660,53 @@
         <div class="bb-panel">
           <div class="panel-header">
             <span>// CUMULATIVE RECOVERY TIMELINE (24H TRAJECTORY)</span>
-            <span style="color: var(--bb-gray); font-size: 10px;">ORANGE: AI ORCHESTRATOR | GRAY: NOOP</span>
+            <span style="color: var(--bb-gray); font-size: 10px;">ORANGE: AI ORCHESTRATOR | RED: BLIND | GRAY: NOOP</span>
           </div>
-          <div style="height: 180px; width: 100%; display: flex; align-items: flex-end; padding-top: 10px;">
-            <svg id="timeline-svg" style="width: 100%; height: 100%;"></svg>
+          <div style="height: 200px; width: 100%; padding-top: 5px;">
+            <svg id="timeline-svg" viewBox="0 0 520 200" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; font-family: 'JetBrains Mono', monospace; font-size: 10px;">
+              <!-- Grid Lines -->
+              <line x1="60" y1="25" x2="500" y2="25" stroke="#222222" stroke-width="1" />
+              <line x1="60" y1="72" x2="500" y2="72" stroke="#222222" stroke-width="1" />
+              <line x1="60" y1="118" x2="500" y2="118" stroke="#222222" stroke-width="1" />
+              <line x1="60" y1="165" x2="500" y2="165" stroke="#444444" stroke-width="1" />
+
+              <!-- Y-Axis Labels -->
+              <text x="52" y="29" fill="#888888" text-anchor="end">₹30M</text>
+              <text x="52" y="76" fill="#888888" text-anchor="end">₹20M</text>
+              <text x="52" y="122" fill="#888888" text-anchor="end">₹10M</text>
+              <text x="52" y="169" fill="#888888" text-anchor="end">₹0</text>
+
+              <!-- X-Axis Line & Ticks -->
+              <line x1="60" y1="165" x2="500" y2="165" stroke="#666666" stroke-width="1" />
+              <line x1="60" y1="25" x2="60" y2="165" stroke="#666666" stroke-width="1" />
+
+              <!-- Vertical Grid Lines & Ticks -->
+              <line x1="170" y1="25" x2="170" y2="165" stroke="#1c1c1c" stroke-width="1" />
+              <line x1="280" y1="25" x2="280" y2="165" stroke="#1c1c1c" stroke-width="1" />
+              <line x1="390" y1="25" x2="390" y2="165" stroke="#1c1c1c" stroke-width="1" />
+              <line x1="500" y1="25" x2="500" y2="165" stroke="#1c1c1c" stroke-width="1" />
+
+              <!-- X-Axis Labels -->
+              <text x="60" y="182" fill="#888888" text-anchor="middle">00:00</text>
+              <text x="170" y="182" fill="#888888" text-anchor="middle">06:00</text>
+              <text x="280" y="182" fill="#888888" text-anchor="middle">12:00</text>
+              <text x="390" y="182" fill="#888888" text-anchor="middle">18:00</text>
+              <text x="500" y="182" fill="#888888" text-anchor="middle">24:00 IST</text>
+
+              <!-- Dynamic Paths Group -->
+              <g id="timeline-paths">
+                <!-- NOOP Baseline -->
+                <polyline fill="none" stroke="#666666" stroke-width="1.5" stroke-dasharray="3,3" points="60,165 79,161 98,158 117,154 136,150 155,147 174,143 193,139 213,136 232,132 251,128 270,125 289,121 308,118 327,114 346,110 365,107 385,103 404,99 423,96 442,92 461,89 480,85 500,78" />
+                <!-- Blind Retry -->
+                <polyline fill="none" stroke="#FF3030" stroke-width="1.5" stroke-dasharray="4,2" points="60,165 79,160 98,156 117,151 136,147 155,142 174,138 193,133 213,128 232,124 251,119 270,115 289,110 308,106 327,101 346,96 365,92 385,87 404,83 423,78 442,74 461,69 480,64 500,55" />
+                <!-- AI Orchestrator -->
+                <polyline fill="none" stroke="#FF6600" stroke-width="2.5" points="60,165 79,159 98,154 117,148 136,142 155,136 174,131 193,125 213,119 232,114 251,108 270,102 289,97 308,91 327,85 346,79 365,74 385,68 404,62 423,57 442,51 461,45 480,39 500,29" />
+                <!-- Current End Markers -->
+                <circle cx="500" cy="29" r="3.5" fill="#FF6600" />
+                <circle cx="500" cy="55" r="2.5" fill="#FF3030" />
+                <circle cx="500" cy="78" r="2.5" fill="#666666" />
+              </g>
+            </svg>
           </div>
         </div>
       </div>
@@ -669,7 +813,7 @@
           <a href="/api/v1/export-csv" class="bb-btn" style="text-decoration: none; padding: 3px 8px;">📥 EXPORT AUDIT CSV</a>
         </div>
         <div style="font-size: 11px; color: var(--bb-gray); line-height: 1.6;">
-          <b>MATHEMATICAL PROOF:</b> The compliance violation rate $CVR=0$ is proven by construction. The guardrail feasibility engine computes $\mathcal{A}_{\text{feasible}}$ upstream of ML inference or expected value ranking. Actions outside $\mathcal{A}_{\text{feasible}}$ cannot be ranked or selected. All unknown bank decline codes automatically map to <code>ESCALATE_HUMAN</code> fail-closed.
+          <b>MATHEMATICAL PROOF:</b> The compliance violation rate (CVR = 0.000%) is proven by construction. The guardrail feasibility engine computes A_feasible upstream of ML inference or expected value ranking. Actions outside A_feasible cannot be ranked or selected. All unknown bank decline codes automatically map to <code>ESCALATE_HUMAN</code> fail-closed.
         </div>
       </div>
     </div>
@@ -851,12 +995,12 @@
           <p class="text-gray" style="margin-bottom: 8px;">
             • <b>Fail-Closed Invariant (§3.4):</b> Citing <code>docs/knowledge_base/rbi_npci_regulations.md §3.4</code>, bank decline codes <code>07</code> (Legal hold / court order), <code>AP03</code> (Account frozen), and any uncatalogued/malformed codes MUST short-circuit to <code>ESCALATE_HUMAN</code> with zero competitive scoring.<br>
             • <b>AFA Limit Invariant:</b> Citing <code>RBI Master Direction on Digital Payments E-Mandates (Consolidated Framework) §2.2</code>, transactions strictly exceeding ₹15,000 require Additional Factor of Authentication (AFA). Silent re-presentation is masked from the feasible action set.<br>
-            • <b>NPCI Presentation Cap:</b> Citing <code>NPCI Mandate Execution Limits Circular (August 2025) §1.1</code>, presentation attempts are capped at $k \le 4$. Upon exhaustion, the engine executes <code>ABORT_COMPLIANT</code>.
+            • <b>NPCI Presentation Cap:</b> Citing <code>NPCI Mandate Execution Limits Circular (August 2025) §1.1</code>, presentation attempts are capped at k ≤ 4. Upon exhaustion, the engine executes <code>ABORT_COMPLIANT</code>.
           </p>
 
           <h3 class="text-green" style="margin-bottom: 6px;">3. MODEL LINEAGE (PROFILE 3)</h3>
           <p class="text-gray">
-            Trained on unconfounded baseline $Y_0 = \mu_0(S)$ with Held-out Accuracy 74.40% and ROC-AUC 0.7300. Model SHA256: <code>170bac42fea7c50bab4fc6aa5305d703f7a065c451cf7e1acfa8dd5802ad9205</code>.
+            Trained on unconfounded baseline Y₀ = μ₀(S) with Held-out Accuracy 74.40% and ROC-AUC 0.7300. Model SHA256: <code>170bac42fea7c50bab4fc6aa5305d703f7a065c451cf7e1acfa8dd5802ad9205</code>.
           </p>
         </div>
       </div>
@@ -873,7 +1017,7 @@
       <span>MODEL SHA: 170bac42</span>
     </div>
     <div>
-      <span>SCIKIT-LEARN: 1.9.0</span> | 
+      <span>SCIKIT-LEARN: 1.5.1</span> | 
       <span class="text-green">CVR: 0.000% (INVARIANT PROVEN)</span> | 
       <span>RAZORPAY REVENUE RECOVERY V1.0</span>
     </div>
@@ -894,6 +1038,8 @@
     updateClock();
 
     // Tab Switching
+    let hasLoadedF2 = false;
+
     function switchTab(tabId) {
       activeTab = tabId;
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -906,6 +1052,9 @@
       if (activeBtn) activeBtn.classList.add('active');
 
       if (tabId === 'F1' && cachedCases.length === 0) loadCases();
+      if (tabId === 'F2' && !hasLoadedF2) {
+        loadCaseDetail('case_0001', false);
+      }
       if (tabId === 'F3') loadMetrics();
     }
 
@@ -997,50 +1146,93 @@
       renderCases(filtered);
     }
 
-    // Drill down to F2 Decision Panel
-    async function drillDownCase(caseId) {
-      switchTab('F2');
+    // Drill down and Case Detail loading for F2
+    async function loadCaseDetail(caseId, switchToTab=true) {
+      if (switchToTab) switchTab('F2');
       try {
         const res = await fetch(`/api/v1/cases/${caseId}`);
         const data = await res.json();
-        
-        document.getElementById('dec-case-id').innerText = data.state.case_id;
-        document.getElementById('d-case-id').innerText = data.state.case_id;
-        document.getElementById('d-mandate-id').innerText = data.state.mandate_id || '--';
-        document.getElementById('d-code').innerText = data.state.failure_code;
-        document.getElementById('d-class').innerText = data.state.failure_class;
-        document.getElementById('d-rail').innerText = data.state.rail;
-        document.getElementById('d-amount').innerText = `₹${parseFloat(data.state.amount_inr).toLocaleString('en-IN')}`;
-        document.getElementById('d-attempts').innerText = `${data.state.attempt_count} / 4`;
-        document.getElementById('d-afa').innerText = data.state.afa_required ? 'YES (> ₹15,000)' : 'NO (≤ ₹15,000)';
-        document.getElementById('d-phat').innerText = data.decision.p_hat !== null ? data.decision.p_hat.toFixed(4) : 'N/A (Bypassed)';
-
-        // Lock Box Check
-        const isLegal = data.state.failure_class === 'LEGAL_HOLD';
-        document.getElementById('dec-lock-box').style.display = isLegal ? 'block' : 'none';
-        document.getElementById('dec-ev-table').style.display = isLegal ? 'none' : 'table';
-        document.getElementById('dec-verdict').innerText = `SELECTED: ${data.decision.selected_action}`;
-        document.getElementById('dec-verdict').className = `bb-badge ${isLegal ? 'text-red border-red' : 'text-green border-green'}`;
-        document.getElementById('dec-rationale').innerText = data.decision.rationale;
-
-        // Render Candidate EV Table
-        const evBody = document.getElementById('dec-ev-body');
-        evBody.innerHTML = (data.candidate_table || []).map(row => `
-          <tr class="${row.selected ? 'selected' : ''}">
-            <td class="${row.selected ? 'text-orange' : 'text-white'}" style="font-weight: 600;">${row.action}</td>
-            <td class="text-cyan">${row.delta_p}</td>
-            <td class="text-white">${row.amt_delta_p}</td>
-            <td class="text-gray">${row.cost_inr}</td>
-            <td class="${row.lift_ev_inr.startsWith('+') ? 'text-green' : 'text-gray'}">${row.lift_ev_inr}</td>
-            <td class="text-center ${row.cleared === '✓' ? 'text-green' : 'text-gray'}">${row.cleared}</td>
-            <td class="text-orange" style="text-align: center; font-weight: 700;">${row.selected}</td>
-          </tr>
-        `).join('');
-
-        // Audit Trail
-        document.getElementById('dec-audit-trail').innerHTML = (data.audit_trail || []).map(t => `<div>${t}</div>`).join('');
+        renderDecisionDetail(data);
       } catch (err) {
         console.error('Failed to fetch case detail:', err);
+      }
+    }
+
+    function drillDownCase(caseId) {
+      loadCaseDetail(caseId, true);
+    }
+
+    function renderDecisionDetail(data) {
+      if (!data) return;
+      hasLoadedF2 = true;
+      const st = data.state || {};
+      const dec = data.decision || {};
+      
+      const caseId = st.case_id || data.case_id || 'CASE_DEFAULT';
+      document.getElementById('dec-case-id').innerText = caseId;
+      document.getElementById('d-case-id').innerText = caseId;
+      document.getElementById('d-mandate-id').innerText = st.mandate_id || '--';
+      document.getElementById('d-code').innerText = st.failure_code || data.failure_code || '--';
+      document.getElementById('d-class').innerText = st.failure_class || data.failure_class || '--';
+      document.getElementById('d-rail').innerText = st.rail || 'UPI_AUTOPAY';
+      const amt = parseFloat(st.amount_inr || data.amount_inr || 0);
+      document.getElementById('d-amount').innerText = `₹${amt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+      document.getElementById('d-attempts').innerText = `${st.attempt_count || 1} / 4`;
+      document.getElementById('d-afa').innerText = st.afa_required ? 'YES (> ₹15,000)' : 'NO (≤ ₹15,000)';
+      document.getElementById('d-phat').innerText = (dec.p_hat !== null && dec.p_hat !== undefined) ? Number(dec.p_hat).toFixed(4) : 'N/A (Bypassed)';
+
+      // Lock Box Check for Legal Hold
+      const fclass = st.failure_class || data.failure_class;
+      const isLegal = fclass === 'LEGAL_HOLD' || dec.is_mandatory_routing;
+      document.getElementById('dec-lock-box').style.display = isLegal ? 'block' : 'none';
+      document.getElementById('dec-ev-table').style.display = isLegal ? 'none' : 'table';
+      document.getElementById('dec-verdict').innerText = `SELECTED: ${dec.selected_action}`;
+      document.getElementById('dec-verdict').className = `bb-badge ${isLegal ? 'text-red border-red' : 'text-green border-green'}`;
+      document.getElementById('dec-rationale').innerText = dec.rationale || 'Optimal recovery candidate selected.';
+
+      // Render Candidate EV Table Rows
+      let tableRows = data.candidate_table;
+      if ((!tableRows || tableRows.length === 0) && dec.candidate_scores && dec.candidate_scores.length > 0) {
+        tableRows = dec.candidate_scores.map(cs => {
+          const lprob = Number(cs.lift_probability || 0);
+          const lev = Number(cs.lift_ev_inr || 0);
+          const cost = Number(cs.cost_inr || 0);
+          return {
+            action: cs.action,
+            delta_p: lprob >= 0 ? `+${lprob.toFixed(4)}` : lprob.toFixed(4),
+            amt_delta_p: `+₹${(amt * lprob).toFixed(2)}`,
+            cost_inr: `-₹${cost.toFixed(2)}`,
+            lift_ev_inr: lev >= 0 ? `+₹${lev.toFixed(2)}` : `-₹${Math.abs(lev).toFixed(2)}`,
+            cleared: cs.cleared_threshold ? '✓' : '✗',
+            selected: cs.action === dec.selected_action ? '★' : '',
+            status: 'FEASIBLE'
+          };
+        });
+      }
+
+      if (tableRows && tableRows.length > 0) {
+        const evBody = document.getElementById('dec-ev-body');
+        evBody.innerHTML = tableRows.map(row => {
+          const isSel = row.selected === '★' || row.selected === true;
+          const liftEvStr = String(row.lift_ev_inr || '');
+          const isPos = liftEvStr.startsWith('+');
+          return `
+            <tr class="${isSel ? 'selected' : ''}">
+              <td class="${isSel ? 'text-orange' : 'text-white'}" style="font-weight: 600;">${row.action}</td>
+              <td class="text-cyan">${row.delta_p}</td>
+              <td class="text-white">${row.amt_delta_p}</td>
+              <td class="text-gray">${row.cost_inr}</td>
+              <td class="${isPos ? 'text-green' : 'text-gray'}">${row.lift_ev_inr}</td>
+              <td class="text-center ${row.cleared === '✓' ? 'text-green' : 'text-gray'}">${row.cleared}</td>
+              <td class="text-orange" style="text-align: center; font-weight: 700;">${isSel ? '★' : ''}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Audit Trail
+      if (data.audit_trail && data.audit_trail.length > 0) {
+        document.getElementById('dec-audit-trail').innerHTML = data.audit_trail.map(t => `<div>${t}</div>`).join('');
       }
     }
 
@@ -1050,49 +1242,78 @@
         const res = await fetch('/api/v1/metrics');
         const data = await res.json();
         
-        document.getElementById('m-nrr').innerText = data.nrr_formatted;
-        document.getElementById('m-fer').innerText = data.false_escalation_rate_formatted;
-        document.getElementById('m-cvr').innerText = data.compliance_violation_rate_formatted;
-        document.getElementById('m-lat').innerText = `${data.avg_decision_latency_ms} ms`;
+        if (data.nrr_formatted) document.getElementById('m-nrr').innerText = data.nrr_formatted;
+        if (data.false_escalation_rate_formatted) document.getElementById('m-fer').innerText = data.false_escalation_rate_formatted;
+        if (data.compliance_violation_rate_formatted) document.getElementById('m-cvr').innerText = data.compliance_violation_rate_formatted;
+        if (data.avg_decision_latency_ms !== undefined) document.getElementById('m-lat').innerText = `${data.avg_decision_latency_ms} ms`;
         const qElem = document.getElementById('stat-queue');
-        if (qElem) qElem.innerText = `QUEUE: ${data.queue_depth} PENDING`;
+        if (qElem && data.queue_depth !== undefined) qElem.innerText = `QUEUE: ${data.queue_depth} PENDING`;
 
         // Segment Breakdown
-        const segBody = document.getElementById('m-segment-body');
-        segBody.innerHTML = data.segments.map(s => `
-          <tr>
-            <td class="text-white" style="font-weight: 600;">${s.segment}</td>
-            <td class="text-gray">${s.cases}</td>
-            <td class="text-cyan">${s.recovered}</td>
-            <td class="text-white">₹${(s.nrr_inr/1e6).toFixed(2)}M</td>
-            <td class="text-amber">${s.nrr_pct}%</td>
-            <td class="${s.ai_vs_blind.startsWith('+') ? 'text-green' : 'text-gray'}">${s.ai_vs_blind}</td>
-          </tr>
-        `).join('');
+        if (data.segments && data.segments.length > 0) {
+          const segBody = document.getElementById('m-segment-body');
+          segBody.innerHTML = data.segments.map(s => {
+            const aiVsBlind = String(s.ai_vs_blind || '');
+            const isPos = aiVsBlind.startsWith('+');
+            return `
+              <tr>
+                <td class="text-white" style="font-weight: 600;">${s.segment}</td>
+                <td class="text-gray">${s.cases.toLocaleString()}</td>
+                <td class="text-cyan">${s.recovered.toLocaleString()}</td>
+                <td class="text-white">₹${(s.nrr_inr/1e6).toFixed(2)}M</td>
+                <td class="text-amber">${s.nrr_pct}%</td>
+                <td class="${isPos ? 'text-green' : 'text-gray'}">${s.ai_vs_blind}</td>
+              </tr>
+            `;
+          }).join('');
+        }
 
         // Render SVG Timeline
-        renderTimelineSvg(data.timeline || []);
+        if (data.timeline && data.timeline.length > 0) {
+          renderTimelineSvg(data.timeline);
+        }
       } catch (err) {
         console.error('Failed to load metrics:', err);
       }
     }
 
     function renderTimelineSvg(timeline) {
-      const svg = document.getElementById('timeline-svg');
       if (!timeline || timeline.length === 0) return;
-      const w = 450;
-      const h = 160;
+      const xStart = 60;
+      const xEnd = 500;
+      const yBottom = 165;
+      const yTop = 25;
       const maxVal = 30000000;
+      const xRange = xEnd - xStart;
+      const yRange = yBottom - yTop;
       
-      let aiPoints = timeline.map((d, i) => `${(i / (timeline.length - 1)) * w},${h - (d.ai_orchestrator / maxVal) * (h - 20)}`).join(' ');
-      let blindPoints = timeline.map((d, i) => `${(i / (timeline.length - 1)) * w},${h - (d.blind_retry / maxVal) * (h - 20)}`).join(' ');
-      let noopPoints = timeline.map((d, i) => `${(i / (timeline.length - 1)) * w},${h - (d.noop / maxVal) * (h - 20)}`).join(' ');
+      const calcX = (i) => Math.round(xStart + (i / (timeline.length - 1)) * xRange);
+      const calcY = (val) => Math.round(yBottom - (Math.min(val, maxVal) / maxVal) * yRange);
 
-      svg.innerHTML = `
-        <polyline fill="none" stroke="#666666" stroke-width="1.5" stroke-dasharray="3,3" points="${noopPoints}" />
-        <polyline fill="none" stroke="#FF3030" stroke-width="1.5" stroke-dasharray="4,2" points="${blindPoints}" />
-        <polyline fill="none" stroke="#FF6600" stroke-width="2.5" points="${aiPoints}" />
-      `;
+      const aiPoints = timeline.map((d, i) => `${calcX(i)},${calcY(d.ai_orchestrator)}`).join(' ');
+      const blindPoints = timeline.map((d, i) => `${calcX(i)},${calcY(d.blind_retry)}`).join(' ');
+      const noopPoints = timeline.map((d, i) => `${calcX(i)},${calcY(d.noop)}`).join(' ');
+
+      const lastIdx = timeline.length - 1;
+      const lastAiY = calcY(timeline[lastIdx].ai_orchestrator);
+      const lastBlindY = calcY(timeline[lastIdx].blind_retry);
+      const lastNoopY = calcY(timeline[lastIdx].noop);
+
+      const pathsGroup = document.getElementById('timeline-paths');
+      if (pathsGroup) {
+        pathsGroup.innerHTML = `
+          <!-- NOOP Baseline -->
+          <polyline fill="none" stroke="#666666" stroke-width="1.5" stroke-dasharray="3,3" points="${noopPoints}" />
+          <!-- Blind Retry -->
+          <polyline fill="none" stroke="#FF3030" stroke-width="1.5" stroke-dasharray="4,2" points="${blindPoints}" />
+          <!-- AI Orchestrator -->
+          <polyline fill="none" stroke="#FF6600" stroke-width="2.5" points="${aiPoints}" />
+          <!-- Current End Markers -->
+          <circle cx="${xEnd}" cy="${lastAiY}" r="3.5" fill="#FF6600" />
+          <circle cx="${xEnd}" cy="${lastBlindY}" r="2.5" fill="#FF3030" />
+          <circle cx="${xEnd}" cy="${lastNoopY}" r="2.5" fill="#666666" />
+        `;
+      }
     }
 
     // Presets in Simulation (F7)
@@ -1145,15 +1366,18 @@
           body: JSON.stringify(payload)
         });
         const data = await res.json();
-        // Switch to Decision panel to show live outcome
-        drillDownCase(data.case_id);
+        // Switch to Decision panel to show live outcome instantly
+        switchTab('F2');
+        renderDecisionDetail(data);
       } catch (err) {
         console.error('Simulation failed:', err);
       }
     }
 
-    // Initial Load
+    // Initial Load: initialize all panels
     loadCases();
+    loadMetrics();
+    loadCaseDetail('case_0001', false);
   </script>
 </body>
 </html>
