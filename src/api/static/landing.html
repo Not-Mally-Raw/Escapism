@@ -492,44 +492,6 @@
       text-align: left;
     }
 
-    /* 3-Step Setup */
-    .setup-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 80px;
-    }
-    .setup-step {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 20px;
-    }
-    .step-num {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--orange);
-      margin-bottom: 8px;
-    }
-    .step-title {
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .step-code {
-      background: #070707;
-      border: 1px solid #222;
-      border-radius: 4px;
-      padding: 8px 10px;
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      color: var(--amber);
-      overflow-x: auto;
-      white-space: nowrap;
-      display: block;
-    }
-
     /* Final CTA Section */
     .cta-banner {
       background: #0f0f0f;
@@ -578,7 +540,6 @@
   <nav>
     <div class="brand">
       <span class="brand-tag">ESCAPISM</span>
-      <span>V6 REVENUE RECOVERY</span>
       <span class="brand-sub">// COMMAND CENTER FOR FAILED PAYMENTS</span>
     </div>
     <div class="nav-links">
@@ -586,7 +547,6 @@
       <a href="#three-step">Three-Question Engine</a>
       <a href="#architecture">Architecture</a>
       <a href="#calculator">ROI Calculator</a>
-      <a href="#deploy">3-Step Deploy</a>
     </div>
     <a href="/" class="nav-cta">
       <span>OPEN RECOVERY CONSOLE [F1-F8]</span>
@@ -598,7 +558,7 @@
   <section class="hero container">
     <div class="hero-eyebrow">
       <span class="live-dot"></span>
-      <span>ESCAPISM V6 · AUTONOMOUS REVENUE RECOVERY · COMPLIANCE-GATED</span>
+      <span>ESCAPISM · COMMAND CENTER FOR FAILED PAYMENTS</span>
     </div>
     <h1>Stop losing money on failed payments.</h1>
     <p class="hero-subheadline">
@@ -610,11 +570,8 @@
     </p>
     <div class="hero-actions">
       <a href="/" class="btn-primary">
-        <span>⚡ OPEN RECOVERY CONSOLE</span>
-        <span>[F1-F8]</span>
-      </a>
-      <a href="#deploy" class="btn-secondary">
-        <span>$ git clone &amp; run locally</span>
+        <span>⚡ LAUNCH RECOVERY CONSOLE [F1-F8]</span>
+        <span>→</span>
       </a>
     </div>
 
@@ -910,32 +867,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section 5: 3-Step Ingestion & Deployment -->
-  <section id="deploy" class="container">
-    <div class="section-header">
-      <div class="section-title">3-STEP INGESTION &amp; DEPLOYMENT</div>
-      <div class="section-tag">// UNDER 60 SECONDS</div>
-    </div>
-
-    <div class="setup-grid">
-      <div class="setup-step">
-        <div class="step-num">STEP 01</div>
-        <div class="step-title">Clone Repository &amp; Init Virtualenv</div>
-        <code class="step-code">git clone https://github.com/Not-Mally-Raw/Razorpay-Escapism-Track-03.git &amp;&amp; cd Razorpay-Escapism-Track-03 &amp;&amp; python3 -m venv .venv &amp;&amp; source .venv/bin/activate</code>
-      </div>
-      <div class="setup-step">
-        <div class="step-num">STEP 02</div>
-        <div class="step-title">Install Runtime Dependencies</div>
-        <code class="step-code">pip install -e .</code>
-      </div>
-      <div class="setup-step">
-        <div class="step-num">STEP 03</div>
-        <div class="step-title">Launch Escapism Console</div>
-        <code class="step-code">python3 src/api/server.py</code>
       </div>
     </div>
   </section>
