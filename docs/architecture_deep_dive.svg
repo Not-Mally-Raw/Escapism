@@ -1,0 +1,338 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 880" width="1280" height="880">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700;800;900&amp;display=swap');
+      
+      .bg { fill: #070707; }
+      .grid-pattern { stroke: #141414; stroke-width: 1px; }
+      
+      /* Typography */
+      .font-sans { font-family: 'Inter', -apple-system, sans-serif; }
+      .font-mono { font-family: 'JetBrains Mono', monospace; }
+      
+      .main-title { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 20px; fill: #FFFFFF; letter-spacing: 1px; }
+      .main-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; fill: #FF6600; font-weight: 700; letter-spacing: 0.5px; }
+      
+      /* Pillar Cards */
+      .pillar-bg { fill: #0d0d0d; stroke: #222222; stroke-width: 1.2px; rx: 6px; }
+      .pillar-header { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
+      .card-sub-bg { fill: #121212; stroke: #1e1e1e; stroke-width: 1px; rx: 4px; }
+      .card-sub-title { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; fill: #EEEEEE; }
+      .card-bullet { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; fill: #999999; }
+      
+      /* Connectors */
+      .arrow-line { stroke: #FF6600; stroke-width: 1.8px; fill: none; }
+      .branch-red { stroke: #FF3333; stroke-width: 2px; fill: none; }
+      .branch-green { stroke: #00FF88; stroke-width: 2px; fill: none; }
+      .bus-line { stroke: #333333; stroke-width: 1.5px; stroke-dasharray: 4 4; fill: none; }
+      
+      /* Badges & Accents */
+      .pill-red { fill: rgba(255, 51, 51, 0.15); stroke: #FF3333; stroke-width: 1px; rx: 3px; }
+      .pill-green { fill: rgba(0, 255, 136, 0.15); stroke: #00FF88; stroke-width: 1px; rx: 3px; }
+    </style>
+    
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#FF6600" />
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#FF3333" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#00FF88" />
+    </marker>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1280" height="880" class="bg" />
+  
+  <!-- Subtle Background Grid -->
+  <g opacity="0.4">
+    <line x1="0" y1="0" x2="0" y2="880" class="grid-pattern" /> <line x1="40" y1="0" x2="40" y2="880" class="grid-pattern" /> <line x1="80" y1="0" x2="80" y2="880" class="grid-pattern" /> <line x1="120" y1="0" x2="120" y2="880" class="grid-pattern" /> <line x1="160" y1="0" x2="160" y2="880" class="grid-pattern" /> <line x1="200" y1="0" x2="200" y2="880" class="grid-pattern" /> <line x1="240" y1="0" x2="240" y2="880" class="grid-pattern" /> <line x1="280" y1="0" x2="280" y2="880" class="grid-pattern" /> <line x1="320" y1="0" x2="320" y2="880" class="grid-pattern" /> <line x1="360" y1="0" x2="360" y2="880" class="grid-pattern" /> <line x1="400" y1="0" x2="400" y2="880" class="grid-pattern" /> <line x1="440" y1="0" x2="440" y2="880" class="grid-pattern" /> <line x1="480" y1="0" x2="480" y2="880" class="grid-pattern" /> <line x1="520" y1="0" x2="520" y2="880" class="grid-pattern" /> <line x1="560" y1="0" x2="560" y2="880" class="grid-pattern" /> <line x1="600" y1="0" x2="600" y2="880" class="grid-pattern" /> <line x1="640" y1="0" x2="640" y2="880" class="grid-pattern" /> <line x1="680" y1="0" x2="680" y2="880" class="grid-pattern" /> <line x1="720" y1="0" x2="720" y2="880" class="grid-pattern" /> <line x1="760" y1="0" x2="760" y2="880" class="grid-pattern" /> <line x1="800" y1="0" x2="800" y2="880" class="grid-pattern" /> <line x1="840" y1="0" x2="840" y2="880" class="grid-pattern" /> <line x1="880" y1="0" x2="880" y2="880" class="grid-pattern" /> <line x1="920" y1="0" x2="920" y2="880" class="grid-pattern" /> <line x1="960" y1="0" x2="960" y2="880" class="grid-pattern" /> <line x1="1000" y1="0" x2="1000" y2="880" class="grid-pattern" /> <line x1="1040" y1="0" x2="1040" y2="880" class="grid-pattern" /> <line x1="1080" y1="0" x2="1080" y2="880" class="grid-pattern" /> <line x1="1120" y1="0" x2="1120" y2="880" class="grid-pattern" /> <line x1="1160" y1="0" x2="1160" y2="880" class="grid-pattern" /> <line x1="1200" y1="0" x2="1200" y2="880" class="grid-pattern" /> <line x1="1240" y1="0" x2="1240" y2="880" class="grid-pattern" />
+    <line x1="0" y1="0" x2="1280" y2="0" class="grid-pattern" /> <line x1="0" y1="40" x2="1280" y2="40" class="grid-pattern" /> <line x1="0" y1="80" x2="1280" y2="80" class="grid-pattern" /> <line x1="0" y1="120" x2="1280" y2="120" class="grid-pattern" /> <line x1="0" y1="160" x2="1280" y2="160" class="grid-pattern" /> <line x1="0" y1="200" x2="1280" y2="200" class="grid-pattern" /> <line x1="0" y1="240" x2="1280" y2="240" class="grid-pattern" /> <line x1="0" y1="280" x2="1280" y2="280" class="grid-pattern" /> <line x1="0" y1="320" x2="1280" y2="320" class="grid-pattern" /> <line x1="0" y1="360" x2="1280" y2="360" class="grid-pattern" /> <line x1="0" y1="400" x2="1280" y2="400" class="grid-pattern" /> <line x1="0" y1="440" x2="1280" y2="440" class="grid-pattern" /> <line x1="0" y1="480" x2="1280" y2="480" class="grid-pattern" /> <line x1="0" y1="520" x2="1280" y2="520" class="grid-pattern" /> <line x1="0" y1="560" x2="1280" y2="560" class="grid-pattern" /> <line x1="0" y1="600" x2="1280" y2="600" class="grid-pattern" /> <line x1="0" y1="640" x2="1280" y2="640" class="grid-pattern" /> <line x1="0" y1="680" x2="1280" y2="680" class="grid-pattern" /> <line x1="0" y1="720" x2="1280" y2="720" class="grid-pattern" /> <line x1="0" y1="760" x2="1280" y2="760" class="grid-pattern" /> <line x1="0" y1="800" x2="1280" y2="800" class="grid-pattern" /> <line x1="0" y1="840" x2="1280" y2="840" class="grid-pattern" />
+  </g>
+
+  <!-- Top Banner Header -->
+  <rect x="32" y="24" width="1216" height="54" rx="6" fill="#0f0f0f" stroke="#222222" stroke-width="1.2" />
+  <rect x="32" y="24" width="6" height="54" rx="3" fill="#FF6600" />
+  <text x="54" y="48" class="main-title">ESCAPISM // ENTERPRISE REVENUE RECOVERY ENGINE</text>
+  <text x="54" y="66" class="main-sub">HIGH-FREQUENCY MANDATE INGESTION · LAW-BEFORE-MATH GOVERNOR · STOCHASTIC OPTIMIZATION</text>
+  
+  <!-- Top Right Telemetry Strip -->
+  <g transform="translate(930, 36)">
+    <rect width="302" height="30" rx="4" fill="#141414" stroke="#262626" />
+    <circle cx="16" cy="15" r="4" fill="#00FF88" />
+    <text x="28" y="19" class="font-mono" font-size="10px" font-weight="700" fill="#00FF88">CVR 0.000%</text>
+    <text x="108" y="19" class="font-mono" font-size="10px" fill="#555">|</text>
+    <text x="122" y="19" class="font-mono" font-size="10px" font-weight="700" fill="#00BFFF">P50 0.598ms</text>
+    <text x="206" y="19" class="font-mono" font-size="10px" fill="#555">|</text>
+    <text x="220" y="19" class="font-mono" font-size="10px" font-weight="700" fill="#FFB300">169 INVARIANTS</text>
+  </g>
+
+  <!-- ==================== 5 PILLARS ROW ==================== -->
+  
+  <!-- Pillar 1: INGESTION BOUNDARY -->
+  <g transform="translate(32, 96)">
+    <rect width="224" height="320" class="pillar-bg" />
+    <rect x="1" y="1" width="222" height="30" rx="5" fill="#141414" />
+    <text x="12" y="20" class="pillar-header" fill="#00BFFF">[ 1. INGESTION BOUNDARY ]</text>
+    
+    <!-- Subcard 1: Webhook Ingress -->
+    <g transform="translate(10, 40)">
+      <rect width="204" height="120" class="card-sub-bg" />
+      <text x="10" y="20" class="card-sub-title">Webhook Ingress</text>
+      <text x="10" y="42" class="card-bullet">• POST /webhook/rzp</text>
+      <text x="10" y="62" class="card-bullet">• HMAC-SHA256 Verify</text>
+      <text x="10" y="82" class="card-bullet">• x-event-id Dedup</text>
+      <text x="10" y="102" class="card-bullet" fill="#00FF88">✓ 100% Idempotent</text>
+    </g>
+    
+    <!-- Subcard 2: State Normalization -->
+    <g transform="translate(10, 172)">
+      <rect width="204" height="136" class="card-sub-bg" />
+      <text x="10" y="20" class="card-sub-title">State Normalization</text>
+      <text x="10" y="42" class="card-bullet">• MandateStateRecord</text>
+      <text x="10" y="62" class="card-bullet">• Channel Consents</text>
+      <text x="10" y="82" class="card-bullet">• Historical Attempt k</text>
+      <text x="10" y="102" class="card-bullet">• IST Timestamp Gate</text>
+      <text x="10" y="122" class="card-bullet" fill="#00BFFF">✓ extra="forbid" Locked</text>
+    </g>
+  </g>
+
+  <!-- Pillar 1 -> Pillar 2 Connector -->
+  <line x1="256" y1="240" x2="274" y2="240" class="arrow-line" marker-end="url(#arrow-orange)" />
+
+  <!-- Pillar 2: DIAGNOSTIC CASCADE -->
+  <g transform="translate(276, 96)">
+    <rect width="224" height="320" class="pillar-bg" />
+    <rect x="1" y="1" width="222" height="30" rx="5" fill="#141414" />
+    <text x="12" y="20" class="pillar-header" fill="#00FF88">[ 2. DIAGNOSTIC CASCADE ]</text>
+    
+    <!-- Subcard 1: Tier-1 Deterministic -->
+    <g transform="translate(10, 40)">
+      <rect width="204" height="120" class="card-sub-bg" />
+      <text x="10" y="20" class="card-sub-title">Tier-1 Deterministic</text>
+      <text x="10" y="42" class="card-bullet">• O(1) Hash (82% vol)</text>
+      <text x="10" y="62" class="card-bullet">• Zero Latency / 0 Tok</text>
+      <text x="10" y="82" class="card-bullet">• Z9, 07, U28, 01-06</text>
+      <text x="10" y="102" class="card-bullet" fill="#00FF88">✓ 16 Codes Hardcoded</text>
+    </g>
+    
+    <!-- Subcard 2: Tier 2/3 Residual -->
+    <g transform="translate(10, 172)">
+      <rect width="204" height="136" class="card-sub-bg" />
+      <text x="10" y="20" class="card-sub-title">Tier 2/3 Residual</text>
+      <text x="10" y="42" class="card-bullet">• Missing-Text Gate</text>
+      <text x="10" y="62" class="card-bullet">• OWASP LLM Classifier</text>
+      <text x="10" y="82" class="card-bullet">• PII Scrubbing (PAN/VPA)</text>
+      <text x="10" y="102" class="card-bullet">• Fail-Closed (conf≤0.40)</text>
+      <text x="10" y="122" class="card-bullet" fill="#FFB300">✓ Strict Fallback Safety</text>
+    </g>
+  </g>
+
+  <!-- Pillar 2 -> Pillar 3 Connector -->
+  <line x1="500" y1="240" x2="518" y2="240" class="arrow-line" marker-end="url(#arrow-orange)" />
+
+  <!-- Pillar 3: COMPLIANCE GATEWAY -->
+  <g transform="translate(520, 96)">
+    <rect width="232" height="320" class="pillar-bg" stroke="#FF6600" stroke-width="1.6" />
+    <rect x="1" y="1" width="230" height="30" rx="5" fill="#1f120a" />
+    <text x="12" y="20" class="pillar-header" fill="#FF6600">[ 3. COMPLIANCE GATEWAY ]</text>
+    
+    <!-- Subcard 1: Deterministic Policy Gateway -->
+    <g transform="translate(10, 40)">
+      <rect width="212" height="100" class="card-sub-bg" stroke="#FF6600" stroke-opacity="0.3" />
+      <text x="10" y="20" class="card-sub-title" fill="#FF6600">Deterministic Policy</text>
+      <text x="10" y="38" class="font-mono" font-size="10.5px" fill="#FF6600" font-weight="700">Gateway (Track 0)</text>
+      <text x="10" y="60" class="card-bullet">• Law Before Math Kernel</text>
+      <text x="10" y="80" class="card-bullet">• A_feasible Pruning</text>
+    </g>
+    
+    <!-- Subcard 2: Hard Regulatory Wall -->
+    <g transform="translate(10, 150)">
+      <rect width="212" height="158" class="card-sub-bg" />
+      <text x="10" y="20" class="card-sub-title">Hard Regulatory Wall</text>
+      <text x="10" y="42" class="card-bullet">• NPCI 4-Attempt Cap</text>
+      <text x="10" y="64" class="card-bullet">• 24/72/168h Spacing</text>
+      <text x="10" y="86" class="card-bullet">• RBI ₹15k AFA Limit</text>
+      <text x="10" y="108" class="card-bullet">• Legal Freeze (07, AP03)</text>
+      <text x="10" y="130" class="card-bullet">• DPDP Consent Enforcer</text>
+      <text x="10" y="148" class="card-bullet" fill="#00FF88">✓ 0.000% Violation Rate</text>
+    </g>
+  </g>
+
+  <!-- Branching Lines Out of Pillar 3 -->
+  <!-- Green Line: Permitted Set -> Pillar 4 -->
+  <line x1="752" y1="200" x2="772" y2="200" class="branch-green" marker-end="url(#arrow-green)" />
+  <rect x="746" y="174" width="22" height="14" rx="2" fill="#0a1a0f" stroke="#00FF88" stroke-width="0.8" />
+  <text x="757" y="184" class="font-mono" font-size="9px" font-weight="700" fill="#00FF88" text-anchor="middle">✓</text>
+
+  <!-- Pillar 4: STOCHASTIC OPTIMIZER -->
+  <g transform="translate(774, 96)">
+    <rect width="228" height="320" class="pillar-bg" />
+    <rect x="1" y="1" width="226" height="30" rx="5" fill="#141414" />
+    <text x="12" y="20" class="pillar-header" fill="#FFB300">[ 4. STOCHASTIC OPTIMIZER ]</text>
+    
+    <!-- Subcard 1: Calibrated ML Model -->
+    <g transform="translate(10, 40)">
+      <rect width="208" height="120" class="card-sub-bg" />
+      <text x="10" y="20" class="card-sub-title">Calibrated ML Model</text>
+      <text x="10" y="42" class="card-bullet">• Logistic Reg (P̂(S))</text>
+      <text x="10" y="62" class="card-bullet">• Profile 3 Unconfounded</text>
+      <text x="10" y="82" class="card-bullet">• ECE = 0.0372 (10 Bins)</text>
+      <text x="10" y="102" class="card-bullet" fill="#00FF88">• P50 = 0.598 ms Latency</text>
+    </g>
+    
+    <!-- Subcard 2: Lift-EV Optimizer -->
+    <g transform="translate(10, 172)">
+      <rect width="208" height="136" class="card-sub-bg" />
+      <text x="10" y="20" class="card-sub-title">Lift-EV Optimizer</text>
+      <text x="10" y="42" class="card-bullet">• ΔP(a)·Amt − Cost(a)</text>
+      <text x="10" y="62" class="card-bullet">• Digital Hurdle θ=₹1.00</text>
+      <text x="10" y="82" class="card-bullet">• Negative EV Floor</text>
+      <text x="10" y="102" class="card-bullet">• Action Multiplier Rank</text>
+      <text x="10" y="122" class="card-bullet" fill="#FFB300">✓ Pure Economic Lift</text>
+    </g>
+  </g>
+
+  <!-- Pillar 4 -> Pillar 5 Connector -->
+  <line x1="1002" y1="240" x2="1020" y2="240" class="arrow-line" marker-end="url(#arrow-orange)" />
+
+  <!-- Pillar 5: EXECUTION & RECOVERY -->
+  <g transform="translate(1022, 96)">
+    <rect width="226" height="320" class="pillar-bg" />
+    <rect x="1" y="1" width="224" height="30" rx="5" fill="#141414" />
+    <text x="12" y="20" class="pillar-header" fill="#00FF88">[ 5. EXECUTION &amp; RECOVERY ]</text>
+    
+    <!-- Subcard 1: Replay-Safe Worker -->
+    <g transform="translate(10, 40)">
+      <rect width="206" height="120" class="card-sub-bg" />
+      <text x="10" y="20" class="card-sub-title">Replay-Safe Worker</text>
+      <text x="10" y="42" class="card-bullet">• Two-Phase Intent Log</text>
+      <text x="10" y="62" class="card-bullet">• Crash Reconciliation</text>
+      <text x="10" y="82" class="card-bullet">• Razorpay API Client</text>
+      <text x="10" y="102" class="card-bullet" fill="#00FF88">✓ Zero Double-Debits</text>
+    </g>
+    
+    <!-- Subcard 2: Omnichannel Dispatch -->
+    <g transform="translate(10, 172)">
+      <rect width="206" height="136" class="card-sub-bg" />
+      <text x="10" y="20" class="card-sub-title">Omnichannel Dispatch</text>
+      <text x="10" y="42" class="card-bullet">• WhatsApp Nudge (₹0.80)</text>
+      <text x="10" y="62" class="card-bullet">• 2FA Payment Link (₹0.75)</text>
+      <text x="10" y="82" class="card-bullet">• SMS Prompt (₹0.50)</text>
+      <text x="10" y="102" class="card-bullet">• Silent Retry (≤₹15k)</text>
+      <text x="10" y="122" class="card-bullet" fill="#00FF88">✓ ₹29.15M Recovered</text>
+    </g>
+  </g>
+
+  <!-- ==================== RED LINE / HUMAN ESCALATION QUEUE ==================== -->
+  <!-- Red Line out from Pillar 3 bottom -->
+  <path d="M 636 416 L 636 450 L 350 450 L 350 480" class="branch-red" marker-end="url(#arrow-red)" />
+  <rect x="420" y="440" width="180" height="20" class="pill-red" />
+  <text x="510" y="454" class="font-mono" font-size="9.5px" font-weight="700" fill="#FF5555" text-anchor="middle">[BLOCKED / LEGAL FREEZE]</text>
+
+  <!-- Red Target Card: Human Escalation & Abort -->
+  <g transform="translate(150, 484)">
+    <rect width="400" height="108" rx="6" fill="#140808" stroke="#FF3333" stroke-width="1.5" />
+    <rect x="0" y="0" width="6" height="108" rx="3" fill="#FF3333" />
+    <text x="20" y="24" class="font-sans" font-weight="800" font-size="13px" fill="#FF5555">HUMAN ESCALATION &amp; MANDATORY ABORT QUEUE</text>
+    <text x="20" y="46" class="card-bullet" fill="#FF8888">• Legal Hold / Court Order Freeze (Codes 07, AP03)</text>
+    <text x="20" y="66" class="card-bullet" fill="#FF8888">• Uncatalogued bank decline codes fail-closed</text>
+    <text x="20" y="86" class="font-mono" font-size="11px" font-weight="700" fill="#00FF88">✓ SHORT-CIRCUIT: CVR = 0.000% · ML SCORING BYPASSED</text>
+  </g>
+
+  <!-- Green Line label returning to execution / summary -->
+  <g transform="translate(680, 484)">
+    <rect width="420" height="108" rx="6" fill="#09140d" stroke="#00FF88" stroke-width="1.5" />
+    <rect x="0" y="0" width="6" height="108" rx="3" fill="#00FF88" />
+    <text x="20" y="24" class="font-sans" font-weight="800" font-size="13px" fill="#00FF88">ALLOWED: FEASIBLE ACTION SET (CAPITAL PROTECTED)</text>
+    <text x="20" y="46" class="card-bullet" fill="#99EEBB">• Only legally cleared actions enter ML EV ranking</text>
+    <text x="20" y="66" class="card-bullet" fill="#99EEBB">• +₹5.69M (+24.3%) uplift over naive blind retries</text>
+    <text x="20" y="86" class="font-mono" font-size="11px" font-weight="700" fill="#00FF88">✓ AVERTED -₹319,032 IN REGULATORY FINES &amp; WASTED FEES</text>
+  </g>
+
+  <!-- Connectors from Pillars down to Persistent Data Storage Layer -->
+  <line x1="144" y1="416" x2="144" y2="628" class="bus-line" />
+  <line x1="388" y1="416" x2="388" y2="628" class="bus-line" />
+  <line x1="888" y1="416" x2="888" y2="628" class="bus-line" />
+  <line x1="1135" y1="416" x2="1135" y2="628" class="bus-line" />
+
+  <!-- ==================== BOTTOM ROW ==================== -->
+  
+  <!-- Persistent Data Storage Layer -->
+  <g transform="translate(32, 636)">
+    <rect width="890" height="216" rx="6" fill="#0c0c0c" stroke="#222222" stroke-width="1.2" />
+    <rect x="1" y="1" width="888" height="30" rx="5" fill="#141414" />
+    <text x="16" y="21" class="font-mono" font-size="11px" font-weight="800" fill="#AAAAAA" letter-spacing="0.5px">PERSISTENT DATA STORAGE LAYER // SQLITE WAL DATABASE ENGINE</text>
+    
+    <g transform="translate(20, 48)">
+      <!-- Item 1 -->
+      <g transform="translate(0, 0)">
+        <rect width="260" height="68" class="card-sub-bg" />
+        <text x="12" y="22" class="font-mono" font-size="11.5px" font-weight="700" fill="#00BFFF">inbox</text>
+        <text x="12" y="42" class="font-sans" font-size="11px" fill="#888">Deduplicated raw event envelopes</text>
+        <text x="12" y="58" class="font-mono" font-size="10px" fill="#555">status=PENDING · retry_count=0</text>
+      </g>
+      
+      <!-- Item 2 -->
+      <g transform="translate(280, 0)">
+        <rect width="260" height="68" class="card-sub-bg" />
+        <text x="12" y="22" class="font-mono" font-size="11.5px" font-weight="700" fill="#00FF88">audit_log</text>
+        <text x="12" y="42" class="font-sans" font-size="11px" fill="#888">Immutable regulatory ledger</text>
+        <text x="12" y="58" class="font-mono" font-size="10px" fill="#555">state · diagnostic · scores · receipt</text>
+      </g>
+      
+      <!-- Item 3 -->
+      <g transform="translate(560, 0)">
+        <rect width="280" height="68" class="card-sub-bg" />
+        <text x="12" y="22" class="font-mono" font-size="11.5px" font-weight="700" fill="#FFB300">benchmark_results</text>
+        <text x="12" y="42" class="font-sans" font-size="11px" fill="#888">SNIPS policy proofs (N=5,000)</text>
+        <text x="12" y="58" class="font-mono" font-size="10px" fill="#555">1,000 bootstrap iterations · 95% CI</text>
+      </g>
+      
+      <!-- Item 4 -->
+      <g transform="translate(0, 80)">
+        <rect width="260" height="68" class="card-sub-bg" />
+        <text x="12" y="22" class="font-mono" font-size="11.5px" font-weight="700" fill="#FF6600">execution_intents</text>
+        <text x="12" y="42" class="font-sans" font-size="11px" fill="#888">Two-phase commit boundary</text>
+        <text x="12" y="58" class="font-mono" font-size="10px" fill="#555">Written prior to external dispatch</text>
+      </g>
+      
+      <!-- Item 5 -->
+      <g transform="translate(280, 80)">
+        <rect width="260" height="68" class="card-sub-bg" />
+        <text x="12" y="22" class="font-mono" font-size="11.5px" font-weight="700" fill="#FF3333">dead_letter_queue</text>
+        <text x="12" y="42" class="font-sans" font-size="11px" fill="#888">Max 3 retries with exp backoff</text>
+        <text x="12" y="58" class="font-mono" font-size="10px" fill="#555">Terminal triage for gateway failures</text>
+      </g>
+      
+      <!-- Item 6 -->
+      <g transform="translate(560, 80)">
+        <rect width="280" height="68" class="card-sub-bg" />
+        <text x="12" y="22" class="font-mono" font-size="11.5px" font-weight="700" fill="#A78BFA">datasets</text>
+        <text x="12" y="42" class="font-sans" font-size="11px" fill="#888">Profile 3 Synthetic DGP Mandates</text>
+        <text x="12" y="58" class="font-mono" font-size="10px" fill="#555">SHA256 locked lineage tracking</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- User Interface Card: Escapism Recovery Console -->
+  <g transform="translate(938, 636)">
+    <rect width="310" height="216" rx="6" fill="#0d0d0d" stroke="#FF6600" stroke-width="1.5" />
+    <rect x="1" y="1" width="308" height="30" rx="5" fill="#1f120a" />
+    <text x="14" y="21" class="font-mono" font-size="11px" font-weight="800" fill="#FF6600" letter-spacing="0.5px">ESCAPISM RECOVERY CONSOLE</text>
+    
+    <g transform="translate(14, 46)">
+      <text x="0" y="14" class="font-sans" font-size="13px" font-weight="700" fill="#FFFFFF">8 Workstations (F1 - F8)</text>
+      <text x="0" y="34" class="font-mono" font-size="10.5px" fill="#999">• F1: Live Feed &amp; Audit Replay</text>
+      <text x="0" y="52" class="font-mono" font-size="10.5px" fill="#999">• F2: State Vector &amp; EV Matrix</text>
+      <text x="0" y="70" class="font-mono" font-size="10.5px" fill="#999">• F3: Portfolio Telemetry</text>
+      <text x="0" y="88" class="font-mono" font-size="10.5px" fill="#999">• F4: Profile 3 ML Lineage</text>
+      <text x="0" y="106" class="font-mono" font-size="10.5px" fill="#999">• F5: Compliance Invariant Proofs</text>
+      <text x="0" y="124" class="font-mono" font-size="10.5px" fill="#999">• F6-F8: Policy &amp; Simulator</text>
+      
+      <rect x="0" y="138" width="280" height="24" rx="3" fill="#191919" stroke="#333" />
+      <text x="140" y="154" class="font-mono" font-size="10.5px" font-weight="700" fill="#00FF88" text-anchor="middle">⚡ Microsecond Telemetry</text>
+    </g>
+  </g>
+</svg>

@@ -60,6 +60,10 @@ htmlcov/
 docs/*
 !docs/v6_engine_architecture.png
 !docs/v6_engine_architecture.svg
+!docs/escapism_video_architecture.png
+!docs/escapism_video_architecture.svg
+!docs/architecture_deep_dive.png
+!docs/architecture_deep_dive.svg
 *.md
 !README.md
 

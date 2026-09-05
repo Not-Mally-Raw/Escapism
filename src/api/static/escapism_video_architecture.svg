@@ -1,0 +1,275 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1180" width="1200" height="1180">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&amp;family=JetBrains+Mono:wght@500;600;700;800&amp;display=swap');
+
+      .bg { fill: #070707; }
+      .grid-line { stroke: #121212; stroke-width: 1px; }
+
+      .font-sans { font-family: 'Inter', -apple-system, sans-serif; }
+      .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+      /* Card Styling */
+      .stage-card { fill: #0e0e0e; stroke: #262626; stroke-width: 1.5px; rx: 8px; }
+      .centerpiece-card { fill: #120e0a; stroke: #FF6600; stroke-width: 2.2px; rx: 8px; filter: drop-shadow(0 0 12px rgba(255, 102, 0, 0.15)); }
+      .blocked-card { fill: #140808; stroke: #FF3333; stroke-width: 1.8px; rx: 8px; }
+      .allowed-card { fill: #08140c; stroke: #00FF88; stroke-width: 1.8px; rx: 8px; }
+
+      /* Text Styling - Large & High-Contrast for Video */
+      .stage-num { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 800; letter-spacing: 1px; }
+      .stage-title { font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 800; fill: #FFFFFF; letter-spacing: -0.3px; }
+      .stage-q { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; font-style: italic; }
+      .stage-sub { font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 500; fill: #A0A0A0; }
+      .stage-tag { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 700; }
+
+      /* Connectors */
+      .arrow-orange { stroke: #FF6600; stroke-width: 2.5px; fill: none; }
+      .arrow-red { stroke: #FF3333; stroke-width: 2.5px; fill: none; }
+      .arrow-green { stroke: #00FF88; stroke-width: 2.5px; fill: none; }
+      .arrow-dim { stroke: #444444; stroke-width: 2px; fill: none; }
+    </style>
+
+    <marker id="arr-orange" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#FF6600" />
+    </marker>
+    <marker id="arr-red" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#FF3333" />
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#00FF88" />
+    </marker>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1200" height="1180" class="bg" />
+
+  <!-- Subtle Ambient Grid -->
+  <g opacity="0.6">
+    <line x1="0" y1="0" x2="0" y2="1180" class="grid-line" /> <line x1="60" y1="0" x2="60" y2="1180" class="grid-line" /> <line x1="120" y1="0" x2="120" y2="1180" class="grid-line" /> <line x1="180" y1="0" x2="180" y2="1180" class="grid-line" /> <line x1="240" y1="0" x2="240" y2="1180" class="grid-line" /> <line x1="300" y1="0" x2="300" y2="1180" class="grid-line" /> <line x1="360" y1="0" x2="360" y2="1180" class="grid-line" /> <line x1="420" y1="0" x2="420" y2="1180" class="grid-line" /> <line x1="480" y1="0" x2="480" y2="1180" class="grid-line" /> <line x1="540" y1="0" x2="540" y2="1180" class="grid-line" /> <line x1="600" y1="0" x2="600" y2="1180" class="grid-line" /> <line x1="660" y1="0" x2="660" y2="1180" class="grid-line" /> <line x1="720" y1="0" x2="720" y2="1180" class="grid-line" /> <line x1="780" y1="0" x2="780" y2="1180" class="grid-line" /> <line x1="840" y1="0" x2="840" y2="1180" class="grid-line" /> <line x1="900" y1="0" x2="900" y2="1180" class="grid-line" /> <line x1="960" y1="0" x2="960" y2="1180" class="grid-line" /> <line x1="1020" y1="0" x2="1020" y2="1180" class="grid-line" /> <line x1="1080" y1="0" x2="1080" y2="1180" class="grid-line" /> <line x1="1140" y1="0" x2="1140" y2="1180" class="grid-line" />
+    <line x1="0" y1="0" x2="1200" y2="0" class="grid-line" /> <line x1="0" y1="60" x2="1200" y2="60" class="grid-line" /> <line x1="0" y1="120" x2="1200" y2="120" class="grid-line" /> <line x1="0" y1="180" x2="1200" y2="180" class="grid-line" /> <line x1="0" y1="240" x2="1200" y2="240" class="grid-line" /> <line x1="0" y1="300" x2="1200" y2="300" class="grid-line" /> <line x1="0" y1="360" x2="1200" y2="360" class="grid-line" /> <line x1="0" y1="420" x2="1200" y2="420" class="grid-line" /> <line x1="0" y1="480" x2="1200" y2="480" class="grid-line" /> <line x1="0" y1="540" x2="1200" y2="540" class="grid-line" /> <line x1="0" y1="600" x2="1200" y2="600" class="grid-line" /> <line x1="0" y1="660" x2="1200" y2="660" class="grid-line" /> <line x1="0" y1="720" x2="1200" y2="720" class="grid-line" /> <line x1="0" y1="780" x2="1200" y2="780" class="grid-line" /> <line x1="0" y1="840" x2="1200" y2="840" class="grid-line" /> <line x1="0" y1="900" x2="1200" y2="900" class="grid-line" /> <line x1="0" y1="960" x2="1200" y2="960" class="grid-line" /> <line x1="0" y1="1020" x2="1200" y2="1020" class="grid-line" /> <line x1="0" y1="1080" x2="1200" y2="1080" class="grid-line" /> <line x1="0" y1="1140" x2="1200" y2="1140" class="grid-line" />
+  </g>
+
+  <!-- Header Section -->
+  <g transform="translate(0, 36)">
+    <text x="600" y="24" class="font-sans" font-size="28px" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="-0.5px">ESCAPISM REVENUE RECOVERY</text>
+    <text x="600" y="52" class="font-mono" font-size="13px" font-weight="700" fill="#FF6600" text-anchor="middle" letter-spacing="1px">FROM FAILED MANDATE → DETERMINISTIC LEGAL RECOVERY</text>
+  </g>
+
+  <!-- Input Trigger Pill -->
+  <g transform="translate(430, 118)">
+    <rect width="340" height="42" rx="21" fill="#161616" stroke="#333333" stroke-width="1.5" />
+    <circle cx="24" cy="21" r="5" fill="#FF3333" />
+    <text x="40" y="26" class="font-mono" font-size="13px" font-weight="800" fill="#FFFFFF">SUBSCRIPTION DEBIT FAILS</text>
+    <text x="250" y="26" class="font-mono" font-size="11.5px" fill="#888888">UPI / e-NACH</text>
+  </g>
+
+  <!-- Connector: Trigger -> Stage 1 -->
+  <line x1="600" y1="160" x2="600" y2="188" class="arrow-orange" marker-end="url(#arr-orange)" />
+
+  <!-- ==================== STAGE 1: UNDERSTAND FAILURE ==================== -->
+  <g transform="translate(320, 192)">
+    <rect width="560" height="106" class="stage-card" />
+    <rect x="0" y="0" width="6" height="106" rx="3" fill="#00BFFF" />
+    
+    <text x="26" y="32" class="stage-num" fill="#00BFFF">STAGE 1</text>
+    <text x="106" y="32" class="stage-title">UNDERSTAND THE FAILURE</text>
+    <text x="440" y="32" class="stage-q" fill="#00BFFF">What happened?</text>
+    
+    <text x="26" y="64" class="stage-sub">Bank Return Code → Semantic Failure Classification</text>
+    
+    <g transform="translate(26, 76)">
+      <rect width="180" height="20" rx="3" fill="#141414" stroke="#262626" />
+      <text x="90" y="14" class="stage-tag" fill="#EEEEEE" text-anchor="middle">Deterministic O(1) Lookup</text>
+      
+      <rect x="192" y="0" width="130" height="20" rx="3" fill="#141414" stroke="#262626" />
+      <text x="257" y="14" class="stage-tag" fill="#00BFFF" text-anchor="middle">82% Volume · 0ms</text>
+      
+      <rect x="334" y="0" width="180" height="20" rx="3" fill="#141414" stroke="#262626" />
+      <text x="424" y="14" class="stage-tag" fill="#EEEEEE" text-anchor="middle">LLM Semantic Fallback</text>
+    </g>
+  </g>
+
+  <!-- Connector: Stage 1 -> Stage 2 -->
+  <line x1="600" y1="298" x2="600" y2="330" class="arrow-orange" marker-end="url(#arr-orange)" />
+
+  <!-- ==================== STAGE 2: COMPLIANCE GATE (CENTERPIECE) ==================== -->
+  <g transform="translate(250, 334)">
+    <rect width="700" height="128" class="centerpiece-card" />
+    <rect x="0" y="0" width="8" height="128" rx="4" fill="#FF6600" />
+    
+    <text x="30" y="34" class="stage-num" fill="#FF6600">STAGE 2 · COMPLIANCE GATEWAY</text>
+    <rect x="290" y="18" width="168" height="22" rx="3" fill="#FF6600" />
+    <text x="374" y="33" class="font-mono" font-size="11px" font-weight="900" fill="#000000" text-anchor="middle">LAW BEFORE MATH</text>
+    <text x="560" y="34" class="stage-q" fill="#FF6600">What are we allowed to do?</text>
+    
+    <text x="30" y="68" class="stage-sub" font-size="14.5px" fill="#FFFFFF">
+      Hard regulatory wall deterministically prunes illegal actions <tspan fill="#FF6600" font-weight="700">before</tspan> any ML model runs.
+    </text>
+    
+    <g transform="translate(30, 86)">
+      <rect width="144" height="24" rx="3" fill="#1c140d" stroke="#FF6600" stroke-width="0.8" />
+      <text x="72" y="16" class="stage-tag" fill="#FFB300" text-anchor="middle">NPCI 4-Attempt Cap</text>
+      
+      <rect x="156" y="0" width="144" height="24" rx="3" fill="#1c140d" stroke="#FF6600" stroke-width="0.8" />
+      <text x="228" y="16" class="stage-tag" fill="#FFB300" text-anchor="middle">24/72/168h Spacing</text>
+      
+      <rect x="312" y="0" width="144" height="24" rx="3" fill="#1c140d" stroke="#FF6600" stroke-width="0.8" />
+      <text x="384" y="16" class="stage-tag" fill="#FFB300" text-anchor="middle">RBI ₹15k AFA Limit</text>
+      
+      <rect x="468" y="0" width="164" height="24" rx="3" fill="#1c140d" stroke="#FF6600" stroke-width="0.8" />
+      <text x="550" y="16" class="stage-tag" fill="#FFB300" text-anchor="middle">DPDP Customer Consent</text>
+    </g>
+  </g>
+
+  <!-- ==================== DUAL BRANCH ROUTING ==================== -->
+
+  <!-- Left Branch: Red Line to Blocked / Human Escalation -->
+  <path d="M 400 462 L 400 520 L 260 520 L 260 560" class="arrow-red" marker-end="url(#arr-red)" />
+  <rect x="170" y="508" width="180" height="24" rx="4" fill="#1f0a0a" stroke="#FF3333" stroke-width="1" />
+  <text x="260" y="524" class="font-mono" font-size="11px" font-weight="800" fill="#FF3333" text-anchor="middle">❌ BLOCKED / RESTRICTED</text>
+
+  <!-- Left Box: HUMAN ESCALATION / ABORT -->
+  <g transform="translate(60, 566)">
+    <rect width="400" height="154" class="blocked-card" />
+    <rect x="0" y="0" width="6" height="154" rx="3" fill="#FF3333" />
+    
+    <text x="24" y="32" class="font-mono" font-size="12px" font-weight="800" fill="#FF5555">TERMINAL SAFETY SHUTOFF</text>
+    <text x="24" y="58" class="font-sans" font-size="18px" font-weight="800" fill="#FFFFFF">HUMAN ESCALATION / ABORT</text>
+    
+    <text x="24" y="90" class="font-sans" font-size="13px" fill="#D0D0D0">• Legal Hold / Court Injunction (07, AP03)</text>
+    <text x="24" y="112" class="font-sans" font-size="13px" fill="#D0D0D0">• Closed Accounts (01) &amp; Uncatalogued Codes</text>
+    
+    <rect x="24" y="124" width="350" height="20" rx="3" fill="#200a0a" />
+    <text x="32" y="138" class="font-mono" font-size="10.5px" font-weight="700" fill="#00FF88">✓ CVR = 0.000% · ML MODEL SKIPPED ENTIRELY</text>
+  </g>
+
+  <!-- Right Branch: Green Line to Allowed / Feasible Set -->
+  <path d="M 800 462 L 800 520 L 880 520 L 880 560" class="arrow-green" marker-end="url(#arr-green)" />
+  <rect x="790" y="508" width="180" height="24" rx="4" fill="#0a1a0f" stroke="#00FF88" stroke-width="1" />
+  <text x="880" y="524" class="font-mono" font-size="11px" font-weight="800" fill="#00FF88" text-anchor="middle">✓ ALLOWED: FEASIBLE SET</text>
+
+  <!-- Right Column: Stages 3, 4, 5 -->
+
+  <!-- ==================== STAGE 3: ESTIMATE RECOVERY ==================== -->
+  <g transform="translate(600, 566)">
+    <rect width="540" height="110" class="stage-card" />
+    <rect x="0" y="0" width="6" height="110" rx="3" fill="#00FF88" />
+    
+    <text x="24" y="32" class="stage-num" fill="#00FF88">STAGE 3</text>
+    <text x="96" y="32" class="stage-title">ESTIMATE RECOVERY CHANCE</text>
+    <text x="430" y="32" class="stage-q" fill="#00FF88">P(recovery)</text>
+    
+    <text x="24" y="62" class="stage-sub">Profile 3 Calibrated ML Propensity Model P̂(S)</text>
+    
+    <g transform="translate(24, 76)">
+      <rect width="150" height="20" rx="3" fill="#141414" stroke="#262626" />
+      <text x="75" y="14" class="stage-tag" fill="#00FF88" text-anchor="middle">ECE = 0.0372 Well-Cal</text>
+      
+      <rect x="160" y="0" width="150" height="20" rx="3" fill="#141414" stroke="#262626" />
+      <text x="235" y="14" class="stage-tag" fill="#00BFFF" text-anchor="middle">P50 = 0.598 ms Latency</text>
+      
+      <rect x="320" y="0" width="180" height="20" rx="3" fill="#141414" stroke="#262626" />
+      <text x="410" y="14" class="stage-tag" fill="#EEEEEE" text-anchor="middle">Unconfounded Passive Y₀</text>
+    </g>
+  </g>
+
+  <!-- Connector: Stage 3 -> Stage 4 -->
+  <line x1="870" y1="676" x2="870" y2="706" class="arrow-green" marker-end="url(#arr-green)" />
+
+  <!-- ==================== STAGE 4: EXPECTED ₹ LIFT ==================== -->
+  <g transform="translate(600, 710)">
+    <rect width="540" height="110" class="stage-card" />
+    <rect x="0" y="0" width="6" height="110" rx="3" fill="#FFB300" />
+    
+    <text x="24" y="32" class="stage-num" fill="#FFB300">STAGE 4</text>
+    <text x="96" y="32" class="stage-title">STOCHASTIC LIFT-EV OPTIMIZER</text>
+    <text x="435" y="32" class="stage-q" fill="#FFB300">Worth doing?</text>
+    
+    <text x="24" y="62" class="stage-sub">Lift-EV(a|S) = P̂(S) · ΔP(a) · Amount − Cost(a)</text>
+    
+    <g transform="translate(24, 76)">
+      <rect width="160" height="20" rx="3" fill="#141414" stroke="#262626" />
+      <text x="80" y="14" class="stage-tag" fill="#FFB300" text-anchor="middle">Digital Hurdle θ = ₹1.00</text>
+      
+      <rect x="170" y="0" width="160" height="20" rx="3" fill="#141414" stroke="#262626" />
+      <text x="250" y="14" class="stage-tag" fill="#00FF88" text-anchor="middle">Negative EV Capital Floor</text>
+      
+      <rect x="340" y="0" width="160" height="20" rx="3" fill="#141414" stroke="#262626" />
+      <text x="420" y="14" class="stage-tag" fill="#EEEEEE" text-anchor="middle">Select Best or ABORT</text>
+    </g>
+  </g>
+
+  <!-- Connector: Stage 4 -> Stage 5 -->
+  <line x1="870" y1="820" x2="870" y2="850" class="arrow-green" marker-end="url(#arr-green)" />
+
+  <!-- ==================== STAGE 5: EXECUTE & AUDIT ==================== -->
+  <g transform="translate(600, 854)">
+    <rect width="540" height="114" class="stage-card" />
+    <rect x="0" y="0" width="6" height="114" rx="3" fill="#00FF88" />
+    
+    <text x="24" y="32" class="stage-num" fill="#00FF88">STAGE 5</text>
+    <text x="96" y="32" class="stage-title">REPLAY-SAFE DISPATCH &amp; AUDIT</text>
+    
+    <text x="24" y="62" class="stage-sub">Two-phase execution intent committed to SQLite prior to dispatch</text>
+    
+    <g transform="translate(24, 76)">
+      <rect width="115" height="22" rx="3" fill="#141414" stroke="#282828" />
+      <text x="57" y="15" class="stage-tag" fill="#00FF88" text-anchor="middle">WhatsApp (1.2×)</text>
+      
+      <rect x="123" y="0" width="125" height="22" rx="3" fill="#141414" stroke="#282828" />
+      <text x="185" y="15" class="stage-tag" fill="#00BFFF" text-anchor="middle">2FA Link (1.15×)</text>
+      
+      <rect x="256" y="0" width="105" height="22" rx="3" fill="#141414" stroke="#282828" />
+      <text x="308" y="15" class="stage-tag" fill="#FFB300" text-anchor="middle">SMS (1.1×)</text>
+      
+      <rect x="369" y="0" width="140" height="22" rx="3" fill="#141414" stroke="#282828" />
+      <text x="439" y="15" class="stage-tag" fill="#EEEEEE" text-anchor="middle">Silent Retry (≤₹15k)</text>
+    </g>
+  </g>
+
+  <!-- ==================== RESULTS BAR AT BOTTOM ==================== -->
+  <g transform="translate(60, 1010)">
+    <rect width="1080" height="74" rx="6" fill="#0d0d0d" stroke="#222222" stroke-width="1.5" />
+    <rect x="0" y="0" width="6" height="74" rx="3" fill="#FF6600" />
+    
+    <g transform="translate(24, 18)">
+      <!-- Metric 1 -->
+      <g transform="translate(10, 0)">
+        <text x="0" y="14" class="font-mono" font-size="10px" font-weight="700" fill="#777" letter-spacing="0.5px">NET RECOVERED</text>
+        <text x="0" y="38" class="font-mono" font-size="22px" font-weight="900" fill="#00FF88">₹29.15M</text>
+      </g>
+      
+      <line x1="220" y1="4" x2="220" y2="40" stroke="#222" stroke-width="1" />
+      
+      <!-- Metric 2 -->
+      <g transform="translate(260, 0)">
+        <text x="0" y="14" class="font-mono" font-size="10px" font-weight="700" fill="#777" letter-spacing="0.5px">REVENUE LIFT</text>
+        <text x="0" y="38" class="font-mono" font-size="22px" font-weight="900" fill="#FF6600">+24.3%</text>
+        <text x="96" y="36" class="font-mono" font-size="11px" fill="#888">vs Blind</text>
+      </g>
+      
+      <line x1="480" y1="4" x2="480" y2="40" stroke="#222" stroke-width="1" />
+      
+      <!-- Metric 3 -->
+      <g transform="translate(520, 0)">
+        <text x="0" y="14" class="font-mono" font-size="10px" font-weight="700" fill="#777" letter-spacing="0.5px">COMPLIANCE VIOLATIONS</text>
+        <text x="0" y="38" class="font-mono" font-size="22px" font-weight="900" fill="#00FF88">0.000%</text>
+        <text x="96" y="36" class="font-mono" font-size="11px" fill="#888">Proven</text>
+      </g>
+      
+      <line x1="770" y1="4" x2="770" y2="40" stroke="#222" stroke-width="1" />
+      
+      <!-- Metric 4 -->
+      <g transform="translate(810, 0)">
+        <text x="0" y="14" class="font-mono" font-size="10px" font-weight="700" fill="#777" letter-spacing="0.5px">TEST INVARIANTS</text>
+        <text x="0" y="38" class="font-mono" font-size="22px" font-weight="900" fill="#00BFFF">169 / 169</text>
+        <text x="128" y="36" class="font-mono" font-size="11px" fill="#888">Passing</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Clean Subtext Footer -->
+  <text x="600" y="1124" class="font-mono" font-size="11px" fill="#555555" text-anchor="middle">
+    Architecture A (Video Storyboard) · Preserved Architecture B (Technical Deep Dive) in docs/architecture_deep_dive.png
+  </text>
+</svg>
